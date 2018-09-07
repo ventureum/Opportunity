@@ -23,7 +23,7 @@ const styles = {
     justifyContent: 'space-between',
     backgroundColor: '#FBFAFC',
     boxShadow: '0 2px 4px 0 #D3D0D5',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       padding: '0 30px'
     }
   },
@@ -32,12 +32,15 @@ const styles = {
   },
   user: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
   username: {
     marginLeft: '10px',
     color: contentColor,
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       display: 'none'
     }
   },
@@ -51,7 +54,7 @@ const styles = {
     width: '100px',
     marginRight: '30px',
     borderRadius: '4px',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       height: '64px',
       width: '64px',
       marginRight: '20px'
@@ -62,6 +65,8 @@ const styles = {
     color: contentColor
   },
   menu: {
+    top: '10px!important',
+    right: '30px',
     boxShadow: '0 2px 4px 0 rgba(233,233,233,0.5)'
   },
   item: {
@@ -93,7 +98,7 @@ const styles = {
     '@media (max-width: 1024px)': {
       maxWidth: '100%'
     },
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       padding: '30px'
     }
   },
@@ -107,7 +112,7 @@ const styles = {
     textAlign: 'center',
     display: 'inline-block',
     color: 'white',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       marginTop: '4px'
     }
   },
@@ -115,7 +120,7 @@ const styles = {
     lineHeight: '32px',
     fontSize: '32px',
     fontWeight: 'bold',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       marginTop: '30px'
     }
   },
@@ -138,7 +143,7 @@ const styles = {
     color: '#999999',
     padding: '0 15%',
     marginTop: '-11px',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       display: 'none'
     }
   },
@@ -163,6 +168,7 @@ const styles = {
     backgroundColor: '#333333'
   },
   mobileTabBar: {
+    zIndex: '0',
     marginTop: '20px',
     marginBottom: '-20px',
     border: 'none',
@@ -172,7 +178,7 @@ const styles = {
   mobileTab: {
     color: '#999999',
     display: 'none',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       display: 'block'
     }
   },
@@ -196,7 +202,7 @@ const styles = {
     fontSize: '14px',
     marginBottom: '8px',
     marginTop: '29px',
-    '@media (max-width: 375px)': {
+    '@media (max-width: 500px)': {
       marginTop: '0'
     }
   },
@@ -243,27 +249,27 @@ class ProfileComponent extends Component {
         title: 'Upvoted a post from @santi',
         text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
         date: '2018-08-19',
-        gain: 96
+        gain: '+96'
       }, {
         title: 'Upvoted a post from @santi',
         text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
         date: '2018-08-19',
-        gain: 96
+        gain: '+96'
       }, {
         title: 'Upvoted a post from @santi',
         text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
         date: '2018-08-19',
-        gain: 96
+        gain: '+96'
       }, {
         title: 'Upvoted a post from @santi',
         text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
         date: '2018-08-19',
-        gain: 96
+        gain: '-96'
       }, {
         title: 'Upvoted a post from @santi',
         text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
         date: '2018-08-19',
-        gain: 96
+        gain: '+96'
       }
     ]
   }
@@ -283,6 +289,7 @@ class ProfileComponent extends Component {
   render () {
     const { classes } = this.props
     const { open, tabIndex, list } = this.state
+    const anchorEl = window.document.querySelector('header')
 
     return (
       <div>
@@ -295,6 +302,7 @@ class ProfileComponent extends Component {
             </Typography>
           </div>
           <Menu
+            anchorEl={anchorEl}
             anchorOrigin={{
               vertical: 'top',
               horizontal: 'right'
@@ -345,18 +353,18 @@ class ProfileComponent extends Component {
               </div>
             </Grid>
           </Grid>
-          <AppBar classes={{ root: classes.mobileTabBar }} position='static'>
-            <Tabs classes={{ root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator }} value={tabIndex} onChange={this.handleChange}>
-              {['VOTING(71)', 'POST(8)', 'REPLY(237)'].map((label, i) => {
-                return <Tab key={i} classes={{ root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected }} label={label} />
+          <AppBar classes={{root: classes.mobileTabBar}} position="static">
+            <Tabs classes={{root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator}} value={tabIndex} onChange={this.handleChange}>
+              {['VOTINGS(71)', 'POSTS(8)', 'REPLIES(237)'].map((label, i) => {
+                return <Tab key={i} classes={{root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected}} label={label} />
               })}
             </Tabs>
           </AppBar>
           <Grid container className={classes.card}>
-            <AppBar classes={{ root: classes.tabBar }} position='static'>
-              <Tabs classes={{ root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator }} value={tabIndex} onChange={this.handleChange}>
-                {['VOTING(71)', 'POST(8)', 'REPLY(237)'].map((label, i) => {
-                  return <Tab key={i} classes={{ root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected }} label={label} />
+            <AppBar classes={{root: classes.tabBar}} position="static">
+              <Tabs classes={{root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator}} value={tabIndex} onChange={this.handleChange}>
+                {['VOTINGS(71)', 'POSTS(8)', 'REPLIES(237)'].map((label, i) => {
+                  return <Tab key={i} classes={{root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected}} label={label} />
                 })}
               </Tabs>
             </AppBar>
@@ -364,9 +372,39 @@ class ProfileComponent extends Component {
               <div>
                 <div className={classes.header}>
                   <div>
-                    VOTING
+                    VOTINGS
                     <div className={classes.floatRight}>
-                      GAIN
+                      POINTS
+                    </div>
+                  </div>
+                </div>
+                {list.map((item, i) => {
+                  return (
+                    <div key={i} className={classes.listItem}>
+                      <div className={classes.title}>
+                        {item.title}
+                      </div>
+                      <div className={classes.text}>
+                        {item.text}
+                      </div>
+                      <div className={classes.date}>
+                        {item.date}
+                      </div>
+                      <div className={classes.gain}>
+                        {item.gain}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            }
+            {tabIndex === 1 &&
+              <div>
+                <div className={classes.header}>
+                  <div>
+                    POSTS
+                    <div className={classes.floatRight}>
+                      POINTS
                     </div>
                   </div>
                 </div>
