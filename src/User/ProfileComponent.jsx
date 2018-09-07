@@ -62,7 +62,7 @@ const styles = {
     color: contentColor
   },
   menu: {
-    boxShadow: '0 2px 4px 0 rgba(233,233,233,0.5)',
+    boxShadow: '0 2px 4px 0 rgba(233,233,233,0.5)'
   },
   item: {
     padding: '20px'
@@ -234,7 +234,7 @@ const styles = {
   }
 }
 
-class Profile extends Component {
+class ProfileComponent extends Component {
   state = {
     open: false,
     tabIndex: 0,
@@ -276,17 +276,17 @@ class Profile extends Component {
     this.setState({ open: false })
   }
 
-  handleChange = (e, value) => {
+  handleChange = (event, value) => {
     this.setState({ tabIndex: value })
   }
 
-  render() {
+  render () {
     const { classes } = this.props
     const { open, tabIndex, list } = this.state
 
     return (
       <div>
-        <AppBar classes={{root: classes.bar}}>
+        <AppBar classes={{ root: classes.bar }}>
           <img className={classes.logo} src={logo} alt='' />
           <div className={classes.user}>
             <img className={classes.avatar} src='https://image.ibb.co/fzwtPe/rect_avatar.png' alt='' onClick={this.handleMenu} />
@@ -297,25 +297,25 @@ class Profile extends Component {
           <Menu
             anchorOrigin={{
               vertical: 'top',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
             transformOrigin={{
               vertical: 'top',
-              horizontal: 'right',
+              horizontal: 'right'
             }}
             open={open}
             onClose={this.handleClose}
-            classes={{paper: classes.menu}}
-            MenuListProps={{disablePadding: true}}
+            classes={{ paper: classes.menu }}
+            MenuListProps={{ disablePadding: true }}
           >
-            <MenuItem classes={{root: classes.item}} onClick={this.handleClose}>
+            <MenuItem classes={{ root: classes.item }} onClick={this.handleClose}>
               <img className={classes.avatar} src='https://image.ibb.co/fzwtPe/rect_avatar.png' alt='' onClick={this.handleMenu} />
               <Typography variant='body2' className={classes.username}>
                 william
               </Typography>
             </MenuItem>
             <div className={classes.bottomLine} />
-            <MenuItem classes={{root: classes.item}} onClick={this.handleClose}>
+            <MenuItem classes={{ root: classes.item }} onClick={this.handleClose}>
               <Typography variant='body1'>
                 Log out
               </Typography>
@@ -336,7 +336,7 @@ class Profile extends Component {
               </div>
             </Grid>
             <div className={classes.empty} />
-            <Grid item md={3} xs={12}>
+            <Grid item xs={12}>
               <div className={classes.points}>
                 10,000
               </div>
@@ -345,18 +345,18 @@ class Profile extends Component {
               </div>
             </Grid>
           </Grid>
-          <AppBar classes={{root: classes.mobileTabBar}} position="static">
-            <Tabs classes={{root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator}} value={tabIndex} onChange={this.handleChange}>
+          <AppBar classes={{ root: classes.mobileTabBar }} position='static'>
+            <Tabs classes={{ root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator }} value={tabIndex} onChange={this.handleChange}>
               {['VOTING(71)', 'POST(8)', 'REPLY(237)'].map((label, i) => {
-                return <Tab key={i} classes={{root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected}} label={label} />
+                return <Tab key={i} classes={{ root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected }} label={label} />
               })}
             </Tabs>
           </AppBar>
           <Grid container className={classes.card}>
-            <AppBar classes={{root: classes.tabBar}} position="static">
-              <Tabs classes={{root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator}} value={tabIndex} onChange={this.handleChange}>
+            <AppBar classes={{ root: classes.tabBar }} position='static'>
+              <Tabs classes={{ root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator }} value={tabIndex} onChange={this.handleChange}>
                 {['VOTING(71)', 'POST(8)', 'REPLY(237)'].map((label, i) => {
-                  return <Tab key={i} classes={{root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected}} label={label} />
+                  return <Tab key={i} classes={{ root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected }} label={label} />
                 })}
               </Tabs>
             </AppBar>
@@ -390,36 +390,6 @@ class Profile extends Component {
                 })}
               </div>
             }
-            {tabIndex === 1 &&
-              <div>
-                <div className={classes.header}>
-                  <div>
-                    POST
-                    <div className={classes.floatRight}>
-                      GAIN
-                    </div>
-                  </div>
-                </div>
-                {list.map((item, i) => {
-                  return (
-                    <div key={i} className={classes.listItem}>
-                      <div className={classes.title}>
-                        {item.title}
-                      </div>
-                      <div className={classes.text}>
-                        {item.text}
-                      </div>
-                      <div className={classes.date}>
-                        {item.date}
-                      </div>
-                      <div className={classes.gain}>
-                        {item.gain}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            }
           </Grid>
         </Grid>
       </div>
@@ -427,4 +397,4 @@ class Profile extends Component {
   }
 }
 
-export default withStyles(styles)(Profile)
+export default withStyles(styles)(ProfileComponent)
