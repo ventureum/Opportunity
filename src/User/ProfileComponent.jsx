@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import logo from '../logo.svg'
+import numeral from 'numeral'
 
 let contentColor = '#666666'
 
@@ -43,6 +44,10 @@ const styles = {
     '@media (max-width: 500px)': {
       display: 'none'
     }
+  },
+  usernameInMenu: {
+    marginLeft: '10px',
+    color: contentColor
   },
   avatar: {
     height: '32px',
@@ -207,15 +212,26 @@ const styles = {
     }
   },
   listItem: {
-    paddingRight: '15%',
+    paddingRight: '10%',
     position: 'relative',
     marginTop: '21px',
     paddingTop: '19px',
-    borderTop: '2px solid #E9E9E9'
+    borderTop: '2px solid #E9E9E9',
+    wordBreak: 'break-all',
+    '@media (max-width: 500px)': {
+      paddingRight: '15%'
+    }
   },
   title: {
     color: '#333333',
     fontSize: '14px',
+    fontWeight: 'bold'
+  },
+  postTitle: {
+    color: '#333333',
+    fontSize: '18px',
+    height: '24px',
+    marginBottom: '8px',
     fontWeight: 'bold'
   },
   text: {
@@ -237,6 +253,9 @@ const styles = {
     position: 'absolute',
     right: '0',
     top: '19px'
+  },
+  tabContent: {
+    width: '100%'
   }
 }
 
@@ -244,34 +263,17 @@ class ProfileComponent extends Component {
   state = {
     open: false,
     tabIndex: 0,
-    list: [
-      {
-        title: 'Upvoted a post from @santi',
-        text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
-        date: '2018-08-19',
-        gain: '+96'
-      }, {
-        title: 'Upvoted a post from @santi',
-        text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
-        date: '2018-08-19',
-        gain: '+96'
-      }, {
-        title: 'Upvoted a post from @santi',
-        text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
-        date: '2018-08-19',
-        gain: '+96'
-      }, {
-        title: 'Upvoted a post from @santi',
-        text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
-        date: '2018-08-19',
-        gain: '-96'
-      }, {
-        title: 'Upvoted a post from @santi',
-        text: 'In today’s net-savvy world it has become common for any business to have a website which they use mostly for advertising their products and services. With the advent of search....',
-        date: '2018-08-19',
-        gain: '+96'
-      }
-    ]
+    voteList: null,
+    postList: null,
+    replyList: null
+  }
+
+  componentDidMount () {
+    this.props.getProfile(this.props.userInfo.username).then(() => {
+      this.props.getVoteList(this.props.userInfo.username)
+      this.props.getPostList(this.props.userInfo.username)
+      this.props.getReplyList(this.props.userInfo.username)
+    })
   }
 
   handleMenu = () => {
@@ -286,9 +288,42 @@ class ProfileComponent extends Component {
     this.setState({ tabIndex: value })
   }
 
+  logout () {
+    this.props.logout()
+    this.handleClose()
+  }
+
+  getLabelText (label) {
+    let tabMap = {
+      VOTINGS: 'voteList',
+      POSTS: 'postList',
+      REPLIES: 'replyList'
+    }
+    if (this.props[tabMap[label]]) {
+      return `${label}(${this.props[tabMap[label]].length})`
+    } else {
+      return `${label}(0)`
+    }
+  }
+
+  formatNumber (number, needSign = true) {
+    number = number / 100
+    let result
+    if (number <= 1000) {
+      number = parseInt(number).toString()
+      result = numeral(number).format('0,0a')
+    } else {
+      result = numeral(number).format('0,0.00a')
+    }
+    if (needSign && number > 0) {
+      return '+' + result
+    }
+    return result
+  }
+
   render () {
-    const { classes } = this.props
-    const { open, tabIndex, list } = this.state
+    const { classes, userInfo, profile, voteList, postList, replyList } = this.props
+    const { open, tabIndex } = this.state
     const anchorEl = window.document.querySelector('header')
 
     return (
@@ -296,9 +331,9 @@ class ProfileComponent extends Component {
         <AppBar classes={{ root: classes.bar }}>
           <img className={classes.logo} src={logo} alt='' />
           <div className={classes.user}>
-            <img className={classes.avatar} src='https://image.ibb.co/fzwtPe/rect_avatar.png' alt='' onClick={this.handleMenu} />
+            <img className={classes.avatar} src={userInfo.photo_url} alt='' onClick={this.handleMenu} />
             <Typography variant='body2' className={classes.username}>
-              william
+              {userInfo.username}
             </Typography>
           </div>
           <Menu
@@ -317,13 +352,13 @@ class ProfileComponent extends Component {
             MenuListProps={{ disablePadding: true }}
           >
             <MenuItem classes={{ root: classes.item }} onClick={this.handleClose}>
-              <img className={classes.avatar} src='https://image.ibb.co/fzwtPe/rect_avatar.png' alt='' onClick={this.handleMenu} />
-              <Typography variant='body2' className={classes.username}>
-                william
+              <img className={classes.avatar} src={userInfo.photo_url} alt='' onClick={this.handleMenu} />
+              <Typography variant='body2' className={classes.usernameInMenu}>
+                {userInfo.username}
               </Typography>
             </MenuItem>
             <div className={classes.bottomLine} />
-            <MenuItem classes={{ root: classes.item }} onClick={this.handleClose}>
+            <MenuItem classes={{ root: classes.item }} onClick={this.logout.bind(this)}>
               <Typography variant='body1'>
                 Log out
               </Typography>
@@ -333,43 +368,43 @@ class ProfileComponent extends Component {
         <Grid container className={classes.content}>
           <Grid container className={classes.card}>
             <Grid item>
-              <img className={classes.bigAvatar} src='https://image.ibb.co/fzwtPe/rect_avatar.png' alt='' />
+              <img className={classes.bigAvatar} src={userInfo.photo_url} alt='' />
             </Grid>
             <Grid item>
               <Typography variant='headline'>
-                william
+                {userInfo.username}
               </Typography>
               <div className={classes.level}>
                 Lv 1
               </div>
             </Grid>
             <div className={classes.empty} />
-            <Grid item xs={12}>
+            <Grid item xs={12} sm={3}>
               <div className={classes.points}>
-                10,000
+                {this.formatNumber(profile ? profile.rewardsInfo.milestonePoints : 0, false)}
               </div>
               <div className={classes.pointsLabel}>
                 Milestone Points
               </div>
             </Grid>
           </Grid>
-          <AppBar classes={{root: classes.mobileTabBar}} position="static">
+          <AppBar classes={{root: classes.mobileTabBar}} position='static'>
             <Tabs classes={{root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator}} value={tabIndex} onChange={this.handleChange}>
-              {['VOTINGS(71)', 'POSTS(8)', 'REPLIES(237)'].map((label, i) => {
-                return <Tab key={i} classes={{root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected}} label={label} />
+              {['VOTINGS', 'POSTS', 'REPLIES'].map((label, i) => {
+                return <Tab key={i} classes={{root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected}} label={this.getLabelText(label)} />
               })}
             </Tabs>
           </AppBar>
           <Grid container className={classes.card}>
-            <AppBar classes={{root: classes.tabBar}} position="static">
+            <AppBar classes={{root: classes.tabBar}} position='static'>
               <Tabs classes={{root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator}} value={tabIndex} onChange={this.handleChange}>
-                {['VOTINGS(71)', 'POSTS(8)', 'REPLIES(237)'].map((label, i) => {
-                  return <Tab key={i} classes={{root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected}} label={label} />
+                {['VOTINGS', 'POSTS', 'REPLIES'].map((label, i) => {
+                  return <Tab key={i} classes={{root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected}} label={this.getLabelText(label)} />
                 })}
               </Tabs>
             </AppBar>
             {tabIndex === 0 &&
-              <div>
+              <div className={classes.tabContent}>
                 <div className={classes.header}>
                   <div>
                     VOTINGS
@@ -378,28 +413,35 @@ class ProfileComponent extends Component {
                     </div>
                   </div>
                 </div>
-                {list.map((item, i) => {
+                {voteList && voteList.map((item, i) => {
                   return (
                     <div key={i} className={classes.listItem}>
                       <div className={classes.title}>
-                        {item.title}
+                        {item.voteType === 'DOWN' ? 'Downvoted @' : 'Upvoted @'}{item.actor}
                       </div>
                       <div className={classes.text}>
-                        {item.text}
+                        {item.content.text}
                       </div>
                       <div className={classes.date}>
-                        {item.date}
+                        {item.createdAt.split('T')[0]}
                       </div>
                       <div className={classes.gain}>
-                        {item.gain}
+                        {this.formatNumber(item.deltaMilestonePoints)}
                       </div>
                     </div>
                   )
                 })}
+                {!voteList &&
+                  <div className={classes.listItem}>
+                    <div className={classes.text}>
+                      No recent data available.
+                    </div>
+                  </div>
+                }
               </div>
             }
             {tabIndex === 1 &&
-              <div>
+              <div className={classes.tabContent}>
                 <div className={classes.header}>
                   <div>
                     POSTS
@@ -408,24 +450,68 @@ class ProfileComponent extends Component {
                     </div>
                   </div>
                 </div>
-                {list.map((item, i) => {
+                {postList && postList.map((item, i) => {
                   return (
                     <div key={i} className={classes.listItem}>
-                      <div className={classes.title}>
-                        {item.title}
+                      <div className={classes.postTitle}>
+                        {item.content.title}
                       </div>
                       <div className={classes.text}>
-                        {item.text}
+                        {item.content.text}
                       </div>
                       <div className={classes.date}>
-                        {item.date}
+                        {item.createdAt.split('T')[0]}
                       </div>
                       <div className={classes.gain}>
-                        {item.gain}
+                        {this.formatNumber(item.deltaMilestonePoints)}
                       </div>
                     </div>
                   )
                 })}
+                {!postList &&
+                  <div className={classes.listItem}>
+                    <div className={classes.text}>
+                      No recent data available.
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+            {tabIndex === 2 &&
+              <div className={classes.tabContent}>
+                <div className={classes.header}>
+                  <div>
+                    REPLIES
+                    <div className={classes.floatRight}>
+                      POINTS
+                    </div>
+                  </div>
+                </div>
+                {replyList && replyList.map((item, i) => {
+                  return (
+                    <div key={i} className={classes.listItem}>
+                      <div className={classes.title}>
+                        Replied @{item.actor}
+                      </div>
+                      <div className={classes.text}>
+                        {item.content.text}
+                      </div>
+                      <div className={classes.date}>
+                        {item.createdAt.split('T')[0]}
+                      </div>
+                      <div className={classes.gain}>
+                        {this.formatNumber(item.deltaMilestonePoints)}
+                      </div>
+                    </div>
+                  )
+                })}
+                {!replyList &&
+                  <div className={classes.listItem}>
+                    <div className={classes.text}>
+                      No recent data available.
+                    </div>
+                  </div>
+                }
               </div>
             }
           </Grid>
