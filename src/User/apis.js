@@ -30,8 +30,7 @@ export function getProfile (username) {
           })
         }
       } else {
-        res.data.profile.rewardsInfo.milestonePoints
-        return Promise.resolve(res)
+        return Promise.resolve(res.data.profile)
       }
     })
 }

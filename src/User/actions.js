@@ -8,51 +8,30 @@ export function onLogin (loginData) {
 }
 
 export function getProfile (username) {
-  return (dispatch) => {
-    return api.getProfile(username)
-      .then((res) => {
-        dispatch({
-          type: 'PROFILE_DATA_FETCHED',
-          payload: res.data.profile
-        })
-        return Promise.resolve(res)
-      })
+  return {
+    type: 'PROFILE_DATA',
+    payload: api.getProfile(username)
   }
 }
 
 export function getVoteList (username) {
-  return (dispatch) => {
-    api.getVoteList(username)
-      .then((data) => {
-        dispatch({
-          type: 'VOTE_LIST_FETCHED',
-          payload: data
-        })
-      })
+  return {
+    type: 'VOTE_LIST',
+    payload: api.getVoteList(username)
   }
 }
 
 export function getPostList (username) {
-  return (dispatch) => {
-    api.getPostList(username)
-      .then((data) => {
-        dispatch({
-          type: 'POST_LIST_FETCHED',
-          payload: data
-        })
-      })
+  return {
+    type: 'POST_LIST',
+    payload: api.getPostList(username)
   }
 }
 
 export function getReplyList (username) {
-  return (dispatch) => {
-    api.getReplyList(username)
-      .then((data) => {
-        dispatch({
-          type: 'REPLY_LIST_FETCHED',
-          payload: data
-        })
-      })
+  return {
+    type: 'REPLY_LIST',
+    payload: api.getReplyList(username)
   }
 }
 
