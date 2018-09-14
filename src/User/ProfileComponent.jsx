@@ -375,7 +375,7 @@ class ProfileComponent extends Component {
                 {userInfo.username}
               </Typography>
               <div className={classes.level}>
-                Lv 1
+                Lv {profile && profile.level}
               </div>
             </Grid>
             <div className={classes.empty} />
