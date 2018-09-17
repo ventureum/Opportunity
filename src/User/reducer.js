@@ -15,22 +15,22 @@ export default function (state = initState, action) {
         ...state,
         userInfo: action.payload
       }
-    case 'PROFILE_DATA_FETCHED':
+    case 'PROFILE_DATA_FULFILLED':
       return {
         ...state,
         profile: action.payload
       }
-    case 'VOTE_LIST_FETCHED':
+    case 'VOTE_LIST_FULFILLED':
       return {
         ...state,
         voteList: action.payload
       }
-    case 'POST_LIST_FETCHED':
+    case 'POST_LIST_FULFILLED':
       return {
         ...state,
         postList: action.payload
       }
-    case 'REPLY_LIST_FETCHED':
+    case 'REPLY_LIST_FULFILLED':
       return {
         ...state,
         replyList: action.payload

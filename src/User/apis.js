@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/alpha/'
+let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/beta/'
 
 const api = axios.create({
   baseURL: baseUrl,
