@@ -230,7 +230,6 @@ const styles = {
   postTitle: {
     color: '#333333',
     fontSize: '18px',
-    height: '24px',
     marginBottom: '8px',
     fontWeight: 'bold'
   },
