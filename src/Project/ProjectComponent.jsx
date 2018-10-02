@@ -2,18 +2,14 @@ import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Milestone from '../Milestone'
-import Utils from '../utils'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
-import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import CheckIcon from '@material-ui/icons/Check'
-import BuildIcon from '@material-ui/icons/Build'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ArrowRightIcon from '@material-ui/icons/ArrowRight'
@@ -23,32 +19,17 @@ import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Toolbar from '@material-ui/core/Toolbar'
 import logo from '../logo.svg'
+var numeral = require('numeral')
 
 var moment = require('moment')
 
 class ProjectComponent extends Component {
-
-  constructor() {
+  constructor () {
     super()
     this.milestone = new Milestone()
     this.state = {
-      projectName: 'project #1',
-      milestones: [],
       ready: false
     }
-  }
-
-  async componentDidMount () {
-    await this.getData()
-  }
-
-  async getData () {
-    let projectId = Utils.web3.utils.sha3(this.state.projectName)
-    let projectData = await this.milestone.getProject(projectId)
-    let milestoneData = await this.milestone.getMilestones(projectId, projectData.numMilestones)
-    this.setState({ projectData: projectData,
-                    milestones: milestoneData,
-                    ready: true })
   }
 
   renderObj = (o) => {
@@ -124,25 +105,26 @@ class ProjectComponent extends Component {
     let content = m.content
     let iconData = this.getMilestoneStateIcon(m.state)
     let time = this.getMilestoneDateStr(m.startTime, m.endTime)
+    console.log(m)
     return (
       <VerticalTimelineElement
         key={m.id}
         iconStyle={iconData.iconStyle}
         icon={iconData.icon}
       >
-        <h3 className="vertical-timeline-element-title"> { content.title } </h3>
-        <Typography className={classes.milestoneContent} variant="subheading">
+        <h3 className='vertical-timeline-element-title'> { content.title } </h3>
+        <Typography className={classes.milestoneContent} variant='subheading'>
           { content.content }
         </Typography>
         <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
           <Grid item>
-            <Typography className={classes.milestoneTime} variant="subheading">
+            <Typography className={classes.milestoneTime} variant='subheading'>
               { time }
             </Typography>
           </Grid>
           <Grid item>
-            <Button className={classes.scoreButton} variant="contained" color="primary">
-              4.8
+            <Button className={classes.scoreButton} variant='contained' color='primary'>
+              { numeral(m.rating / 10.0).format('0.0') }
             </Button>
           </Grid>
         </Grid>
@@ -152,9 +134,9 @@ class ProjectComponent extends Component {
 
   render () {
     let value = 0
-    let { classes } = this.props
-    let { ready, projectName, milestones, projectData } = this.state
-    if (!ready) {
+    let { classes, projectData } = this.props
+
+    if (!projectData) {
       return (
         <Grid container className={classes.root} direction='column' justify='center' alignItems='center'>
           <Grid item>
@@ -172,7 +154,7 @@ class ProjectComponent extends Component {
           <Grid item>
             <Grid container direction='column' justify='center' alignItems='stretch'>
               <Grid item>
-                <AppBar className={classes.topBanner} position="static" color="default">
+                <AppBar className={classes.topBanner} position='static' color='default'>
                   <Toolbar>
                     <img src={logo} className={classes.topBannerLogo} />
                     <Typography className={classes.topBannerLogoText}>
@@ -184,18 +166,18 @@ class ProjectComponent extends Component {
               <Grid item>
                 <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
                   <Grid item>
-                    <img className={classes.topSectionProjectLogo} src='https://icobench.com/images/icos/icons/datablockchain.jpg'  />
+                    <img className={classes.topSectionProjectLogo} src='https://icobench.com/images/icos/icons/datablockchain.jpg' />
                   </Grid>
                   <Grid item lg={5}>
                     <Grid container direction='column' justify='center' alignItems='flex-start'>
                       <Grid item>
                         <Typography className={classes.topSectionProjectName} >
-                          { projectName }
+                          { projectData.content.projectName }
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography className={classes.topSectionProjectShortDescription} variant="headline">
-                          From its medieval origins to the digital era, learn everything there is to know about the ubiquitous lorem ipsum passage.
+                        <Typography className={classes.topSectionProjectShortDescription} variant='headline'>
+                          { projectData.content.shortDescription }
                         </Typography>
                       </Grid>
                     </Grid>
@@ -204,7 +186,7 @@ class ProjectComponent extends Component {
                     <Grid container direction='column' justify='center' alignItems='center'>
                       <Grid item>
                         <Typography className={classes.topSectionRating} >
-                          4.8
+                          { numeral(projectData.rating / 10.0).format('0.0') }
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -217,18 +199,18 @@ class ProjectComponent extends Component {
                 </Grid>
               </Grid>
               <Grid item>
-                <AppBar className={classes.tabsBar} position="static">
+                <AppBar className={classes.tabsBar} position='static'>
                   <Tabs indicatorColor='primary' value={value} onChange={this.handleChange} centered >
-                    <Tab label="MILESTONES" />
-                    <Tab label="INFO" />
-                    <Tab label="TEAM" />
+                    <Tab label='MILESTONES' />
+                    <Tab label='INFO' />
+                    <Tab label='TEAM' />
                   </Tabs>
                 </AppBar>
               </Grid>
             </Grid>
             <Grid item>
               <VerticalTimeline animate={false}>
-                { milestones.map((m) => this.renderMilestone(m))}
+                { projectData.milestones.map((m) => this.renderMilestone(m))}
               </VerticalTimeline>
             </Grid>
           </Grid>
@@ -267,7 +249,7 @@ const theme = createMuiTheme({
     paddingBottom: '5px'
   },
   topBannerLogo: {
-    width: '20px',
+    width: '20px'
   },
   topBanner: {
     backgroundColor: '#FFFFFF'
@@ -280,31 +262,31 @@ const theme = createMuiTheme({
     padding: '60px 0px 60px 0px'
   },
   topSectionProjectName: {
-	  color: '#333333',
-	  fontSize: '24px',
-	  fontWeight: 'bold',
-	  letterSpacing: '0.39px',
-	  lineHeight: '33px'
+    color: '#333333',
+    fontSize: '24px',
+    fontWeight: 'bold',
+    letterSpacing: '0.39px',
+    lineHeight: '33px'
   },
   topSectionProjectShortDescription: {
     maxWidth: '480px',
     marginTop: '5%',
-	  color: '#666666',
-	  fontSize: '18px',
-	  letterSpacing: '0.29px',
-	  lineHeight: '24px'
+    color: '#666666',
+    fontSize: '18px',
+    letterSpacing: '0.29px',
+    lineHeight: '24px'
   },
   topSectionProjectLogo: {
     marginRight: '20px',
-	  height: '128px',
-	  width: '128px',
-	  borderRadius: '16px',
-	  backgroundColor: '#44517B'
+    height: '128px',
+    width: '128px',
+    borderRadius: '16px',
+    backgroundColor: '#44517B'
   },
   topSectionRating: {
-	  width: '55px',
-	  borderRadius: '4px',
-	  backgroundColor: '#01A78D',
+    width: '55px',
+    borderRadius: '4px',
+    backgroundColor: '#01A78D',
     textAlign: 'center',
     padding: '5px 0',
     fontSize: '24px',
@@ -312,10 +294,10 @@ const theme = createMuiTheme({
   },
   topSectionRatingDescription: {
     marginTop: '5%',
-	  color: '#666666',
-	  fontSize: '18px',
-	  letterSpacing: '0.29px',
-	  lineHeight: '24px'
+    color: '#666666',
+    fontSize: '18px',
+    letterSpacing: '0.29px',
+    lineHeight: '24px'
   },
   tabsBar: {
     backgroundColor: '#FFFFFF',
@@ -326,14 +308,14 @@ const theme = createMuiTheme({
       light: '#01A78D',
       main: '#01A78D',
       dark: '#01A78D',
-      contrastText: '#01A78D',
+      contrastText: '#01A78D'
     },
     secondary: {
       light: '#ff7961',
       main: '#f44336',
       dark: '#ba000d',
-      contrastText: '#000',
-    },
+      contrastText: '#000'
+    }
   }
 })
 
