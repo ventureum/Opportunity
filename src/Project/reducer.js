@@ -9,6 +9,11 @@ const projectReducer = (state = initState, action) => {
         ...state,
         projects: action.payload
       }
+    case 'GET_PROJECT_FULFILLED':
+      return {
+        ...state,
+        projectData: action.payload
+      }
     default: // need this for default case
       return state
   }

@@ -13,7 +13,8 @@ export default class Milestone {
       content: JSON.parse(rv[1]),
       currMilestone: Number(rv[2]),
       milestonesCompleted: Number(rv[3]),
-      numMilestones: Number(rv[4])
+      numMilestones: Number(rv[4]),
+      rating: 48 // mock rating
     }
   }
 
@@ -63,7 +64,8 @@ export default class Milestone {
       content: JSON.parse(rv[1]),
       startTime: Number(rv[2]),
       endTime: Number(rv[3]),
-      numObjs: Number(rv[4])
+      numObjs: Number(rv[4]),
+      rating: (1 + milestoneId * 5.5) % 51 // mock rating
     }
 
     let state = this.getMilestoneState(_m)

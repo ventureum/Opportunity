@@ -1,3 +1,5 @@
+import Milestone from '../Milestone.js'
+
 async function _getProjects () {
   // generate mock data
 
@@ -5,7 +7,7 @@ async function _getProjects () {
 
   for (let i = 1; i < 10; i++) {
     projects.push({
-      projectId: 'project id #' + i,
+      projectId: '0xfa32a09875ec16eaab435100ea0ffd9a669d2d9c9a93240b687b5738ed7f040c',
       admin: '',
       milestoneInProgress: true,
       currMilestone: 0,
@@ -25,6 +27,21 @@ async function _getProjects () {
   return projects
 }
 
+async function _getProject (projectId) {
+  let milestone = new Milestone()
+  let projectData = await milestone.getProject(projectId)
+  let milestoneData = await milestone.getMilestones(projectId, projectData.numMilestones)
+  projectData.milestones = milestoneData
+  return projectData
+}
+
+const getProject = (projectId) => {
+  return {
+    type: 'GET_PROJECT',
+    payload: _getProject(projectId)
+  }
+}
+
 const getProjects = () => {
   return {
     type: 'GET_PROJECTS',
@@ -32,4 +49,4 @@ const getProjects = () => {
   }
 }
 
-export { getProjects }
+export { getProjects, getProject }

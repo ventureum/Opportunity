@@ -1,4 +1,7 @@
 import React, { Component } from 'react'
+import {
+  Redirect
+} from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
@@ -12,12 +15,29 @@ import Toolbar from '@material-ui/core/Toolbar'
 var numeral = require('numeral')
 
 class ProjectListComponent extends Component {
+  constructor () {
+    super()
+
+    this.state = {
+      redirectPath: null,
+      redirectArgs: null
+    }
+  }
+
+  onClickProject = (p) => {
+    console.log(p)
+    this.setState({
+      redirectPath: `/project/${p.projectId}`,
+      redirectArgs: p
+    })
+  }
+
   renderProjectCard = (p) => {
     const { classes } = this.props
     return (
       <Grid item key={p.projectId}>
         <Card className={classes.card}>
-          <CardActionArea>
+          <CardActionArea onClick={() => this.onClickProject(p)}>
             <CardMedia
               className={classes.media}
               image={p.content.wideLogo}
@@ -55,7 +75,15 @@ class ProjectListComponent extends Component {
   }
 
   render () {
+    const { redirectPath, redirectArgs } = this.state
     const { classes, projects } = this.props
+
+    if (redirectPath) {
+      // redirect to another page
+      console.log(redirectPath, redirectArgs)
+      return (<Redirect to={redirectPath} />)
+    }
+
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
