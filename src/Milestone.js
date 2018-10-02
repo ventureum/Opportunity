@@ -8,6 +8,7 @@ export default class Milestone {
   async getProject (projectId) {
     let rv = await this.instance.methods.getProject(projectId).call()
     return {
+      projectId: projectId,
       admin: rv[0],
       content: JSON.parse(rv[1]),
       currMilestone: Number(rv[2]),
