@@ -387,18 +387,18 @@ class ProfileComponent extends Component {
               </div>
             </Grid>
           </Grid>
-          <AppBar classes={{root: classes.mobileTabBar}} position='static'>
-            <Tabs classes={{root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator}} value={tabIndex} onChange={this.handleChange}>
+          <AppBar classes={{ root: classes.mobileTabBar }} position='static'>
+            <Tabs classes={{ root: classes.mobileTab, flexContainer: classes.tabFlex, indicator: classes.mobileTabIndicator }} value={tabIndex} onChange={this.handleChange}>
               {['VOTINGS', 'POSTS', 'REPLIES'].map((label, i) => {
-                return <Tab key={i} classes={{root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected}} label={this.getLabelText(label)} />
+                return <Tab key={i} classes={{ root: classes.mobileTabButton, label: classes.mobileTabLabel, selected: classes.mobileTabButtonSelected }} label={this.getLabelText(label)} />
               })}
             </Tabs>
           </AppBar>
           <Grid container className={classes.card}>
-            <AppBar classes={{root: classes.tabBar}} position='static'>
-              <Tabs classes={{root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator}} value={tabIndex} onChange={this.handleChange}>
+            <AppBar classes={{ root: classes.tabBar }} position='static'>
+              <Tabs classes={{ root: classes.tab, flexContainer: classes.tabFlex, indicator: classes.tabIndicator }} value={tabIndex} onChange={this.handleChange}>
                 {['VOTINGS', 'POSTS', 'REPLIES'].map((label, i) => {
-                  return <Tab key={i} classes={{root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected}} label={this.getLabelText(label)} />
+                  return <Tab key={i} classes={{ root: classes.tabButton, labelContainer: classes.tabLabelContainer, label: classes.tabLabel, selected: classes.tabButtonSelected }} label={this.getLabelText(label)} />
                 })}
               </Tabs>
             </AppBar>
