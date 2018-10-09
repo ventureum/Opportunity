@@ -23,17 +23,18 @@ class ProjectDetailComponent extends Component {
 
   render () {
     const { expandTeam } = this.state
-    const { classes, projectData, tokenInfo } = this.props
+    const { classes, projectData } = this.props
+    const content = projectData.content
 
     return (
       <MuiThemeProvider theme={theme}>
         <Grid container direction='column' className={classes.projectInfo}>
           <Grid item className={classes.video}>
             {projectData.video &&
-              <iframe key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
+            <iframe key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
             }
             {!projectData.video &&
-              <img className={classes.videoFrame} src='https://icodrops.com/wp-content/uploads/2018/06/Haja-banner.jpg' alt='' />
+            <img className={classes.videoFrame} src='https://icodrops.com/wp-content/uploads/2018/06/Haja-banner.jpg' alt='' />
             }
           </Grid>
           <Grid item className={classes.titleAbout}>
@@ -49,19 +50,19 @@ class ProjectDetailComponent extends Component {
             <Grid container direction='row'>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={'fas fa-map-marker-alt ' + classes.blockImg} />
-                {projectData.corporationInfo.location.city}, {projectData.corporationInfo.location.country}
+                {content.corporationInfo.location.city}, {content.corporationInfo.location.country}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={'fas fa-tag ' + classes.blockImg} />
-                {projectData.category}
+                {content.category}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={'fas fa-globe-americas ' + classes.blockImg} />
-                <a className={classes.link} href={projectData.website} target='_blank'>View website</a>
+                <a className={classes.link} href={content.website} target='_blank'>View website</a>
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={'fas fa-link ' + classes.blockImg} />
-                <a className={classes.link} href={projectData.whitepaper} target='_blank'>View Whitepaper</a>
+                <a className={classes.link} href={content.whitepaper} target='_blank'>View Whitepaper</a>
               </Grid>
             </Grid>
           </Grid>
@@ -72,7 +73,7 @@ class ProjectDetailComponent extends Component {
               </Grid>
               <Grid item md={12}>
                 <Grid container className={classes.team} direction='row'>
-                  {projectData.corporationInfo.team.members.map((person, i) => {
+                  {content.corporationInfo.team.members.map((person, i) => {
                     if (!expandTeam && i >= 3) {
                       return null
                     }
@@ -80,7 +81,7 @@ class ProjectDetailComponent extends Component {
                       <Grid item key={i} className={classes.personWrap} sm={4} lg={3} xs={12}>
                         <Grid container className={classes.person} direction='column' alignItems='center'>
                           <Grid item>
-                            <img className={classes.memberAvatar} src={projectData.logo} alt='' />
+                            <img className={classes.memberAvatar} src={content.logo} alt='' />
                           </Grid>
                           <Grid item className={classes.memberName}>
                             {person.name}
@@ -97,10 +98,10 @@ class ProjectDetailComponent extends Component {
                   })}
                 </Grid>
               </Grid>
-              {projectData.corporationInfo.team.members.length > 3 &&
-                <Grid item className={classes.expand} onClick={this.toggleTeam}>
-                  Show all {projectData.corporationInfo.team.members.length} team members
-                </Grid>
+              {content.corporationInfo.team.members.length > 3 &&
+              <Grid item className={classes.expand} onClick={this.toggleTeam}>
+               Show all {content.corporationInfo.team.members.length} team members
+              </Grid>
               }
             </Grid>
           </Grid>
@@ -117,17 +118,7 @@ class ProjectDetailComponent extends Component {
                         Token
                       </Grid>
                       <Grid item className={classes.value} xs={5} md={6}>
-                        {projectData.token.symbol}
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Grid container direction='row'>
-                      <Grid item className={classes.key} xs={7} md={6}>
-                        Tokens&nbsp;for&nbsp;sale
-                      </Grid>
-                      <Grid item className={classes.value} xs={5} md={6}>
-                        {tokenInfo.forSale}
+                        {content.token.symbol}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -137,7 +128,7 @@ class ProjectDetailComponent extends Component {
                         Price
                       </Grid>
                       <Grid item className={classes.value} xs={5} md={6}>
-                        1&nbsp;{projectData.token.symbol}&nbsp;=&nbsp;{projectData.token.price}&nbsp;ETH
+                        1&nbsp;{content.token.symbol}&nbsp;=&nbsp;{content.token.price}&nbsp;ETH
                       </Grid>
                     </Grid>
                   </Grid>
@@ -147,7 +138,7 @@ class ProjectDetailComponent extends Component {
                         Platform
                       </Grid>
                       <Grid item className={classes.value} xs={5} md={6}>
-                        {projectData.token.platform}
+                        {content.token.platform}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -157,7 +148,7 @@ class ProjectDetailComponent extends Component {
                         Accepting
                       </Grid>
                       <Grid item className={classes.value} xs={5} md={6}>
-                        {projectData.token.accept.join(', ')}
+                        {content.token.accept.join(', ')}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -167,7 +158,7 @@ class ProjectDetailComponent extends Component {
                         KYC
                       </Grid>
                       <Grid item className={classes.value} xs={5} md={6}>
-                        {projectData.token.KYC ? 'Yes' : 'No'}
+                        {content.token.KYC ? 'Yes' : 'No'}
                       </Grid>
                     </Grid>
                   </Grid>
@@ -177,7 +168,7 @@ class ProjectDetailComponent extends Component {
                         Can't participate
                       </Grid>
                       <Grid item className={classes.value} xs={5} md={6}>
-                        {projectData.token.cantParticipate.map((code) => countryCodeToName(code)).join(', ')}
+                        {content.token.cantParticipate.map((code) => countryCodeToName(code)).join(', ')}
                       </Grid>
                     </Grid>
                   </Grid>

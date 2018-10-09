@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Milestone from '../Milestone'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
 import ListItem from '@material-ui/core/ListItem'
@@ -27,87 +26,11 @@ var moment = require('moment')
 class ProjectComponent extends Component {
   constructor () {
     super()
-    this.milestone = new Milestone()
     this.state = {
       tabValue: 0,
       ready: false,
       tokenInfo: {
         forSale: '18000000'
-      },
-      projectData: {
-        projectName: 'Blockcloud',
-        logo: '/mock_logo.png',
-        shortDescription: 'A Blockchain-based Advanced TCP/IP Architecture Providing Constant Connectivity for Dynamic Networks',
-        video: 'https://www.youtube.com/watch?v=64kQLRZeE_E',
-        description: 'While BigData has traditionally been available only to big companies, Blockcloud.io lowers the barrier for entry and expands our potential client base to include small, medium and large businesses around the globe as well as ICOs seeking data for their new ventures.',
-        corporationInfo: {
-          location: {
-            country: 'CA',
-            city: 'Toronto'
-          },
-          team: {
-            teamSize: 6,
-            members: [
-              {
-                name: 'Raul Romero',
-                title: 'CEO',
-                link: 'www.google.com'
-              }, {
-                name: 'Zi Wen Zhang',
-                title: 'CTO',
-                link: 'www.google.com'
-              }, {
-                name: 'Lawrence Duerson',
-                title: 'COO',
-                link: 'www.google.com'
-              }, {
-                name: 'Raul Romero',
-                title: 'CEO',
-                link: 'www.google.com'
-              }, {
-                name: 'Zi Wen Zhang',
-                title: 'CTO',
-                link: 'www.google.com'
-              }, {
-                name: 'Lawrence Duerson',
-                title: 'COO',
-                link: 'www.google.com'
-              }
-            ]
-          }
-        },
-        category: 'Artificial Intelligence',
-        website: 'www.google.com',
-        whitepaper: 'www.google.com',
-        token: {
-          symbol: 'BLOC',
-          price: '10',
-          platform: 'Ethereum',
-          accept: ['ETH', 'BTC'],
-          KYC: true,
-          cantParticipate: ['CN', 'US']
-        },
-        socialLinks: [
-          {
-            type: 'telegram',
-            link: 'www.google.com'
-          }, {
-            type: 'github',
-            link: 'www.google.com'
-          }, {
-            type: 'reddit',
-            link: 'www.google.com'
-          }, {
-            type: 'twitter',
-            link: 'www.google.com'
-          }, {
-            type: 'facebook',
-            link: 'www.google.com'
-          }, {
-            type: 'slack',
-            link: 'www.google.com'
-          }
-        ]
       }
     }
   }
@@ -181,7 +104,7 @@ class ProjectComponent extends Component {
   }
 
   handleTabChange = (event, value) => {
-    this.setState({tabValue: value })
+    this.setState({ tabValue: value })
   }
 
   renderMilestone = (m) => {
@@ -189,7 +112,6 @@ class ProjectComponent extends Component {
     let content = m.content
     let iconData = this.getMilestoneStateIcon(m.state)
     let time = this.getMilestoneDateStr(m.startTime, m.endTime)
-    console.log(m)
     return (
       <VerticalTimelineElement
         key={m.id}
@@ -198,7 +120,7 @@ class ProjectComponent extends Component {
       >
         <h3 className='vertical-timeline-element-title'> { content.title } </h3>
         <Typography className={classes.milestoneContent} variant='subheading'>
-          { content.content }
+          { content.description }
         </Typography>
         <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
           <Grid item>
@@ -221,19 +143,19 @@ class ProjectComponent extends Component {
     return (
       <Grid item>
         <VerticalTimeline animate={false}>
-          { projectData.milestones.map((m) => this.renderMilestone(m))}
+          { projectData.milestoneInfo.milestones.map((m) => this.renderMilestone(m))}
         </VerticalTimeline>
       </Grid>
     )
   }
 
   renderDetail = () => {
-    let { projectData, tokenInfo } = this.state
+    let { projectData } = this.props
     return (
       <Grid item>
         <Grid container direction='column' alignItems='center'>
           <Grid item lg={6}>
-            <ProjectDetail projectData={projectData} tokenInfo={tokenInfo} />
+            <ProjectDetail projectData={projectData} />
           </Grid>
         </Grid>
       </Grid>
@@ -294,7 +216,7 @@ class ProjectComponent extends Component {
                     <Grid container direction='column' justify='center' alignItems='center'>
                       <Grid item>
                         <Typography className={classes.topSectionRating} >
-                          { numeral(projectData.rating / 10.0).format('0.0') }
+                          { numeral(projectData.avgRating / 10.0).format('0.0') }
                         </Typography>
                       </Grid>
                       <Grid item>

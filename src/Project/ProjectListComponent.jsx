@@ -52,18 +52,18 @@ class ProjectListComponent extends Component {
                   <Grid className={classes.cardMilestonesInProgressContainer} container direction='row' justify='flex-start' alignItems='center'>
                     <img src={logo} className={classes.cardMilestoneInProgressIcon} />
                     <Typography className={classes.cardMilestonesInProgressText} color='textSecondary'>
-                      { p.milestoneInProgress ? 'In Progress' : '' }
+                      { p.milestoneInfo.currMilestone > 0 ? 'In Progress' : '' }
                     </Typography>
                   </Grid>
                 </Grid>
                 <Grid item xs={4} lg={4}>
                   <Typography className={classes.cardMilestonesComplete} >
-                    { p.milestonesCompleted } MS COMPLETED
+                    { p.milestoneInfo.milestonesCompleted } MS COMPLETED
                   </Typography>
                 </Grid>
                 <Grid item xs={1} lg={1}>
                   <Typography className={classes.cardMilestonesRating} >
-                    { numeral(p.rating / 10.0).format('0.0') }
+                    { numeral(p.avgRating / 10.0).format('0.0') }
                   </Typography>
                 </Grid>
               </Grid>
