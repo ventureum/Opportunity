@@ -130,7 +130,7 @@ class ProjectComponent extends Component {
           </Grid>
           <Grid item>
             <Button className={classes.scoreButton} variant='contained' color='primary'>
-              { numeral(m.rating / 10.0).format('0.0') }
+              { numeral(m.avgRating / 10.0).format('0.0') }
             </Button>
           </Grid>
         </Grid>
