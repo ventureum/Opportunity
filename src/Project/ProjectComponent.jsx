@@ -3,7 +3,6 @@ import Typography from '@material-ui/core/Typography'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Milestone from '../Milestone'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
 import 'react-vertical-timeline-component/style.min.css'
 import ListItem from '@material-ui/core/ListItem'
@@ -18,6 +17,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Toolbar from '@material-ui/core/Toolbar'
+import ProjectDetail from './ProjectDetailComponent'
 import logo from '../logo.svg'
 var numeral = require('numeral')
 
@@ -26,9 +26,12 @@ var moment = require('moment')
 class ProjectComponent extends Component {
   constructor () {
     super()
-    this.milestone = new Milestone()
     this.state = {
-      ready: false
+      tabValue: 0,
+      ready: false,
+      tokenInfo: {
+        forSale: '18000000'
+      }
     }
   }
 
@@ -100,12 +103,15 @@ class ProjectComponent extends Component {
     return rv
   }
 
+  handleTabChange = (event, value) => {
+    this.setState({ tabValue: value })
+  }
+
   renderMilestone = (m) => {
     let { classes } = this.props
     let content = m.content
     let iconData = this.getMilestoneStateIcon(m.state)
     let time = this.getMilestoneDateStr(m.startTime, m.endTime)
-    console.log(m)
     return (
       <VerticalTimelineElement
         key={m.id}
@@ -114,7 +120,7 @@ class ProjectComponent extends Component {
       >
         <h3 className='vertical-timeline-element-title'> { content.title } </h3>
         <Typography className={classes.milestoneContent} variant='subheading'>
-          { content.content }
+          { content.description }
         </Typography>
         <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
           <Grid item>
@@ -124,7 +130,7 @@ class ProjectComponent extends Component {
           </Grid>
           <Grid item>
             <Button className={classes.scoreButton} variant='contained' color='primary'>
-              { numeral(m.rating / 10.0).format('0.0') }
+              { numeral(m.avgRating / 10.0).format('0.0') }
             </Button>
           </Grid>
         </Grid>
@@ -132,8 +138,32 @@ class ProjectComponent extends Component {
     )
   }
 
+  renderTimeline = () => {
+    let { classes, projectData } = this.props
+    return (
+      <Grid item>
+        <VerticalTimeline animate={false}>
+          { projectData.milestoneInfo.milestones.map((m) => this.renderMilestone(m))}
+        </VerticalTimeline>
+      </Grid>
+    )
+  }
+
+  renderDetail = () => {
+    let { projectData } = this.props
+    return (
+      <Grid item>
+        <Grid container direction='column' alignItems='center'>
+          <Grid item lg={6}>
+            <ProjectDetail projectData={projectData} />
+          </Grid>
+        </Grid>
+      </Grid>
+    )
+  }
+
   render () {
-    let value = 0
+    let { tabValue } = this.state
     let { classes, projectData } = this.props
 
     if (!projectData) {
@@ -186,7 +216,7 @@ class ProjectComponent extends Component {
                     <Grid container direction='column' justify='center' alignItems='center'>
                       <Grid item>
                         <Typography className={classes.topSectionRating} >
-                          { numeral(projectData.rating / 10.0).format('0.0') }
+                          { numeral(projectData.avgRating / 10.0).format('0.0') }
                         </Typography>
                       </Grid>
                       <Grid item>
@@ -200,18 +230,14 @@ class ProjectComponent extends Component {
               </Grid>
               <Grid item>
                 <AppBar className={classes.tabsBar} position='static'>
-                  <Tabs indicatorColor='primary' value={value} onChange={this.handleChange} centered >
+                  <Tabs indicatorColor='primary' value={tabValue} onChange={this.handleTabChange} centered >
                     <Tab label='MILESTONES' />
                     <Tab label='INFO' />
-                    <Tab label='TEAM' />
                   </Tabs>
                 </AppBar>
               </Grid>
-            </Grid>
-            <Grid item>
-              <VerticalTimeline animate={false}>
-                { projectData.milestones.map((m) => this.renderMilestone(m))}
-              </VerticalTimeline>
+              { tabValue === 0 && this.renderTimeline() }
+              { tabValue === 1 && this.renderDetail() }
             </Grid>
           </Grid>
         </Grid>
