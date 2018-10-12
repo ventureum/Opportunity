@@ -7,10 +7,10 @@ import registerServiceWorker from './registerServiceWorker'
 import 'typeface-roboto'
 import { store, persistor } from './configureStore.js'
 import { PersistGate } from 'redux-persist/integration/react'
-import Utils from './utils.js'
+// import Utils from './utils.js'
 
 async function init () {
-  await Utils.init()
+  // await Utils.init()
   ReactDOM.render(
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
