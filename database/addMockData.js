@@ -163,11 +163,21 @@ async function print () {
   }
 }
 
+async function printProjectList () {
+  console.log('printing project list ...')
+  let rv = await axios.post(endpoint + '/get-project-list', {
+    limit: 10,
+    cursor: ''
+  })
+  console.log(rv.data)
+}
+
 async function main () {
   await populateProjects()
   await populateMilestones()
   await populateObjs()
   await print()
+  await printProjectList()
 }
 
 main()

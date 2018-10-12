@@ -1,16 +1,46 @@
 import { projectData } from './mockData.js'
+import axios from 'axios'
+
+const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/beta'
+
+function parseObj (o) {
+  o.content = JSON.parse(o.content)
+  return o
+}
+
+function parseMilestone (m) {
+  m.content = JSON.parse(m.content)
+  if (m.objectives) {
+    for (let i = 0; i < m.objectives.length; i++) {
+      m.objectives[i] = parseObj(m.objectives[i])
+    }
+  }
+  return m
+}
+
+function parseProject (p) {
+  p.content = JSON.parse(p.content)
+  if (p.milestonesInfo.milestones) {
+    for (let i = 0; i < p.milestonesInfo.milestones.length; i++) {
+      p.milestonesInfo.milestones[i] = parseMilestone(p.milestonesInfo.milestones[i])
+    }
+  }
+  return p
+}
 
 async function _getProject (projectId) {
-  return projectData
+  let rv = await axios.post(endpoint + '/get-project', {
+    projectId: projectId
+  })
+  return parseProject(rv.data.project)
 }
 
 async function _getProjects () {
-  let projects = []
-  for (let i = 0; i < 10; i++) {
-    let _p = await _getProject('mock id')
-    projects.push(_p)
-  }
-  return projects
+  let rv = await axios.post(endpoint + '/get-project-list', {
+    limit: 20,
+    cursor: ''
+  })
+  return rv.data.projects.map(p => parseProject(p))
 }
 
 const getProject = (projectId) => {

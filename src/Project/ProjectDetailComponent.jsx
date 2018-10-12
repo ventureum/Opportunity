@@ -47,14 +47,14 @@ class ProjectDetailComponent extends Component {
             <iframe key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
             }
             {!projectData.video &&
-            <img className={classes.videoFrame} src='https://icodrops.com/wp-content/uploads/2018/06/Haja-banner.jpg' alt='' />
+            <img className={classes.videoFrame} src={content.wideLogo} alt='' />
             }
           </Grid>
           <Grid item className={classes.titleAbout}>
-            About {projectData.name}
+            About {content.projectName}
           </Grid>
           <Grid item className={classes.projectDesc}>
-            {projectData.description}
+            { content.shortDescription }
           </Grid>
           <Grid item className={classes.expand}>
             Read more about the project
