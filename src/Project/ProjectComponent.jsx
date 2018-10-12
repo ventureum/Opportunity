@@ -114,7 +114,7 @@ class ProjectComponent extends Component {
     let time = this.getMilestoneDateStr(m.startTime, m.endTime)
     return (
       <VerticalTimelineElement
-        key={m.id}
+        key={m.milestoneId}
         iconStyle={iconData.iconStyle}
         icon={iconData.icon}
       >
@@ -139,11 +139,11 @@ class ProjectComponent extends Component {
   }
 
   renderTimeline = () => {
-    let { classes, projectData } = this.props
+    let { projectData } = this.props
     return (
       <Grid item>
         <VerticalTimeline animate={false}>
-          { projectData.milestoneInfo.milestones.map((m) => this.renderMilestone(m))}
+          { projectData.milestonesInfo.milestones.map((m) => this.renderMilestone(m))}
         </VerticalTimeline>
       </Grid>
     )
