@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import countryCodeToName from './countryCodeToName'
+import classNames from 'classnames'
 
 class ProjectDetailComponent extends Component {
   constructor (props) {
@@ -13,6 +14,18 @@ class ProjectDetailComponent extends Component {
     }
 
     this.toggleTeam = this.toggleTeam.bind(this)
+  }
+
+  componentDidMount () {
+    let setVideoHeight = () => {
+      let elem = document.querySelector('#project-video')
+      if (elem) {
+        let height = elem.offsetWidth / 2
+        document.querySelector('#project-video').style.height = height + 'px'
+      }
+    }
+    window.addEventListener('resize', setVideoHeight)
+    setTimeout(setVideoHeight, 200)
   }
 
   toggleTeam () {
@@ -29,7 +42,7 @@ class ProjectDetailComponent extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Grid container direction='column' className={classes.projectInfo}>
-          <Grid item className={classes.video}>
+          <Grid item className={classes.video} id='project-video'>
             {projectData.video &&
             <iframe key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
             }
@@ -49,19 +62,19 @@ class ProjectDetailComponent extends Component {
           <Grid item>
             <Grid container direction='row'>
               <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={'fas fa-map-marker-alt ' + classes.blockImg} />
+                <i className={classNames('fas', 'fa-map-marker-alt', classes.blockImg)} />
                 {content.corporationInfo.location.city}, {content.corporationInfo.location.country}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={'fas fa-tag ' + classes.blockImg} />
+                <i className={classNames('fas', 'fa-tag', classes.blockImg)} />
                 {content.category}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={'fas fa-globe-americas ' + classes.blockImg} />
+                <i className={classNames('fas', 'fa-globe-americas', classes.blockImg)} />
                 <a className={classes.link} href={content.website} target='_blank'>View website</a>
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={'fas fa-link ' + classes.blockImg} />
+                <i className={classNames('fas', 'fa-link', classes.blockImg)} />
                 <a className={classes.link} href={content.whitepaper} target='_blank'>View Whitepaper</a>
               </Grid>
             </Grid>
@@ -91,7 +104,7 @@ class ProjectDetailComponent extends Component {
                           </Grid>
                         </Grid>
                         <a href={person.linkedin} className={classes.linkedIn}>
-                          <img className={classes.linkedInImg} src={projectData.logo} alt='' />
+                          <i className={classNames('fab', 'fa-linkedin', classes.linkedInImg)} />
                         </a>
                       </Grid>
                     )
@@ -270,11 +283,11 @@ const theme = createMuiTheme({
   linkedIn: {
     position: 'absolute',
     right: '27.07px',
-    top: '18.06px'
+    top: '22px'
   },
   linkedInImg: {
-    height: '18.87px',
-    width: '18.87px',
+    fontSize: 20,
+    color: '#188ADC',
     '&:hover': {
       cursor: 'pointer'
     }
