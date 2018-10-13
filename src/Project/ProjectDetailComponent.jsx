@@ -16,18 +16,6 @@ class ProjectDetailComponent extends Component {
     this.toggleTeam = this.toggleTeam.bind(this)
   }
 
-  componentDidMount () {
-    let setVideoHeight = () => {
-      let elem = document.querySelector('#project-video')
-      if (elem) {
-        let height = elem.offsetWidth / 2
-        document.querySelector('#project-video').style.height = height + 'px'
-      }
-    }
-    window.addEventListener('resize', setVideoHeight)
-    setTimeout(setVideoHeight, 200)
-  }
-
   toggleTeam () {
     this.setState({
       expandTeam: !this.state.expandTeam
@@ -42,7 +30,7 @@ class ProjectDetailComponent extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Grid container direction='column' className={classes.projectInfo}>
-          <Grid item className={classes.video} id='project-video'>
+          <Grid item className={classes.video}>
             {projectData.video &&
             <iframe key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
             }
@@ -204,9 +192,13 @@ const theme = createMuiTheme({
     color: '#464C4E'
   },
   video: {
-    height: '314px'
+    position: 'relative',
+    paddingTop: '50%'
   },
   videoFrame: {
+    position: 'absolute',
+    top: '0',
+    left: '0',
     height: '100%',
     width: '100%'
   },
