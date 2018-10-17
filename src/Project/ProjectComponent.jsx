@@ -17,8 +17,12 @@ import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Toolbar from '@material-ui/core/Toolbar'
+import Modal from '@material-ui/core/Modal'
 import ProjectDetail from './ProjectDetailComponent'
 import logo from '../logo.svg'
+import classNames from 'classnames'
+import MilestoneDetail from './MilestoneDetailComponent'
+
 var numeral = require('numeral')
 
 var moment = require('moment')
@@ -27,12 +31,28 @@ class ProjectComponent extends Component {
   constructor () {
     super()
     this.state = {
+      open: false,
+      selectedMilestone: null,
       tabValue: 0,
       ready: false,
       tokenInfo: {
         forSale: '18000000'
       }
     }
+  }
+
+  handleOpen = (milestone) => {
+    this.setState({
+      open: true,
+      selectedMilestone: milestone
+    })
+  }
+
+  handleClose = () => {
+    this.setState({
+      open: false,
+      selectedMilestone: null
+    })
   }
 
   renderObj = (o) => {
@@ -118,22 +138,24 @@ class ProjectComponent extends Component {
         iconStyle={iconData.iconStyle}
         icon={iconData.icon}
       >
-        <h3 className='vertical-timeline-element-title'> { content.title } </h3>
-        <Typography className={classes.milestoneContent} variant='subheading'>
-          { content.description }
-        </Typography>
-        <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
-          <Grid item>
-            <Typography className={classes.milestoneTime} variant='subheading'>
-              { time }
-            </Typography>
+        <div onClick={() => { this.handleOpen(m) }} className={classes.milestoneCard}>
+          <h3 className={classNames(classes.milestoneTitle, 'vertical-timeline-element-title')}> { content.title } </h3>
+          <Typography className={classes.milestoneContent} variant='subheading'>
+            { content.description }
+          </Typography>
+          <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
+            <Grid item>
+              <Typography className={classes.milestoneTime} variant='subheading'>
+                { time }
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button className={classes.scoreButton} variant='contained' color='primary'>
+                { numeral(m.avgRating / 10.0).format('0.0') }
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button className={classes.scoreButton} variant='contained' color='primary'>
-              { numeral(m.avgRating / 10.0).format('0.0') }
-            </Button>
-          </Grid>
-        </Grid>
+        </div>
       </VerticalTimelineElement>
     )
   }
@@ -163,7 +185,7 @@ class ProjectComponent extends Component {
   }
 
   render () {
-    let { tabValue } = this.state
+    let { open, tabValue, selectedMilestone } = this.state
     let { classes, projectData } = this.props
 
     if (!projectData) {
@@ -238,6 +260,20 @@ class ProjectComponent extends Component {
               </Grid>
               { tabValue === 0 && this.renderTimeline() }
               { tabValue === 1 && this.renderDetail() }
+              <Modal
+                disableRestoreFocus
+                disableEnforceFocus
+                disableAutoFocus
+                BackdropProps={{classes: {root: classes.backdrop}}}
+                open={open}
+                onClose={this.handleClose}
+              >
+                <Grid onClick={this.handleClose} container direction='row' justify='flex-end'>
+                  <Grid className={classes.milestoneModal} item xs={12} sm={8} md={6}>
+                    <MilestoneDetail handleClose={this.handleClose} milestone={selectedMilestone} />
+                  </Grid>
+                </Grid>
+              </Modal>
             </Grid>
           </Grid>
         </Grid>
@@ -261,10 +297,33 @@ const theme = createMuiTheme({
     height: '36px',
     width: '36px'
   },
+  backdrop: {
+    background: 'inherit'
+  },
+  milestoneCard: {
+    margin: '-1.5em',
+    padding: '1.5em',
+    '&:hover': {
+      cursor: 'pointer'
+    }
+  },
+  milestoneModal: {
+    background: 'white',
+    height: '100vh',
+    overflow: 'auto',
+    outline: 'none!important',
+    borderLeft: '1px solid #E9E9E9',
+    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.5)'
+  },
   milestoneContent: {
     marginTop: '5%',
     color: '#666666',
     fontSize: '14px'
+  },
+  milestoneTitle: {
+    '&:hover': {
+      cursor: 'pointer'
+    }
   },
   milestoneTime: {
     color: '#666666',

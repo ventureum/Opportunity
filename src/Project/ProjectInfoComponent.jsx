@@ -38,34 +38,34 @@ class ProjectInfoComponent extends Component {
               {
                 name: 'Raul Romero',
                 title: 'CEO',
-                link: 'www.google.com'
+                link: 'https://www.google.com'
               }, {
                 name: 'Zi Wen Zhang',
                 title: 'CTO',
-                link: 'www.google.com'
+                link: 'https://www.google.com'
               }, {
                 name: 'Lawrence Duerson',
                 title: 'COO',
-                link: 'www.google.com'
+                link: 'https://www.google.com'
               }, {
                 name: 'Raul Romero',
                 title: 'CEO',
-                link: 'www.google.com'
+                link: 'https://www.google.com'
               }, {
                 name: 'Zi Wen Zhang',
                 title: 'CTO',
-                link: 'www.google.com'
+                link: 'https://www.google.com'
               }, {
                 name: 'Lawrence Duerson',
                 title: 'COO',
-                link: 'www.google.com'
+                link: 'https://www.google.com'
               }
             ]
           }
         },
         category: 'Artificial Intelligence',
-        website: 'www.google.com',
-        whitepaper: 'www.google.com',
+        website: 'https://www.google.com',
+        whitepaper: 'https://www.google.com',
         token: {
           symbol: 'BLOC',
           price: '10',
@@ -77,22 +77,22 @@ class ProjectInfoComponent extends Component {
         socialLinks: [
           {
             type: 'telegram',
-            link: 'www.google.com'
+            link: 'https://www.google.com'
           }, {
             type: 'github',
-            link: 'www.google.com'
+            link: 'https://www.google.com'
           }, {
             type: 'reddit',
-            link: 'www.google.com'
+            link: 'https://www.google.com'
           }, {
             type: 'twitter',
-            link: 'www.google.com'
+            link: 'https://www.google.com'
           }, {
             type: 'facebook',
-            link: 'www.google.com'
+            link: 'https://www.google.com'
           }, {
             type: 'slack',
-            link: 'www.google.com'
+            link: 'https://www.google.com'
           }
         ]
       }
