@@ -211,4 +211,38 @@ var projectData = {
   content: projectContent
 }
 
-export { projectData }
+var validators = [
+  {
+    actor: 'validator1',
+    username: 'John_Smith',
+    photoUrl: '/mock_logo.png',
+    description: 'PhD | Entrepreneur | CEO | ICO Advisor | Crypto enthusiast | Blockchain expert',
+    reputation: 4.3,
+    proxyVoting: {
+      receivedVotes: 1023
+    }
+  }, {
+    actor: 'validator2',
+    username: 'Ale_Pamela',
+    photoUrl: '/mock_logo.png',
+    description: 'PhD | Entrepreneur | CEO | ICO Advisor | Crypto enthusiast | Blockchain expert',
+    reputation: 4.9,
+    proxyVoting: {
+      receivedVotes: 908
+    }
+  }
+]
+
+var voteInfo = {
+  actor: 'uuid',
+  votes: '208',
+  receivedVotes: '0',
+  proxyList: [
+    {
+      actor: 'validator1',
+      pct: 10
+    }
+  ]
+}
+
+export { projectData, validators, voteInfo }

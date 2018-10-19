@@ -1,4 +1,4 @@
-import { projectData } from './mockData.js'
+import { projectData, validators, voteInfo } from './mockData.js'
 import axios from 'axios'
 
 const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/beta'
@@ -57,4 +57,25 @@ const getProjects = () => {
   }
 }
 
-export { getProjects, getProject }
+const getValidators = () => {
+  return {
+    type: 'GET_VALIDATORS',
+    payload: validators
+  }
+}
+
+const getVoteInfo = () => {
+  return {
+    type: 'GET_VOTE_INFO',
+    payload: voteInfo
+  }
+}
+
+const vote = () => {
+  return {
+    type: 'VOTE',
+    payload: Promise.resolve({})
+  }
+}
+
+export { getProjects, getProject, getValidators, getVoteInfo, vote }

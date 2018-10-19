@@ -22,6 +22,7 @@ import ProjectDetail from './ProjectDetailComponent'
 import logo from '../logo.svg'
 import classNames from 'classnames'
 import MilestoneDetail from './MilestoneDetailComponent'
+import ProxyVoting from './ProxyVotingContainer'
 
 var numeral = require('numeral')
 
@@ -255,16 +256,18 @@ class ProjectComponent extends Component {
                   <Tabs indicatorColor='primary' value={tabValue} onChange={this.handleTabChange} centered >
                     <Tab label='MILESTONES' />
                     <Tab label='INFO' />
+                    <Tab label='VOTING' />
                   </Tabs>
                 </AppBar>
               </Grid>
               { tabValue === 0 && this.renderTimeline() }
               { tabValue === 1 && this.renderDetail() }
+              { tabValue === 2 && <ProxyVoting /> }
               <Modal
                 disableRestoreFocus
                 disableEnforceFocus
                 disableAutoFocus
-                BackdropProps={{classes: {root: classes.backdrop}}}
+                BackdropProps={{ classes: { root: classes.backdrop } }}
                 open={open}
                 onClose={this.handleClose}
               >
