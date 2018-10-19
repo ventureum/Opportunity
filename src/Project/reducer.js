@@ -1,5 +1,7 @@
 const initState = {
-  projects: []
+  projects: [],
+  validators: [],
+  voteInfo: null
 }
 
 const projectReducer = (state = initState, action) => {
@@ -13,6 +15,16 @@ const projectReducer = (state = initState, action) => {
       return {
         ...state,
         projectData: action.payload
+      }
+    case 'GET_VALIDATORS':
+      return {
+        ...state,
+        validators: action.payload
+      }
+    case 'GET_VOTE_INFO':
+      return {
+        ...state,
+        voteInfo: action.payload
       }
     default: // need this for default case
       return state
