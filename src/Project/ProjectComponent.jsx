@@ -187,7 +187,37 @@ class ProjectComponent extends Component {
 
   render () {
     let { open, tabValue, selectedMilestone } = this.state
-    let { classes, projectData } = this.props
+    let { classes, projectData, error } = this.props
+
+    if (error) {
+      return (
+        <MuiThemeProvider theme={theme}>
+          <Grid container className={classes.root} direction='column'>
+            <Grid item>
+              <Grid container direction='column' justify='center' alignItems='stretch'>
+                <Grid item>
+                  <AppBar className={classes.topBanner} position='static' color='default'>
+                    <Toolbar>
+                      <img src={logo} className={classes.topBannerLogo} />
+                      <Typography className={classes.topBannerLogoText}>
+                        Milestone
+                      </Typography>
+                    </Toolbar>
+                  </AppBar>
+                </Grid>
+                <Grid item>
+                  <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
+                    <Grid item className={classes.error}>
+                      Error: {error}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </MuiThemeProvider>
+      )
+    }
 
     if (!projectData) {
       return (
@@ -289,6 +319,10 @@ const theme = createMuiTheme({
   root: {
     height: '100vh',
     width: '100vw'
+  },
+  error: {
+    color: '#F23A30',
+    fontSize: '20px'
   },
   section: {
     padding: '10px 10px 10px 10px'

@@ -4,17 +4,31 @@ import Project from './ProjectComponent'
 import { getProject } from './actions'
 
 class ProjectContainer extends Component {
-  componentDidMount () {
+  constructor () {
+    super()
+    this.state = {
+      error: ''
+    }
+  }
+
+  async componentDidMount () {
     let { match } = this.props
     if (match) {
       let projectId = match.params.projectId
-      this.props.getProject(projectId)
+      try {
+        await this.props.getProject(projectId)
+      } catch (e) {
+        this.setState({
+          error: e
+        })
+      }
     }
   }
 
   render () {
     let { projectData } = this.props
-    return (<Project projectData={projectData} />)
+    let { error } = this.state
+    return (<Project projectData={projectData} error={error} />)
   }
 }
 

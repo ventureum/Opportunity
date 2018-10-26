@@ -1,4 +1,4 @@
-import { projectData, validators, voteInfo } from './mockData.js'
+import { validators, voteInfo } from './mockData.js'
 import axios from 'axios'
 
 const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/beta'
@@ -32,7 +32,14 @@ async function _getProject (projectId) {
   let rv = await axios.post(endpoint + '/get-project', {
     projectId: projectId
   })
-  return parseProject(rv.data.project)
+  if (rv.data.ok) {
+    return parseProject(rv.data.project)
+  } else {
+    let errorMsg = {
+      NoProjectIdExisting: 'Project not exist'
+    }
+    throw errorMsg[rv.data.message.errorCode]
+  }
 }
 
 async function _getProjects () {
@@ -40,7 +47,7 @@ async function _getProjects () {
     limit: 20,
     cursor: ''
   })
-  return rv.data.projects.map(p => parseProject(p))
+  return rv.data.projects ? rv.data.projects.map(p => parseProject(p)) : []
 }
 
 const getProject = (projectId) => {
