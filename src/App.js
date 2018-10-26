@@ -11,6 +11,7 @@ import locationHelperBuilder from 'redux-auth-wrapper/history4/locationHelper'
 import Login from './User/LoginContainer'
 import Project from './Project/ProjectContainer.jsx'
 import ProjectList from './Project/ProjectListContainer.jsx'
+import MyProjects from './User/MyProjectsContainer.jsx'
 
 const userIsAuthenticated = connectedRouterRedirect({
   // The url to redirect user to if they fail
@@ -44,6 +45,7 @@ class App extends Component {
           <Route path='/login' component={userIsNotAuthenticated(Login)} />
           <Route exact path='/' component={ProjectList} />
           <Route path='/project/:projectId' component={Project} />
+          <Route path='/my-projects' component={MyProjects} />
         </Switch>
       </Router>
     )

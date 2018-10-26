@@ -7,11 +7,11 @@ import Web3 from 'web3'
 import MilestoneJson from './contracts/Milestone.json'
 import RepSysJson from './contracts/RepSys.json'
 
-function getClient(privateKey, publicKey) {
+function getClient (privateKey, publicKey) {
   const client = new Client(
     'default',
     'ws://127.0.0.1:46658/websocket',
-    'ws://127.0.0.1:46658/queryws',
+    'ws://127.0.0.1:46658/queryws'
   )
 
   client.txMiddleware = [
