@@ -95,6 +95,7 @@ class AddWalletComponent extends Component {
       isVerifying: true
     })
     if (this._verify()) {
+      this.props.addWallet(this.state.walletAddress)
       this.setState({
         error: ''
       }, () => this.props.handleClose())
@@ -148,8 +149,8 @@ class AddWalletComponent extends Component {
               value={message}
               margin='normal'
             />
-            <a onClick={this.copy} className={classes.btnLink}>Copy to Clipboard</a>
-            <a href='https://www.myetherwallet.com/signmsg.html' target='_blank' className={classNames(classes.btnLink, classes.secondBtnLink)} rel='noopener noreferrer'>Open MyEtherWallet</a>
+            <a onClick={this.copy} className={classNames(classes.btnLink, classes.firstBtnLink)}>Copy to Clipboard</a>
+            <a href='https://www.myetherwallet.com/signmsg.html' target='_blank' className={classes.btnLink} rel='noopener noreferrer'>Open MyEtherWallet</a>
             <div className={classes.stepTitle}>
               Step 3. Paste Signed Message from MyEtherWallet
             </div>
@@ -216,6 +217,7 @@ const theme = createMuiTheme({
     lineHeight: '17px'
   },
   btnLink: {
+    display: 'inline-block',
     textDecoration: 'none',
     marginTop: '10px',
     marginLeft: '6px',
@@ -227,8 +229,8 @@ const theme = createMuiTheme({
       cursor: 'pointer'
     }
   },
-  secondBtnLink: {
-    marginLeft: '30px'
+  firstBtnLink: {
+    marginRight: '30px'
   },
   input: {
     width: '100%',
