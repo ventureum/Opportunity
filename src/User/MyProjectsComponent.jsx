@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 import WalletList from './WalletListComponent'
 import Modal from '@material-ui/core/Modal'
 import Grid from '@material-ui/core/Grid'
+import NavBar from './NavBarContainer'
 
 class MyProjectsComponent extends Component {
   state = {
@@ -24,6 +25,7 @@ class MyProjectsComponent extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
+        <NavBar />
         <Grid container direction='column'>
           <Grid item>
             <Button onClick={this.handleOpen}>Manage Wallets</Button>

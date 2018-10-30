@@ -16,13 +16,12 @@ import Button from '@material-ui/core/Button'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import Toolbar from '@material-ui/core/Toolbar'
 import Modal from '@material-ui/core/Modal'
 import ProjectDetail from './ProjectDetailComponent'
-import logo from '../logo.svg'
 import classNames from 'classnames'
 import MilestoneDetail from './MilestoneDetailComponent'
 import ProxyVoting from './ProxyVotingContainer'
+import NavBar from '../User/NavBarContainer'
 
 var numeral = require('numeral')
 
@@ -196,14 +195,7 @@ class ProjectComponent extends Component {
             <Grid item>
               <Grid container direction='column' justify='center' alignItems='stretch'>
                 <Grid item>
-                  <AppBar className={classes.topBanner} position='static' color='default'>
-                    <Toolbar>
-                      <img src={logo} className={classes.topBannerLogo} />
-                      <Typography className={classes.topBannerLogoText}>
-                        Milestone
-                      </Typography>
-                    </Toolbar>
-                  </AppBar>
+                  <NavBar />
                 </Grid>
                 <Grid item>
                   <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
@@ -237,14 +229,7 @@ class ProjectComponent extends Component {
           <Grid item>
             <Grid container direction='column' justify='center' alignItems='stretch'>
               <Grid item>
-                <AppBar className={classes.topBanner} position='static' color='default'>
-                  <Toolbar>
-                    <img src={logo} className={classes.topBannerLogo} />
-                    <Typography className={classes.topBannerLogoText}>
-                      Milestone
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
+                <NavBar />
               </Grid>
               <Grid item>
                 <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
