@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button'
 import WalletList from './WalletListComponent'
 import Modal from '@material-ui/core/Modal'
 import Grid from '@material-ui/core/Grid'
+import NavBar from './NavBarContainer'
 
 class MyProjectsComponent extends Component {
   state = {
@@ -19,11 +20,12 @@ class MyProjectsComponent extends Component {
   }
 
   render () {
-    const { classes } = this.props
+    const { classes, walletAddress, addWallet, removeWallet } = this.props
     const { open } = this.state
 
     return (
       <MuiThemeProvider theme={theme}>
+        <NavBar />
         <Grid container direction='column'>
           <Grid item>
             <Button onClick={this.handleOpen}>Manage Wallets</Button>
@@ -36,8 +38,8 @@ class MyProjectsComponent extends Component {
               onClose={this.handleClose}
             >
               <Grid onClick={this.handleClose} container direction='row' justify='flex-end'>
-                <Grid className={classes.walletListModal} item xs={12} sm={8} md={6}>
-                  <WalletList handleClose={this.handleClose} />
+                <Grid className={classes.walletListModal} item xs={12} sm={6} md={4}>
+                  <WalletList handleClose={this.handleClose} walletAddress={walletAddress} addWallet={addWallet} removeWallet={removeWallet} />
                 </Grid>
               </Grid>
             </Modal>

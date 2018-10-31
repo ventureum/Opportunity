@@ -2,58 +2,12 @@ import React, { Component } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
-import MenuItem from '@material-ui/core/MenuItem'
-import Menu from '@material-ui/core/Menu'
-import ExitToApp from '@material-ui/icons/ExitToApp'
 import Grid from '@material-ui/core/Grid'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import logo from '../logo.svg'
 import numeral from 'numeral'
 
-let contentColor = '#666666'
-
 const styles = {
-  bar: {
-    color: contentColor,
-    height: '60px',
-    padding: '0 60px',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#FBFAFC',
-    boxShadow: '0 2px 4px 0 #D3D0D5',
-    '@media (max-width: 500px)': {
-      padding: '0 30px'
-    }
-  },
-  logo: {
-    height: '32px'
-  },
-  user: {
-    display: 'flex',
-    alignItems: 'center',
-    '&:hover': {
-      cursor: 'pointer'
-    }
-  },
-  username: {
-    marginLeft: '10px',
-    color: contentColor,
-    '@media (max-width: 500px)': {
-      display: 'none'
-    }
-  },
-  usernameInMenu: {
-    marginLeft: '10px',
-    color: contentColor
-  },
-  avatar: {
-    height: '32px',
-    width: '32px',
-    borderRadius: '4px'
-  },
   bigAvatar: {
     height: '100px',
     width: '100px',
@@ -64,24 +18,6 @@ const styles = {
       width: '64px',
       marginRight: '20px'
     }
-  },
-  exitIcon: {
-    marginLeft: '70px',
-    color: contentColor
-  },
-  menu: {
-    top: '10px!important',
-    right: '30px',
-    boxShadow: '0 2px 4px 0 rgba(233,233,233,0.5)'
-  },
-  item: {
-    padding: '20px'
-  },
-  bottomLine: {
-    height: '1px',
-    backgroundColor: '#E9E9E9',
-    marginLeft: '20px',
-    marginRight: '20px'
   },
   content: {
     marginTop: '60px',
@@ -260,7 +196,6 @@ const styles = {
 
 class ProfileComponent extends Component {
   state = {
-    open: false,
     tabIndex: 0,
     voteList: null,
     postList: null,
@@ -275,21 +210,8 @@ class ProfileComponent extends Component {
     })
   }
 
-  handleMenu = () => {
-    this.setState({ open: true })
-  }
-
-  handleClose = () => {
-    this.setState({ open: false })
-  }
-
   handleChange = (event, value) => {
     this.setState({ tabIndex: value })
-  }
-
-  logout () {
-    this.props.logout()
-    this.handleClose()
   }
 
   getLabelText (label) {
@@ -322,48 +244,10 @@ class ProfileComponent extends Component {
 
   render () {
     const { classes, userInfo, profile, voteList, postList, replyList } = this.props
-    const { open, tabIndex } = this.state
-    const anchorEl = window.document.querySelector('header')
+    const { tabIndex } = this.state
 
     return (
       <div>
-        <AppBar classes={{ root: classes.bar }}>
-          <img className={classes.logo} src={logo} alt='' />
-          <div className={classes.user}>
-            <img className={classes.avatar} src={userInfo.photo_url} alt='' onClick={this.handleMenu} />
-            <Typography variant='body2' className={classes.username}>
-              {userInfo.username}
-            </Typography>
-          </div>
-          <Menu
-            anchorEl={anchorEl}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            open={open}
-            onClose={this.handleClose}
-            classes={{ paper: classes.menu }}
-            MenuListProps={{ disablePadding: true }}
-          >
-            <MenuItem classes={{ root: classes.item }} onClick={this.handleClose}>
-              <img className={classes.avatar} src={userInfo.photo_url} alt='' onClick={this.handleMenu} />
-              <Typography variant='body2' className={classes.usernameInMenu}>
-                {userInfo.username}
-              </Typography>
-            </MenuItem>
-            <div className={classes.bottomLine} />
-            <MenuItem classes={{ root: classes.item }} onClick={this.logout.bind(this)}>
-              <Typography variant='body1'>
-                Log out
-              </Typography>
-              <ExitToApp className={classes.exitIcon} /></MenuItem>
-          </Menu>
-        </AppBar>
         <Grid container className={classes.content}>
           <Grid container className={classes.card}>
             <Grid item>

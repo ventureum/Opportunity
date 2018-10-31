@@ -10,8 +10,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import logo from '../logo.svg'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
+import NavBar from '../User/NavBarContainer'
 var numeral = require('numeral')
 
 class ProjectListComponent extends Component {
@@ -87,14 +86,7 @@ class ProjectListComponent extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
-          <AppBar className={classes.topBanner} position='static' color='default'>
-            <Toolbar>
-              <img src={logo} className={classes.topBannerLogo} />
-              <Typography className={classes.topBannerLogoText}>
-                Milestone
-              </Typography>
-            </Toolbar>
-          </AppBar>
+          <NavBar />
           <Grid container direction='column' justify='center' alignItems='center'>
             <Grid item>
               <Grid container direction='column' justify='center' alignItems='stretch'>

@@ -16,13 +16,12 @@ import Button from '@material-ui/core/Button'
 import AppBar from '@material-ui/core/AppBar'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
-import Toolbar from '@material-ui/core/Toolbar'
 import Modal from '@material-ui/core/Modal'
 import ProjectDetail from './ProjectDetailComponent'
-import logo from '../logo.svg'
 import classNames from 'classnames'
 import MilestoneDetail from './MilestoneDetailComponent'
 import ProxyVoting from './ProxyVotingContainer'
+import NavBar from '../User/NavBarContainer'
 
 var numeral = require('numeral')
 
@@ -187,7 +186,30 @@ class ProjectComponent extends Component {
 
   render () {
     let { open, tabValue, selectedMilestone } = this.state
-    let { classes, projectData } = this.props
+    let { classes, projectData, error } = this.props
+
+    if (error) {
+      return (
+        <MuiThemeProvider theme={theme}>
+          <Grid container className={classes.root} direction='column'>
+            <Grid item>
+              <Grid container direction='column' justify='center' alignItems='stretch'>
+                <Grid item>
+                  <NavBar />
+                </Grid>
+                <Grid item>
+                  <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
+                    <Grid item className={classes.error}>
+                      Error: {error}
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </MuiThemeProvider>
+      )
+    }
 
     if (!projectData) {
       return (
@@ -207,14 +229,7 @@ class ProjectComponent extends Component {
           <Grid item>
             <Grid container direction='column' justify='center' alignItems='stretch'>
               <Grid item>
-                <AppBar className={classes.topBanner} position='static' color='default'>
-                  <Toolbar>
-                    <img src={logo} className={classes.topBannerLogo} />
-                    <Typography className={classes.topBannerLogoText}>
-                      Milestone
-                    </Typography>
-                  </Toolbar>
-                </AppBar>
+                <NavBar />
               </Grid>
               <Grid item>
                 <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
@@ -289,6 +304,10 @@ const theme = createMuiTheme({
   root: {
     height: '100vh',
     width: '100vw'
+  },
+  error: {
+    color: '#F23A30',
+    fontSize: '20px'
   },
   section: {
     padding: '10px 10px 10px 10px'
