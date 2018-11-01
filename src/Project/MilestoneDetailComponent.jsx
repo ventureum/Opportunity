@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import classNames from 'classnames'
+import Button from '@material-ui/core/Button'
+import MilestoneObjVote from './MilestoneObjVoteComponent'
 
 var moment = require('moment')
 
@@ -10,28 +12,9 @@ class MilestoneDetailComponent extends Component {
     super()
 
     this.state = {
+      objVoteModalOpen: false,
       evaluatorList: [
         {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
-          avatar: '/mock_logo.png'
-        }, {
           avatar: '/mock_logo.png'
         }, {
           avatar: '/mock_logo.png'
@@ -108,6 +91,14 @@ class MilestoneDetailComponent extends Component {
     return rv
   }
 
+  handleObjVoteModalOpen = () => {
+    this.setState({ objVoteModalOpen: true })
+  }
+
+  handleObjVoteModalClose = () => {
+    this.setState({ objVoteModalOpen: false })
+  }
+
   render () {
     const { classes, milestone, handleClose } = this.props
     const { evaluatorList, fileList, relatedPosts } = this.state
@@ -143,7 +134,7 @@ class MilestoneDetailComponent extends Component {
                 return (
                   <Grid item xs={12} className={classes.obj} key={i}>
                     <div className={classes.objId}>
-                      Objective&nbsp;{(i + 1)}
+                       Objective&nbsp;{(i + 1)}
                       <div className={classes.objRating}>
                         {obj.avgRating}
                       </div>
@@ -160,6 +151,11 @@ class MilestoneDetailComponent extends Component {
                 )
               })}
             </Grid>
+          </Grid>
+          <Grid item>
+            <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
+              Rate
+            </Button>
           </Grid>
           <Grid item>
             <Grid container direction='column'>
@@ -197,6 +193,11 @@ class MilestoneDetailComponent extends Component {
           <div onClick={handleClose} className={classes.close}>
             <i className='fas fa-times' />
           </div>
+          <MilestoneObjVote
+            open={this.state.objVoteModalOpen}
+            onClose={this.handleObjVoteModalClose}
+            milestone={milestone}
+          />
         </Grid>
       </MuiThemeProvider>
     )
@@ -368,6 +369,10 @@ const theme = createMuiTheme({
     '&:hover': {
       cursor: 'pointer'
     }
+  },
+  objVoteBtn: {
+    color: '#01A78D',
+    border: '1px solid #01A78D'
   }
 })
 
