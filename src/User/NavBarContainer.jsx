@@ -5,7 +5,12 @@ import { logout } from './actions'
 
 class NavBarContainer extends Component {
   render () {
-    return (<NavBar userInfo={{ username: 'Lezhong', photo_url: 'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50' }} logout={this.props.logout} />)
+    return (
+      <NavBar
+        userInfo={this.props.userInfo}
+        logout={this.props.logout}
+      />
+    )
   }
 }
 

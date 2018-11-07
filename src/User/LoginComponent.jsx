@@ -47,8 +47,8 @@ class Login extends Component {
               control={
                 <Checkbox
                   color='primary'
-                         checked={this.state.agreementChecked}
-                         onChange={this.handleAgreementCheckboxChange}
+                  checked={this.state.agreementChecked}
+                  onChange={this.handleAgreementCheckboxChange}
                 />
               }
               label='I agree with terms and conditions'
