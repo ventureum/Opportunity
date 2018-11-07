@@ -26,14 +26,15 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { projectData } = this.props
+    let { profile, projectData } = this.props
     let { error } = this.state
-    return (<Project projectData={projectData} error={error} />)
+    return (<Project profile={profile} projectData={projectData} error={error} />)
   }
 }
 
 const mapStateToProps = state => {
   return {
+    profile: state.userReducer.profile,
     projectData: state.projectReducer.projectData
   }
 }
