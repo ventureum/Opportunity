@@ -1,3 +1,5 @@
+import update from 'immutability-helper'
+
 const initState = {
   userInfo: {
     isAuthenticated: false
@@ -10,10 +12,30 @@ const initState = {
 
 export default function (state = initState, action) {
   switch (action.type) {
-    case 'LOGIN_DATA_FETCHED':
+    case 'REGISTER_PENDING':
       return {
         ...state,
-        userInfo: action.payload
+        transactionPending: true
+      }
+    case 'REGISTER_FULFILLED':
+      let newState = update(state, { userInfo: { newUser: { $set: false } } })
+      newState = update(state, { userInfo: { isAuthenticated: { $set: true } } })
+      return {
+        ...newState,
+        profile: action.payload,
+        transactionPending: false
+      }
+    case 'REGISTER_REJECTED':
+      return {
+        ...state,
+        transactionPending: false,
+        error: action.payload
+      }
+    case 'FETCH_LOGIN_DATA_FULFILLED':
+      return {
+        ...state,
+        profile: action.payload.profile,
+        userInfo: action.payload.userInfo
       }
     case 'PROFILE_DATA_FULFILLED':
       return {

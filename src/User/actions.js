@@ -1,9 +1,95 @@
+import delay from 'delay'
 import * as api from './apis'
+import Wallet from '../wallet'
+import Contract from '../contract'
+const shake128 = require('js-sha3').shake128
+const uuidParse = require('uuid-parse')
 
-export function onLogin (loginData) {
+const userTypeMap = {
+  'USER': '0x2db9fd3d',
+  'KOL': '0xf4af7c06',
+  'PF': '0x5707a2a6'
+}
+
+function getUUID (telegramId) {
+  const shakeHash = shake128(String(telegramId), 128)
+  const hashBytes = Buffer.from(shakeHash, 'hex')
+  const id = uuidParse.unparse(hashBytes)
+  return id
+}
+
+function getRawUUID (telegramId) {
+  return '0x' + shake128(String(telegramId), 128)
+}
+
+async function postTelegramLogin (loginData) {
+  let uuid = getUUID(loginData.id)
+  let rv = { userInfo: loginData, profile: {} }
+  rv.userInfo.isAuthenticated = false
+
+  try {
+    // next, fetch user profile from our database
+    let { profile } = await api.getProfile(uuid)
+    rv.profile = profile
+    rv.userInfo.newUser = false
+    rv.userInfo.isAuthenticated = true
+  } catch (err) {
+    if (err.message.errorCode === 'NoActorExisting') {
+      rv.userInfo.newUser = true
+      return rv
+    } else {
+      // re-throw other errors
+      throw err
+    }
+  }
+  return rv
+}
+
+async function _register (userInfo) {
+  try {
+    // generate a new private key
+    Wallet.setupPrivateKey()
+
+    let rawUUID = getRawUUID(userInfo.id)
+    let user = Wallet.from
+    let userType = userTypeMap['USER']
+    let reputation = 0
+    let meta = {
+      username: userInfo.username,
+      photoUrl: userInfo.photo_url,
+      telegramId: userInfo.id.toString(),
+      phoneNumber: userInfo.phone_number
+    }
+
+    let c = new Contract()
+    await c.start()
+    await c.registerUser(rawUUID, user, userType, reputation, JSON.stringify(meta))
+
+    // successfully registered onchain
+    // wait for database update, sleep for 2 seconds
+    await delay(2000)
+
+    // now, fetch user profile
+    let uuid = getUUID(userInfo.id)
+
+    let { profile } = await api.getProfile(uuid)
+    return profile
+  } catch (err) {
+    throw err
+  }
+}
+
+function register (userInfo) {
   return {
-    type: 'LOGIN_DATA_FETCHED',
-    payload: loginData
+    type: 'REGISTER',
+    payload: _register(userInfo)
+  }
+}
+
+function onLogin (loginData) {
+  return {
+    type: 'FETCH_LOGIN_DATA',
+    payload: postTelegramLogin(loginData)
   }
 }
 
@@ -35,8 +121,10 @@ export function getReplyList (username) {
   }
 }
 
-export function logout () {
+function logout () {
   return {
     type: 'LOGOUT'
   }
 }
+
+export { onLogin, logout, register }
