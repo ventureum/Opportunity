@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/beta/'
+let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/exp'
 
-const api = axios.create({
+const apiFeed = axios.create({
   baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json'
@@ -16,34 +16,26 @@ const hashMap = {
   milestone: '0xf7003d25'
 }
 
-export function getProfile (username) {
-  return api.post('/get-profile', {
-    actor: username
-  })
-    .then((res) => {
-      if (!res.data.ok) {
-        if (res.data.message.errorCode === 'NoActorExisting') {
-          return userActive(username).then((res) => {
-            if (res.data.ok) {
-              return getProfile(username)
-            }
-          })
-        }
-      } else {
-        return Promise.resolve(res.data.profile)
-      }
-    })
+const responseCheck = (responseData) => {
+  if (!responseData.data.ok) {
+    throw responseData.data
+  }
+  return responseData.data
+}
+
+async function getProfile (uuid) {
+  return responseCheck(await apiFeed.post('/get-profile', { actor: uuid }))
 }
 
 export function userActive (username) {
-  return api.post('/profile', {
+  return apiFeed.post('/profile', {
     Actor: username,
     UserType: 'USER'
   })
 }
 
 export function getVoteList (username) {
-  return api.post('/get-recent-votes', {
+  return apiFeed.post('/get-recent-votes', {
     actor: username,
     limit: 20
   })
@@ -67,7 +59,7 @@ export function getVoteList (username) {
 }
 
 export function getPostList (username) {
-  return api.post('/get-recent-posts', {
+  return apiFeed.post('/get-recent-posts', {
     actor: username,
     typeHash: hashMap['post'],
     limit: 20
@@ -91,7 +83,7 @@ export function getPostList (username) {
 }
 
 export function getReplyList (username) {
-  return api.post('/get-recent-posts', {
+  return apiFeed.post('/get-recent-posts', {
     actor: username,
     typeHash: hashMap['comment'],
     limit: 20
@@ -115,7 +107,7 @@ export function getReplyList (username) {
 }
 
 export function getBatchPosts (hashList, stateName, mergeList) {
-  return api.post('/get-batch-posts', {
+  return apiFeed.post('/get-batch-posts', {
     postHashes: hashList
   })
     .then((res) => {
@@ -129,3 +121,5 @@ export function getBatchPosts (hashList, stateName, mergeList) {
       }
     })
 }
+
+export { getProfile }
