@@ -100,7 +100,7 @@ class MilestoneDetailComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, handleClose } = this.props
+    const { classes, milestone, profile, handleClose } = this.props
     const { evaluatorList, fileList, relatedPosts } = this.state
 
     return (
@@ -153,9 +153,11 @@ class MilestoneDetailComponent extends Component {
             </Grid>
           </Grid>
           <Grid item>
-            <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
-              Rate
-            </Button>
+            { profile.actorType === 'KOL' &&
+              <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
+                Rate
+              </Button>
+            }
           </Grid>
           <Grid item>
             <Grid container direction='column'>

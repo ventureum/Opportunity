@@ -1,7 +1,7 @@
 import { validators, voteInfo } from './mockData.js'
 import axios from 'axios'
 
-const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/beta'
+const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/exp'
 
 function parseObj (o) {
   o.content = JSON.parse(o.content)
