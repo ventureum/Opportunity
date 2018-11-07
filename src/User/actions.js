@@ -2,24 +2,12 @@ import delay from 'delay'
 import * as api from './apis'
 import Wallet from '../wallet'
 import Contract from '../contract'
-const shake128 = require('js-sha3').shake128
-const uuidParse = require('uuid-parse')
+import { getUUID, getRawUUID } from '../utils/index'
 
 const userTypeMap = {
   'USER': '0x2db9fd3d',
   'KOL': '0xf4af7c06',
   'PF': '0x5707a2a6'
-}
-
-function getUUID (telegramId) {
-  const shakeHash = shake128(String(telegramId), 128)
-  const hashBytes = Buffer.from(shakeHash, 'hex')
-  const id = uuidParse.unparse(hashBytes)
-  return id
-}
-
-function getRawUUID (telegramId) {
-  return '0x' + shake128(String(telegramId), 128)
 }
 
 async function postTelegramLogin (loginData) {
