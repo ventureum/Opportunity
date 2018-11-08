@@ -135,6 +135,10 @@ class MilestoneComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   root: {
     height: '50vh',
     width: '50vw'

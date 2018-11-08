@@ -51,6 +51,10 @@ class MyProjectsComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   backdrop: {
     background: 'inherit'
   },

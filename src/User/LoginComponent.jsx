@@ -38,7 +38,7 @@ class Login extends Component {
       <Grid item className={classes.loginButton} align='center'>
         <Grid container direction='column' alignItems='center' justify='center'>
           <Grid item>
-            <Typography className={classes.content} variant='headline' gutterBottom>
+            <Typography className={classes.content} variant='h5' gutterBottom>
               Welcome to Milestone!
             </Typography>
           </Grid>
@@ -91,10 +91,10 @@ class Login extends Component {
               <img src={logo} />
             </Grid>
             <Grid item className={classes.textSection} align='center'>
-              <Typography className={classes.heading} variant='display2' gutterBottom align='center'>
+              <Typography className={classes.heading} variant='h3' gutterBottom align='center'>
                 Milestone
               </Typography>
-              <Typography className={classes.content} variant='headline' gutterBottom>
+              <Typography className={classes.content} variant='h5' gutterBottom>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu feugiat ante, feugiat ultrices urna. Sed feugiat congue urna, in lacinia dolor accumsan faucibus.
               </Typography>
             </Grid>
@@ -108,6 +108,10 @@ class Login extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   root: {
     height: '100vh',
     width: '100vw'

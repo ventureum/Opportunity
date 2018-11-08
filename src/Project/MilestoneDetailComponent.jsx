@@ -207,6 +207,10 @@ class MilestoneDetailComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   milestone: {
     padding: '60px',
     position: 'relative',
