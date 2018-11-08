@@ -184,6 +184,10 @@ class ProjectDetailComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   link: {
     textDecoration: 'none',
     color: '#1B95E0'

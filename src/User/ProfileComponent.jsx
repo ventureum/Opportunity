@@ -8,6 +8,10 @@ import Tab from '@material-ui/core/Tab'
 import numeral from 'numeral'
 
 const styles = {
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   bigAvatar: {
     height: '100px',
     width: '100px',
@@ -254,7 +258,7 @@ class ProfileComponent extends Component {
               <img className={classes.bigAvatar} src={userInfo.photo_url} alt='' />
             </Grid>
             <Grid item>
-              <Typography variant='headline'>
+              <Typography variant='h5'>
                 {userInfo.username}
               </Typography>
               <div className={classes.level}>

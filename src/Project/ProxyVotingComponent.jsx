@@ -350,6 +350,10 @@ class ProxyVotingComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   proxyVoting: {
     marginTop: '40px',
     fontFamily: 'Helvetica Neue'

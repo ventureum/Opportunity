@@ -42,7 +42,7 @@ class NavBarComponent extends Component {
           </div>
           <div className={classes.user} onClick={this.handleOpen}>
             <img className={classes.avatar} src={userInfo.photo_url} alt='' />
-            <Typography variant='body2' className={classes.username}>
+            <Typography variant='body1' className={classes.username}>
               {userInfo.username}
             </Typography>
           </div>
@@ -59,21 +59,21 @@ class NavBarComponent extends Component {
           >
             <MenuItem onClick={this.handleClose}>
               <Link to='/my-projects' className={classes.link}>
-                <Typography variant='body1'>
+                <Typography variant='body2'>
                   My Projects
                 </Typography>
               </Link>
             </MenuItem>
             <MenuItem onClick={this.handleClose}>
               <Link to='/' className={classes.link}>
-                <Typography variant='body1'>
+                <Typography variant='body2'>
                   Account Settings&nbsp;
                 </Typography>
               </Link>
             </MenuItem>
             <div className={classes.bottomLine} />
             <MenuItem className={classes.logout} onClick={this.logout}>
-              <Typography variant='body1'>
+              <Typography variant='body2'>
                 Log out
               </Typography>
               <ExitToApp className={classes.exitIcon} />
@@ -86,6 +86,10 @@ class NavBarComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   bar: {
     position: 'relative',
     color: 'white',

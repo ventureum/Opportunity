@@ -213,6 +213,10 @@ class ProjectInfoComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   root: {
     width: '100%',
     backgroundColor: '#F3F6FC',

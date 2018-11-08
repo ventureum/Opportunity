@@ -183,6 +183,10 @@ class AddWalletComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   addWalletWrapper: {
     height: '100%'
   },
