@@ -1,9 +1,8 @@
 import {
-  NonceTxMiddleware, SignedTxMiddleware, Client, LocalAddress, LoomProvider, createJSONRPCClient
+  NonceTxMiddleware, SignedTxMiddleware, Client, LocalAddress, LoomProvider, createJSONRPCClient, CryptoUtils
 } from 'loom-js'
 
 import Web3 from 'web3'
-import Wallet from './wallet.js'
 import RepSys from './contracts/RepSys.json'
 import Milestone from './contracts/Milestone.json'
 
@@ -25,12 +24,11 @@ function getClient (privateKey, publicKey) {
 }
 
 export default class Contract {
-  async createClient () {
-    this.privateKey = Wallet.privateKey
-    this.publicKey = Wallet.publicKey
-    this.client = getClient(this.privateKey, this.publicKey)
-    this.from = LocalAddress.fromPublicKey(this.publicKey).toString()
-    this.web3 = new Web3(new LoomProvider(this.client, this.privateKey))
+  async createClient (privateKey) {
+    let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
+    this.client = getClient(privateKey, publicKey)
+    this.from = LocalAddress.fromPublicKey(publicKey).toString()
+    this.web3 = new Web3(new LoomProvider(this.client, privateKey))
     this.user = this.from
     this.client.on('error', msg => {
       console.error('Error on connect to client', msg)
@@ -67,8 +65,8 @@ export default class Contract {
     })
   }
 
-  async start () {
-    await this.createClient()
+  async start (privateKey) {
+    await this.createClient(privateKey)
     await this.createContractInstance()
   }
 
