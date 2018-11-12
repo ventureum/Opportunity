@@ -1,6 +1,6 @@
 import delay from 'delay'
 import * as api from './apis'
-import Wallet from '../wallet'
+import { generatePrivateKey } from '../wallet'
 import Contract from '../contract'
 import { getUUID, getRawUUID } from '../utils/index'
 
@@ -21,6 +21,10 @@ async function postTelegramLogin (loginData) {
     rv.profile = profile
     rv.userInfo.newUser = false
     rv.userInfo.isAuthenticated = true
+
+    // fetch privateKey
+    let { privateKey } = await api.getActorPrivateKey(uuid)
+    rv.profile.privateKey = privateKey
   } catch (err) {
     if (err.message.errorCode === 'NoActorExisting') {
       rv.userInfo.newUser = true
@@ -36,10 +40,10 @@ async function postTelegramLogin (loginData) {
 async function _register (userInfo) {
   try {
     // generate a new private key
-    Wallet.setupPrivateKey()
+    let { privateKey, address } = generatePrivateKey()
 
     let rawUUID = getRawUUID(userInfo.id)
-    let user = Wallet.from
+    let user = address
     let userType = userTypeMap['USER']
     let reputation = 0
     let meta = {
@@ -50,8 +54,9 @@ async function _register (userInfo) {
     }
 
     let c = new Contract()
-    await c.start()
+    await c.start(privateKey)
     await c.registerUser(rawUUID, user, userType, reputation, JSON.stringify(meta))
+    await c.disconnect()
 
     // successfully registered onchain
     // wait for database update, sleep for 2 seconds
@@ -61,6 +66,13 @@ async function _register (userInfo) {
     let uuid = getUUID(userInfo.id)
 
     let { profile } = await api.getProfile(uuid)
+
+    // successfully retrieved profile, now register privateKey
+    await api.setActorPrivateKey(uuid, privateKey)
+
+    // set profile's privateKey manually
+    profile.privateKey = privateKey
+
     return profile
   } catch (err) {
     throw err
