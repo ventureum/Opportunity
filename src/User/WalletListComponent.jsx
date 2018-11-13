@@ -121,6 +121,10 @@ class WalletListComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   root: {
     height: '100%'
   },

@@ -36,6 +36,10 @@ class TransactionProgressComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   modalWrapper: {
     padding: '30px 30px 30px 30px'
   }

@@ -162,6 +162,10 @@ class MilestoneObjVoteComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   modalWrapper: {
     height: '100%',
     width: '100%',

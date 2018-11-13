@@ -140,12 +140,12 @@ class ProjectComponent extends Component {
       >
         <div onClick={() => { this.handleOpen(m) }} className={classes.milestoneCard}>
           <h3 className={classNames(classes.milestoneTitle, 'vertical-timeline-element-title')}> { content.title } </h3>
-          <Typography className={classes.milestoneContent} variant='subheading'>
+          <Typography className={classes.milestoneContent} variant='subtitle1'>
             { content.description }
           </Typography>
           <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
             <Grid item>
-              <Typography className={classes.milestoneTime} variant='subheading'>
+              <Typography className={classes.milestoneTime} variant='subtitle1'>
                 { time }
               </Typography>
             </Grid>
@@ -244,7 +244,7 @@ class ProjectComponent extends Component {
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Typography className={classes.topSectionProjectShortDescription} variant='headline'>
+                        <Typography className={classes.topSectionProjectShortDescription} variant='h5'>
                           { projectData.content.shortDescription }
                         </Typography>
                       </Grid>
@@ -301,6 +301,10 @@ class ProjectComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   root: {
     height: '100vh',
     width: '100vw'

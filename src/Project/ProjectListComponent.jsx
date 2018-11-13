@@ -107,6 +107,10 @@ class ProjectListComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true
+  },
   root: {
     height: '100vh',
     width: '100vw'
