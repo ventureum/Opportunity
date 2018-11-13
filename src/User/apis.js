@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { CryptoUtils } from 'loom-js'
 
 let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/exp'
 
@@ -31,14 +30,13 @@ async function getProfile (uuid) {
 async function setActorPrivateKey (uuid, privateKey) {
   return responseCheck(await apiFeed.post('/set-actor-private-key',
     { actor: uuid,
-      privateKey: CryptoUtils.Uint8ArrayToB64(privateKey)
+      privateKey: privateKey
     }))
 }
 
 async function getActorPrivateKey (uuid) {
   let response = await apiFeed.post('/get-actor-private-key', { actor: uuid })
   let data = responseCheck(response)
-  data.privateKey = CryptoUtils.B64ToUint8Array(data.privateKey)
   return data
 }
 
