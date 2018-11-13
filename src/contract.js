@@ -25,9 +25,11 @@ function getClient (privateKey, publicKey) {
 
 export default class Contract {
   async createClient (privateKey) {
+    privateKey = new Uint8Array(Web3.utils.hexToBytes(privateKey))
     let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
-    this.client = getClient(privateKey, publicKey)
     this.from = LocalAddress.fromPublicKey(publicKey).toString()
+    console.log(privateKey, publicKey, this.from)
+    this.client = getClient(privateKey, publicKey)
     this.web3 = new Web3(new LoomProvider(this.client, privateKey))
     this.user = this.from
     this.client.on('error', msg => {
@@ -82,5 +84,10 @@ export default class Contract {
       userType,
       reputation,
       meta).send()
+  }
+
+  // milestone functions
+  async rateObj (projectId, milestoneId, ratings, comment) {
+    return this.milestoneInstance.methods.rateObj(projectId, milestoneId, ratings, comment).send()
   }
 }

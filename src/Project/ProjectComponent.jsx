@@ -186,7 +186,7 @@ class ProjectComponent extends Component {
 
   render () {
     let { open, tabValue, selectedMilestone } = this.state
-    let { classes, profile, projectData, error } = this.props
+    let { classes, profile, projectData, rateObj, error } = this.props
 
     if (error) {
       return (
@@ -288,7 +288,7 @@ class ProjectComponent extends Component {
               >
                 <Grid onClick={this.handleClose} container direction='row' justify='flex-end'>
                   <Grid className={classes.milestoneModal} item xs={12} sm={8} md={6}>
-                    <MilestoneDetail handleClose={this.handleClose} profile={profile} milestone={selectedMilestone} />
+                    <MilestoneDetail handleClose={this.handleClose} profile={profile} milestone={selectedMilestone} rateObj={rateObj} />
                   </Grid>
                 </Grid>
               </Modal>

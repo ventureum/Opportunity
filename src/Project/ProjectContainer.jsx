@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Project from './ProjectComponent'
-import { getProject } from './actions'
+import { getProject, rateObj } from './actions'
 
 class ProjectContainer extends Component {
   constructor () {
@@ -26,9 +26,9 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { profile, projectData } = this.props
+    let { profile, projectData, ...other } = this.props
     let { error } = this.state
-    return (<Project profile={profile} projectData={projectData} error={error} />)
+    return (<Project profile={profile} projectData={projectData} error={error} {...other} />)
   }
 }
 
@@ -41,7 +41,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProject: (projectId) => dispatch(getProject(projectId))
+    getProject: (projectId) => dispatch(getProject(projectId)),
+    rateObj: (projectId, milestoneId, ratings, comment) => dispatch(rateObj(projectId, milestoneId, ratings, comment))
   }
 }
 

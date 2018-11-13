@@ -100,7 +100,7 @@ class MilestoneDetailComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, profile, handleClose } = this.props
+    const { classes, milestone, profile, handleClose, rateObj } = this.props
     const { evaluatorList, fileList, relatedPosts } = this.state
 
     return (
@@ -199,6 +199,7 @@ class MilestoneDetailComponent extends Component {
             open={this.state.objVoteModalOpen}
             onClose={this.handleObjVoteModalClose}
             milestone={milestone}
+            rateObj={rateObj}
           />
         </Grid>
       </MuiThemeProvider>
