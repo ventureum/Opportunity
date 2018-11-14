@@ -28,7 +28,6 @@ export default class Contract {
     privateKey = new Uint8Array(Web3.utils.hexToBytes(privateKey))
     let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
     this.from = LocalAddress.fromPublicKey(publicKey).toString()
-    console.log(privateKey, publicKey, this.from)
     this.client = getClient(privateKey, publicKey)
     this.web3 = new Web3(new LoomProvider(this.client, privateKey))
     this.user = this.from

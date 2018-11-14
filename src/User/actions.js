@@ -18,16 +18,10 @@ async function postTelegramLogin (loginData) {
 
   try {
     // next, fetch user profile from our database
-    let { profile } = await api.getProfile(uuid)
+    let profile = await api.getProfile(uuid)
     rv.profile = profile
     rv.userInfo.newUser = false
     rv.userInfo.isAuthenticated = true
-
-    // fetch privateKey
-    let { privateKey } = await api.getActorPrivateKey(uuid)
-
-    // set privateKey
-    rv.profile.privateKey = privateKey
   } catch (err) {
     if (err.message.errorCode === 'NoActorExisting') {
       rv.userInfo.newUser = true
@@ -68,7 +62,7 @@ async function _register (userInfo) {
     // now, fetch user profile
     let uuid = getUUID(userInfo.id)
 
-    let { profile } = await api.getProfile(uuid)
+    let profile = await api.getProfile(uuid)
 
     // successfully retrieved profile, now register privateKey
     await api.setActorPrivateKey(uuid, privateKey)

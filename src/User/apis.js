@@ -24,7 +24,13 @@ const responseCheck = (responseData) => {
 }
 
 async function getProfile (uuid) {
-  return responseCheck(await apiFeed.post('/get-profile', { actor: uuid }))
+  let { profile } = responseCheck(await apiFeed.post('/get-profile', { actor: uuid }))
+
+  let privateKeyResponse = await apiFeed.post('/get-actor-private-key', { actor: uuid })
+  // auto retrieve privateKey, do not check error in this step
+  profile.privateKey = privateKeyResponse.data.privateKey
+
+  return profile
 }
 
 async function setActorPrivateKey (uuid, privateKey) {
@@ -36,8 +42,8 @@ async function setActorPrivateKey (uuid, privateKey) {
 
 async function getActorPrivateKey (uuid) {
   let response = await apiFeed.post('/get-actor-private-key', { actor: uuid })
-  let data = responseCheck(response)
-  return data
+  let { privateKey } = responseCheck(response)
+  return privateKey
 }
 
 export function userActive (username) {
