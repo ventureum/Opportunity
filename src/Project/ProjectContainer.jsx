@@ -4,13 +4,6 @@ import Project from './ProjectComponent'
 import { getProject, rateObj } from './actions'
 
 class ProjectContainer extends Component {
-  constructor () {
-    super()
-    this.state = {
-      error: ''
-    }
-  }
-
   async componentDidMount () {
     let { match } = this.props
     if (match) {
@@ -27,15 +20,16 @@ class ProjectContainer extends Component {
 
   render () {
     let { profile, projectData, ...other } = this.props
-    let { error } = this.state
-    return (<Project profile={profile} projectData={projectData} error={error} {...other} />)
+    return (<Project profile={profile} projectData={projectData} {...other} />)
   }
 }
 
 const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
-    projectData: state.projectReducer.projectData
+    projectData: state.projectReducer.projectData,
+    transactionPending: state.projectReducer.transactionPending,
+    error: state.projectReducer.error
   }
 }
 

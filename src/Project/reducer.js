@@ -26,6 +26,25 @@ const projectReducer = (state = initState, action) => {
         ...state,
         voteInfo: action.payload
       }
+    case 'RATE_OBJ_PENDING': {
+      return {
+        ...state,
+        transactionPending: true
+      }
+    }
+    case 'RATE_OBJ_FULFILLED': {
+      return {
+        ...state,
+        transactionPending: false
+      }
+    }
+    case 'RATE_OBJ_REJECTED': {
+      return {
+        ...state,
+        transactionPending: false,
+        error: action.payload
+      }
+    }
     default: // need this for default case
       return state
   }

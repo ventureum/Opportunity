@@ -23,12 +23,20 @@ const loadPartialLoginFilter = createFilter(
   'blacklist'
 )
 
+const loadPartialProjectFilter = createFilter(
+  'projectReducer',
+  null,
+  ['loading', 'error', 'transactionPending'],
+  'blacklist'
+)
+
 const persistConfig = {
   key: 'root',
   storage,
   stateReconciler: autoMergeLevel2,
   transforms: [
-    loadPartialLoginFilter
+    loadPartialLoginFilter,
+    loadPartialProjectFilter
   ]
 }
 

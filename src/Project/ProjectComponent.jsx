@@ -22,6 +22,7 @@ import classNames from 'classnames'
 import MilestoneDetail from './MilestoneDetailComponent'
 import ProxyVoting from './ProxyVotingContainer'
 import NavBar from '../User/NavBarContainer'
+import Error from '../Error/ErrorComponent'
 
 var numeral = require('numeral')
 
@@ -172,10 +173,10 @@ class ProjectComponent extends Component {
   }
 
   renderDetail = () => {
-    let { projectData } = this.props
+    let { classes, projectData } = this.props
     return (
       <Grid item>
-        <Grid container direction='column' alignItems='center'>
+        <Grid container direction='column' alignItems='center' className={classes.detailSection}>
           <Grid item lg={6}>
             <ProjectDetail projectData={projectData} />
           </Grid>
@@ -186,29 +187,10 @@ class ProjectComponent extends Component {
 
   render () {
     let { open, tabValue, selectedMilestone } = this.state
-    let { classes, profile, projectData, rateObj, error } = this.props
+    let { classes, profile, projectData, rateObj, transactionPending, error } = this.props
 
     if (error) {
-      return (
-        <MuiThemeProvider theme={theme}>
-          <Grid container className={classes.root} direction='column'>
-            <Grid item>
-              <Grid container direction='column' justify='center' alignItems='stretch'>
-                <Grid item>
-                  <NavBar />
-                </Grid>
-                <Grid item>
-                  <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
-                    <Grid item className={classes.error}>
-                      Error: {error}
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </MuiThemeProvider>
-      )
+      return (<Error error={error} />)
     }
 
     if (!projectData) {
@@ -288,7 +270,14 @@ class ProjectComponent extends Component {
               >
                 <Grid onClick={this.handleClose} container direction='row' justify='flex-end'>
                   <Grid className={classes.milestoneModal} item xs={12} sm={8} md={6}>
-                    <MilestoneDetail handleClose={this.handleClose} profile={profile} milestone={selectedMilestone} rateObj={rateObj} />
+                    <MilestoneDetail
+                      handleClose={this.handleClose}
+                      profile={profile}
+                      milestone={selectedMilestone}
+                      rateObj={rateObj}
+                      transactionPending={transactionPending}
+                      error={error}
+                    />
                   </Grid>
                 </Grid>
               </Modal>
@@ -413,6 +402,9 @@ const theme = createMuiTheme({
   tabsBar: {
     backgroundColor: '#FFFFFF',
     color: 'rgba(0,0,0,0.6)'
+  },
+  detailSection: {
+    marginTop: '60px'
   },
   palette: {
     primary: {

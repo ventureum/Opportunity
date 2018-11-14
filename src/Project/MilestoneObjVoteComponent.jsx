@@ -111,7 +111,7 @@ class MilestoneObjVoteComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, onClose, fullScreen, ...other } = this.props
+    const { classes, milestone, onClose, fullScreen, transactionPending, error, ...other } = this.props
 
     return (
       <MuiThemeProvider theme={theme}>
