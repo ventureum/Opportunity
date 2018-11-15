@@ -42,7 +42,7 @@ class WalletListComponent extends Component {
   }
 
   render () {
-    const { classes, walletAddress, addWallet, handleClose } = this.props
+    const { classes, wallets, addWallet, handleClose, isAddingWallet } = this.props
     const { modalOpen, dialogOpen } = this.state
 
     return (
@@ -55,7 +55,7 @@ class WalletListComponent extends Component {
             <Grid item className={classes.subTitle} xs={12}>
               Wallet Address
             </Grid>
-            {walletAddress.map(addr => {
+            {wallets.map(addr => {
               return (
                 <Grid item className={classes.addressWrapper} key={addr} xs={12}>
                   <Grid container direction='row' alignItems='center'>
@@ -83,7 +83,7 @@ class WalletListComponent extends Component {
                 open={modalOpen}
                 onClose={() => this.handleClose('modal')}
               >
-                <AddWallet handleClose={() => this.handleClose('modal')} addWallet={addWallet} />
+                <AddWallet isAddingWallet={isAddingWallet} handleClose={() => this.handleClose('modal')} addWallet={addWallet} />
               </Modal>
             </Grid>
             <div onClick={handleClose} className={classes.close}>

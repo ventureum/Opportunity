@@ -1,33 +1,49 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProxyVoting from './ProxyVotingComponent'
-import { getValidators, getVoteInfo, vote } from './actions'
+import { getProxyList, getVoteInfo, delegate } from './actions'
 
 class ProxyVotingContainer extends Component {
   componentDidMount () {
-    let { getValidators, getVoteInfo } = this.props
-    getValidators()
-    getVoteInfo()
+    let { getProxyList, getVoteInfo, project, profile } = this.props
+    getProxyList(project.projectId, Number.MAX_SAFE_INTEGER)
+    getVoteInfo(profile.actor, project.projectId, Number.MAX_SAFE_INTEGER)
+  }
+
+  refreshVoteInfo = () => {
+    let { getVoteInfo, project, profile } = this.props
+    getVoteInfo(profile.actor, project.projectId, Number.MAX_SAFE_INTEGER)
   }
 
   render () {
-    let { validators, voteInfo, vote } = this.props
-    return (<ProxyVoting validators={validators} voteInfo={voteInfo} vote={vote} />)
+    let { handleClose, proxyList, proxyVotingInfo, delegate, profile, requestStatus, project } = this.props
+    return (<ProxyVoting
+      handleClose={handleClose}
+      proxyList={proxyList}
+      proxyVotingInfo={proxyVotingInfo}
+      delegate={delegate}
+      project={project}
+      profile={profile}
+      requestStatus={requestStatus}
+      refreshVoteInfo={this.refreshVoteInfo}
+    />)
   }
 }
 
 const mapStateToProps = state => {
   return {
-    validators: state.projectReducer.validators,
-    voteInfo: state.projectReducer.voteInfo
+    proxyVotingInfo: state.projectReducer.proxyVotingInfo,
+    profile: state.userReducer.profile,
+    proxyList: state.projectReducer.proxyList,
+    requestStatus: state.requestReducer
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getValidators: (objId) => dispatch(getValidators(objId)),
-    getVoteInfo: (userId) => dispatch(getVoteInfo(userId)),
-    vote: (objId, userId, validators) => dispatch(vote(objId, userId, validators))
+    getVoteInfo: (actor, projectId, limit) => dispatch(getVoteInfo(actor, projectId, limit)),
+    getProxyList: (projectId, limit) => dispatch(getProxyList(projectId, limit)),
+    delegate: (projectId, actor, pct) => dispatch(delegate(projectId, actor, pct))
   }
 }
 

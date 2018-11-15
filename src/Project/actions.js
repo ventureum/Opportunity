@@ -1,108 +1,57 @@
-import { validators, voteInfo } from './mockData.js'
-import axios from 'axios'
-import Contract from '../contract'
-
-const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/exp'
-
-function parseObj (o) {
-  o.content = JSON.parse(o.content)
-  return o
-}
-
-function parseMilestone (m) {
-  m.content = JSON.parse(m.content)
-  if (m.objectives) {
-    for (let i = 0; i < m.objectives.length; i++) {
-      m.objectives[i] = parseObj(m.objectives[i])
-    }
-  }
-  return m
-}
-
-function parseProject (p) {
-  p.content = JSON.parse(p.content)
-  if (p.milestonesInfo.milestones) {
-    for (let i = 0; i < p.milestonesInfo.milestones.length; i++) {
-      p.milestonesInfo.milestones[i] = parseMilestone(p.milestonesInfo.milestones[i])
-    }
-  }
-  return p
-}
-
-async function _getProject (projectId) {
-  let rv = await axios.post(endpoint + '/get-project', {
-    projectId: projectId
-  })
-  if (rv.data.ok) {
-    return parseProject(rv.data.project)
-  } else {
-    let errorMsg = {
-      NoProjectIdExisting: 'Project not exist'
-    }
-    throw errorMsg[rv.data.message.errorCode]
-  }
-}
-
-async function _getProjects () {
-  let rv = await axios.post(endpoint + '/get-project-list', {
-    limit: 20,
-    cursor: ''
-  })
-  return rv.data.projects ? rv.data.projects.map(p => parseProject(p)) : []
-}
-
-async function _rateObj (privateKey, projectId, milestoneId, ratings, comment) {
-  let ratingData = []
-  for (var objId in ratings) {
-    ratingData.push(objId)
-    ratingData.push(ratings[objId])
-  }
-
-  let c = new Contract()
-  await c.start(privateKey)
-  await c.rateObj(projectId, milestoneId, ratingData, comment)
-  await c.disconnect()
-}
+import * as projectApi from './apis'
 
 const getProject = (projectId) => {
   return {
     type: 'GET_PROJECT',
-    payload: _getProject(projectId)
+    payload: projectApi.getProject(projectId)
   }
 }
 
-const getProjects = () => {
+const getProjects = (limit = 20) => {
   return {
     type: 'GET_PROJECTS',
-    payload: _getProjects()
+    payload: projectApi.getProjects(limit)
   }
 }
 
-const getValidators = () => {
+const getProxyList = (projectId, limit = 20) => {
   return {
-    type: 'GET_VALIDATORS',
-    payload: validators
+    type: 'GET_PROXY_LIST',
+    payload: projectApi.getProxyList(projectId, limit)
   }
 }
 
-const getVoteInfo = () => {
+const getVoteInfo = (actor, projectId, limit = 20) => {
   return {
     type: 'GET_VOTE_INFO',
-    payload: voteInfo
+    payload: projectApi.getVoteInfo(actor, projectId, limit)
   }
 }
 
-const vote = () => {
+const delegate = (projectId, actorList, pctList) => {
   return {
-    type: 'VOTE',
-    payload: Promise.resolve({})
+    type: 'DELEGATE',
+    payload: projectApi.delegate(projectId, actorList, pctList)
   }
 }
 
+const getBatchFinalizedValidators = (MilestoneValidatorsInfoKeyList) => {
+  return {
+    type: 'GET_BATCH_FINALIZED_VALIDATORS',
+    payload: projectApi.getBatchFinalizedValidators(MilestoneValidatorsInfoKeyList)
+  }
+}
+
+const getBatchProxyVotingInfo = (ProxyVotingInfoKeyList) => {
+  return {
+    type: 'GET_BATCH_PROXY_VOTING_INFO',
+    payload: projectApi.getBatchProxyVotingInfo(ProxyVotingInfoKeyList)
+  }
+}
 const rateObjHelper = (privateKey, projectId, milestoneId, ratings, comment) => {
   return {
     type: 'RATE_OBJ',
-    payload: _rateObj(privateKey, projectId, milestoneId, ratings, comment)
+    payload: projectApi.rateObj(privateKey, projectId, milestoneId, ratings, comment)
   }
 }
 
@@ -113,4 +62,11 @@ const rateObj = (projectId, milestoneId, ratings, comment) => {
   }
 }
 
-export { getProjects, getProject, getValidators, getVoteInfo, vote, rateObj }
+const getProjectPageData = (actor) => {
+  return {
+    type: 'GET_PROJECT_PAGE_DATA',
+    payload: projectApi.getProjectPageData(actor)
+  }
+}
+
+export { getProjects, getProject, getProxyList, getVoteInfo, delegate, rateObj, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData }

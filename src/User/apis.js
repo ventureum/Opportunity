@@ -9,6 +9,15 @@ const apiFeed = axios.create({
   }
 })
 
+apiFeed.interceptors.response.use(function (response) {
+  if (!response.data.ok) {
+    throw response.data
+  }
+  return response
+}, function (error) {
+  return Promise.reject(error)
+})
+
 const hashMap = {
   post: '0x2fca5a5e',
   comment: '0x6bf78b95',
@@ -16,33 +25,29 @@ const hashMap = {
   milestone: '0xf7003d25'
 }
 
-const responseCheck = (responseData) => {
-  if (!responseData.data.ok) {
-    throw responseData.data
+async function getProfile (uuid, withPrivateKey = true) {
+  let rv = await apiFeed.post('/get-profile', { actor: uuid })
+  let profile = rv.data.profile
+
+  if (withPrivateKey) {
+    let privateKeyResponse = await apiFeed.post('/get-actor-private-key', { actor: uuid })
+    // auto retrieve privateKey, do not check error in this step
+    profile.privateKey = privateKeyResponse.data.privateKey
   }
-  return responseData.data
-}
-
-async function getProfile (uuid) {
-  let { profile } = responseCheck(await apiFeed.post('/get-profile', { actor: uuid }))
-
-  let privateKeyResponse = await apiFeed.post('/get-actor-private-key', { actor: uuid })
-  // auto retrieve privateKey, do not check error in this step
-  profile.privateKey = privateKeyResponse.data.privateKey
 
   return profile
 }
 
 async function setActorPrivateKey (uuid, privateKey) {
-  return responseCheck(await apiFeed.post('/set-actor-private-key',
+  await apiFeed.post('/set-actor-private-key',
     { actor: uuid,
       privateKey: privateKey
-    }))
+    })
 }
 
 async function getActorPrivateKey (uuid) {
   let response = await apiFeed.post('/get-actor-private-key', { actor: uuid })
-  let { privateKey } = responseCheck(response)
+  let { privateKey } = response
   return privateKey
 }
 
@@ -53,92 +58,117 @@ export function userActive (username) {
   })
 }
 
-export function getVoteList (username) {
-  return apiFeed.post('/get-recent-votes', {
-    actor: username,
-    limit: 20
+async function getWallets (actor) {
+  let rv = await apiFeed.post('/get-tracked-wallet-addresses', {
+    actor
   })
-    .then((res) => {
-      if (res.data.ok && res.data.recentVotes) {
-        let hashList = []
-        let mergeList = []
-        res.data.recentVotes.forEach((item) => {
-          hashList.push(item.postHash)
-          mergeList.push({
-            voteType: item.voteType,
-            deltaMilestonePoints: item.deltaMilestonePoints,
-            createdAt: item.createdAt
-          })
-        })
-        return getBatchPosts(hashList, 'voteList', mergeList)
-      } else {
-        return Promise.resolve(null)
-      }
-    })
+  return rv.data.walletAddressList || []
 }
 
-export function getPostList (username) {
-  return apiFeed.post('/get-recent-posts', {
-    actor: username,
+async function getBatchProfiles (actors) {
+  let rv = await apiFeed.post('/get-batch-profiles', {
+    actors
+  })
+  return rv.data.profiles
+}
+
+async function getVoteList (actor) {
+  let rv = await apiFeed.post('/get-recent-votes', {
+    actor,
+    limit: 20
+  })
+  if (rv.data.recentVotes) {
+    let hashList = []
+    let mergeList = []
+    rv.data.recentVotes.forEach((item) => {
+      hashList.push(item.postHash)
+      mergeList.push({
+        voteType: item.voteType,
+        deltaMilestonePoints: item.deltaMilestonePoints,
+        createdAt: item.createdAt
+      })
+    })
+    let posts = await getBatchPosts(hashList, 'voteList', mergeList)
+    return posts
+  } else {
+    return []
+  }
+}
+
+async function getPostList (actor) {
+  let rv = await apiFeed.post('/get-recent-posts', {
+    actor,
     typeHash: hashMap['post'],
     limit: 20
   })
-    .then((res) => {
-      if (res.data.ok && res.data.recentPosts) {
-        let hashList = []
-        let mergeList = []
-        res.data.recentPosts.forEach((item) => {
-          hashList.push(item.postHash)
-          mergeList.push({
-            deltaMilestonePoints: item.deltaMilestonePoints,
-            createdAt: item.createdAt
-          })
-        })
-        return getBatchPosts(hashList, 'postList', mergeList)
-      } else {
-        return Promise.resolve(null)
-      }
+  if (rv.data.recentPosts) {
+    let hashList = []
+    let mergeList = []
+    rv.data.recentPosts.forEach((item) => {
+      hashList.push(item.postHash)
+      mergeList.push({
+        deltaMilestonePoints: item.deltaMilestonePoints,
+        createdAt: item.createdAt
+      })
     })
+    let posts = await getBatchPosts(hashList, 'postList', mergeList)
+    return posts
+  } else {
+    return []
+  }
 }
 
-export function getReplyList (username) {
-  return apiFeed.post('/get-recent-posts', {
-    actor: username,
+async function getReplyList (actor) {
+  let rv = await apiFeed.post('/get-recent-posts', {
+    actor,
     typeHash: hashMap['comment'],
     limit: 20
   })
-    .then((res) => {
-      if (res.data.ok && res.data.recentPosts) {
-        let hashList = []
-        let mergeList = []
-        res.data.recentPosts.forEach((item) => {
-          hashList.push(item.postHash)
-          mergeList.push({
-            deltaMilestonePoints: item.deltaMilestonePoints,
-            createdAt: item.createdAt
-          })
-        })
-        return getBatchPosts(hashList, 'replyList', mergeList)
-      } else {
-        return Promise.resolve(null)
-      }
+  if (rv.data.recentPosts) {
+    let hashList = []
+    let mergeList = []
+    rv.data.recentPosts.forEach((item) => {
+      hashList.push(item.postHash)
+      mergeList.push({
+        deltaMilestonePoints: item.deltaMilestonePoints,
+        createdAt: item.createdAt
+      })
     })
+    let posts = await getBatchPosts(hashList, 'replyList', mergeList)
+    return posts
+  } else {
+    return []
+  }
 }
 
-export function getBatchPosts (hashList, stateName, mergeList) {
-  return apiFeed.post('/get-batch-posts', {
+async function getBatchPosts (hashList, stateName, mergeList) {
+  let rv = await apiFeed.post('/get-batch-posts', {
     postHashes: hashList
   })
-    .then((res) => {
-      if (res.data.ok) {
-        if (mergeList) {
-          res.data.posts = res.data.posts.map((post, i) => {
-            return Object.assign(post, mergeList[i])
-          })
-        }
-        return Promise.resolve(res.data.posts)
-      }
+  if (mergeList) {
+    rv.data.posts = rv.data.posts.map((post, i) => {
+      return Object.assign(post, mergeList[i])
     })
+  }
+  return rv.data.posts
 }
 
-export { getProfile, setActorPrivateKey, getActorPrivateKey }
+async function addWallet (actor, walletAddress) {
+  await apiFeed.post('/add-tracked-wallet-addresses', {
+    actor,
+    walletAddressList: [walletAddress]
+  })
+  let wallets = getWallets(actor)
+  return wallets
+}
+
+async function removeWallet (actor, walletAddress) {
+  await apiFeed.post('/delete-tracked-wallet-addresses', {
+    actor,
+    walletAddressList: [walletAddress]
+  })
+  let wallets = getWallets(actor)
+  return wallets
+}
+
+export { getProfile, setActorPrivateKey, getActorPrivateKey, getWallets, getBatchProfiles, getVoteList, getPostList, getReplyList, getBatchPosts, addWallet, removeWallet }

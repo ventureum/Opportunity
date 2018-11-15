@@ -11,6 +11,7 @@
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
     "delay": "^4.1.0",
+    "commafy": "0.0.5",
     "immutability-helper": "^2.8.1",
     "js-sha3": "^0.8.0",
     "keccak": "^1.4.0",
@@ -40,15 +41,13 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-es2017": "^6.24.1",
-    "rimraf": "^2.6.2"
+    "babel-preset-es2017": "^6.24.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "populate": "rimraf database/dist/ && babel ./database --out-dir database/dist/ --ignore ./package.json,./npm-debug.log --copy-files && node database/dist/addMockData.js"
+    "eject": "react-scripts eject"
   },
   "standard": {
     "parser": "babel-eslint"

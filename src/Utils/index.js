@@ -11,3 +11,11 @@ export function getUUID (telegramId) {
 export function getRawUUID (telegramId) {
   return '0x' + shake128(String(telegramId), 128)
 }
+
+export function processError (requestStatus) {
+  for (let name of Object.keys(requestStatus)) {
+    if (name.endsWith('Error') && requestStatus[name]) {
+      return requestStatus[name]
+    }
+  }
+}

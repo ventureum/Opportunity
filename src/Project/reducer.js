@@ -1,7 +1,9 @@
 const initState = {
   projects: [],
-  validators: [],
-  voteInfo: null
+  proxyList: [],
+  finalizedValidator: [],
+  proxyVotingInfoList: [],
+  proxyVotingInfo: null
 }
 
 const projectReducer = (state = initState, action) => {
@@ -16,15 +18,33 @@ const projectReducer = (state = initState, action) => {
         ...state,
         projectData: action.payload
       }
-    case 'GET_VALIDATORS':
+    case 'GET_BATCH_FINALIZED_VALIDATORS_FULFILLED':
       return {
         ...state,
-        validators: action.payload
+        finalizedValidator: action.payload
       }
-    case 'GET_VOTE_INFO':
+    case 'GET_BATCH_PROXY_VOTING_INFO_FULFILLED':
       return {
         ...state,
-        voteInfo: action.payload
+        proxyVotingInfoList: action.payload
+      }
+    case 'GET_PROXY_LIST_FULFILLED':
+      return {
+        ...state,
+        proxyList: action.payload
+      }
+    case 'GET_VOTE_INFO_FULFILLED':
+      let voteInfo
+      for (let i = 0; i < state.proxyVotingInfoList.length; i++) {
+        if (state.proxyVotingInfoList[i].projectId === action.payload.projectId) {
+          state.proxyVotingInfoList.splice(i, 1, {
+            ...action.payload
+          })
+        }
+      }
+      return {
+        ...state,
+        proxyVotingInfo: action.payload
       }
     case 'RATE_OBJ_PENDING': {
       return {
@@ -45,8 +65,16 @@ const projectReducer = (state = initState, action) => {
         error: action.payload
       }
     }
+    case 'GET_PROJECT_PAGE_DATA_FULFILLED': {
+      return {
+        ...state,
+        ...action.payload.projectData
+      }
+    }
     default: // need this for default case
-      return state
+      return {
+        ...state
+      }
   }
 }
 

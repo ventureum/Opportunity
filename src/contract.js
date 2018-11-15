@@ -1,10 +1,10 @@
 import {
   NonceTxMiddleware, SignedTxMiddleware, Client, LocalAddress, LoomProvider, createJSONRPCClient, CryptoUtils
 } from 'loom-js'
-
 import Web3 from 'web3'
 import RepSys from './contracts/RepSys.json'
 import Milestone from './contracts/Milestone.json'
+import { store } from './configureStore'
 
 function getClient (privateKey, publicKey) {
   const writer = createJSONRPCClient({ protocols: [{ url: 'http://127.0.0.1:46658/rpc' }] })
@@ -23,7 +23,11 @@ function getClient (privateKey, publicKey) {
   return client
 }
 
-export default class Contract {
+class Contract {
+  constructor () {
+    this._getCurrentNetwork().then(network => { this.networkId = network })
+  }
+
   async createClient (privateKey) {
     privateKey = new Uint8Array(Web3.utils.hexToBytes(privateKey))
     let publicKey = CryptoUtils.publicKeyFromPrivateKey(privateKey)
@@ -43,14 +47,13 @@ export default class Contract {
     await this.client.disconnect()
   }
 
-  async _getCurrentNetwork () {
+  _getCurrentNetwork () {
     return Promise.resolve('default')
   }
 
-  async createContractInstance () {
-    const networkId = await this._getCurrentNetwork()
-    this.RepSysCurrentNetwork = RepSys.networks[networkId]
-    this.MilestoneCurrentNetwork = Milestone.networks[networkId]
+  createContractInstance () {
+    this.RepSysCurrentNetwork = RepSys.networks[this.networkId]
+    this.MilestoneCurrentNetwork = Milestone.networks[this.networkId]
 
     if (!this.RepSysCurrentNetwork || !this.MilestoneCurrentNetwork) {
       throw Error('Contract not deployed on Loom')
@@ -66,13 +69,9 @@ export default class Contract {
     })
   }
 
-  async start (privateKey) {
-    await this.createClient(privateKey)
-    await this.createContractInstance()
-  }
-
-  getUser () {
-    return this.user
+  start (privateKey) {
+    this.createClient(privateKey)
+    this.createContractInstance()
   }
 
   // RepSys functions
@@ -85,8 +84,38 @@ export default class Contract {
       meta).send()
   }
 
+  async delegate (projectId, actor, pct) {
+    return this.repSysInstance.methods.delegate(
+      projectId,
+      actor,
+      pct).send()
+  }
+
   // milestone functions
   async rateObj (projectId, milestoneId, ratings, comment) {
     return this.milestoneInstance.methods.rateObj(projectId, milestoneId, ratings, comment).send()
   }
 }
+
+let handler = {
+  get: (target, name) => {
+    let needInstanceList = ['delegate', 'rateObj']
+    if (needInstanceList.indexOf(name) >= 0) {
+      let state = store.getState()
+      if (state.userReducer.profile && state.userReducer.profile.privateKey) {
+        target.start(state.userReducer.profile.privateKey)
+      } else {
+        console.error('No privateKey')
+      }
+      return async (...args) => {
+        let result = await target[name](...args)
+        target.disconnect()
+        return result
+      }
+    } else {
+      return target[name]
+    }
+  }
+}
+
+export default new Proxy(new Contract(), handler)

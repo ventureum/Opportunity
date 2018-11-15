@@ -17,8 +17,13 @@ class AddWalletComponent extends Component {
       walletAddress: '',
       message: '',
       signedMessage: '',
-      isVerifying: false,
       error: ''
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.isAddingWallet && !this.props.isAddingWallet) {
+      this.props.handleClose()
     }
   }
 
@@ -91,22 +96,13 @@ class AddWalletComponent extends Component {
   }
 
   verify = () => {
-    this.setState({
-      isVerifying: true
-    })
     if (this._verify()) {
       this.props.addWallet(this.state.walletAddress)
-      this.setState({
-        error: ''
-      }, () => this.props.handleClose())
     } else {
       this.setState({
         error: 'Invalid signed message. Please check again.'
       })
     }
-    this.setState({
-      isVerifying: false
-    })
   }
 
   copy = () => {
@@ -115,8 +111,8 @@ class AddWalletComponent extends Component {
   }
 
   render () {
-    const { classes, handleClose } = this.props
-    const { walletAddress, message, signedMessage, isVerifying, error } = this.state
+    const { classes, handleClose, isAddingWallet } = this.props
+    const { walletAddress, message, signedMessage, error } = this.state
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -167,7 +163,7 @@ class AddWalletComponent extends Component {
               error={!!error}
             />
             <Button onClick={this.verify} className={classes.btnVerify}>
-              {isVerifying ? <CircularProgress className={classes.progress} classes={{ svg: classes.progressSvg }} /> : 'Verify'}
+              {isAddingWallet ? <CircularProgress className={classes.progress} classes={{ svg: classes.progressSvg }} /> : 'Verify'}
             </Button>
             <Button onClick={handleClose} className={classes.btnCancel}>
               Cancel
