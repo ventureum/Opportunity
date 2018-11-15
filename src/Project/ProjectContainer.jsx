@@ -1,16 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Project from './ProjectComponent'
-import { getProject } from './actions'
+import { getProject, rateObj } from './actions'
 
 class ProjectContainer extends Component {
-  constructor () {
-    super()
-    this.state = {
-      error: ''
-    }
-  }
-
   async componentDidMount () {
     let { match } = this.props
     if (match) {
@@ -26,22 +19,24 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { profile, projectData } = this.props
-    let { error } = this.state
-    return (<Project profile={profile} projectData={projectData} error={error} />)
+    let { profile, projectData, ...other } = this.props
+    return (<Project profile={profile} projectData={projectData} {...other} />)
   }
 }
 
 const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
-    projectData: state.projectReducer.projectData
+    projectData: state.projectReducer.projectData,
+    transactionPending: state.projectReducer.transactionPending,
+    error: state.projectReducer.error
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProject: (projectId) => dispatch(getProject(projectId))
+    getProject: (projectId) => dispatch(getProject(projectId)),
+    rateObj: (projectId, milestoneId, ratings, comment) => dispatch(rateObj(projectId, milestoneId, ratings, comment))
   }
 }
 

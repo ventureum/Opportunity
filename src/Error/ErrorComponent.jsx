@@ -66,7 +66,7 @@ const theme = createMuiTheme({
     marginBottom: '35px'
   },
   homeBtn: {
-    width: '200px',
+    width: '210px',
     color: '#01a78d',
     border: '2px solid #01a78d',
     borderRadius: '99px',
@@ -75,7 +75,7 @@ const theme = createMuiTheme({
     marginTop: '15px'
   },
   reportBtn: {
-    width: '200px',
+    width: '210px',
     color: '#01a78d',
     border: '2px solid #01a78d',
     borderRadius: '99px',

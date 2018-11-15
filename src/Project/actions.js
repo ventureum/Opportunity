@@ -1,5 +1,6 @@
 import { validators, voteInfo } from './mockData.js'
 import axios from 'axios'
+import Contract from '../contract'
 
 const endpoint = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/exp'
 
@@ -50,6 +51,19 @@ async function _getProjects () {
   return rv.data.projects ? rv.data.projects.map(p => parseProject(p)) : []
 }
 
+async function _rateObj (privateKey, projectId, milestoneId, ratings, comment) {
+  let ratingData = []
+  for (var objId in ratings) {
+    ratingData.push(objId)
+    ratingData.push(ratings[objId])
+  }
+
+  let c = new Contract()
+  await c.start(privateKey)
+  await c.rateObj(projectId, milestoneId, ratingData, comment)
+  await c.disconnect()
+}
+
 const getProject = (projectId) => {
   return {
     type: 'GET_PROJECT',
@@ -85,4 +99,18 @@ const vote = () => {
   }
 }
 
-export { getProjects, getProject, getValidators, getVoteInfo, vote }
+const rateObjHelper = (privateKey, projectId, milestoneId, ratings, comment) => {
+  return {
+    type: 'RATE_OBJ',
+    payload: _rateObj(privateKey, projectId, milestoneId, ratings, comment)
+  }
+}
+
+const rateObj = (projectId, milestoneId, ratings, comment) => {
+  return (dispatch, getState) => {
+    const privateKey = getState().userReducer.profile.privateKey
+    dispatch(rateObjHelper(privateKey, projectId, milestoneId, ratings, comment))
+  }
+}
+
+export { getProjects, getProject, getValidators, getVoteInfo, vote, rateObj }

@@ -23,6 +23,7 @@ class MilestoneObjVoteComponent extends Component {
 
     this.state = {
       objRating: {},
+      comment: '',
       walletAddress: '',
       message: '',
       signedMessage: '',
@@ -56,9 +57,15 @@ class MilestoneObjVoteComponent extends Component {
   }
 
   onSubmit = () => {
+    let { milestone, rateObj } = this.props
+
     // submit rating and comment
     let { objRating, comment } = this.state
-    console.log(objRating, comment)
+    let commentContent = {
+      title: '',
+      text: comment
+    }
+    rateObj(milestone.projectId, milestone.milestoneId, objRating, JSON.stringify(commentContent))
   }
 
   renderObj = (obj) => {
@@ -104,7 +111,7 @@ class MilestoneObjVoteComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, onClose, fullScreen, ...other } = this.props
+    const { classes, milestone, onClose, fullScreen, transactionPending, error, ...other } = this.props
 
     return (
       <MuiThemeProvider theme={theme}>

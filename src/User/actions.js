@@ -1,3 +1,4 @@
+import Web3 from 'web3'
 import delay from 'delay'
 import * as api from './apis'
 import { generatePrivateKey } from '../wallet'
@@ -17,14 +18,10 @@ async function postTelegramLogin (loginData) {
 
   try {
     // next, fetch user profile from our database
-    let { profile } = await api.getProfile(uuid)
+    let profile = await api.getProfile(uuid)
     rv.profile = profile
     rv.userInfo.newUser = false
     rv.userInfo.isAuthenticated = true
-
-    // fetch privateKey
-    let { privateKey } = await api.getActorPrivateKey(uuid)
-    rv.profile.privateKey = privateKey
   } catch (err) {
     if (err.message.errorCode === 'NoActorExisting') {
       rv.userInfo.newUser = true
@@ -41,7 +38,7 @@ async function _register (userInfo) {
   try {
     // generate a new private key
     let { privateKey, address } = generatePrivateKey()
-
+    privateKey = Web3.utils.bytesToHex(privateKey)
     let rawUUID = getRawUUID(userInfo.id)
     let user = address
     let userType = userTypeMap['USER']
@@ -65,7 +62,7 @@ async function _register (userInfo) {
     // now, fetch user profile
     let uuid = getUUID(userInfo.id)
 
-    let { profile } = await api.getProfile(uuid)
+    let profile = await api.getProfile(uuid)
 
     // successfully retrieved profile, now register privateKey
     await api.setActorPrivateKey(uuid, privateKey)

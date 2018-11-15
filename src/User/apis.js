@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { CryptoUtils } from 'loom-js'
 
 let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/exp'
 
@@ -25,21 +24,26 @@ const responseCheck = (responseData) => {
 }
 
 async function getProfile (uuid) {
-  return responseCheck(await apiFeed.post('/get-profile', { actor: uuid }))
+  let { profile } = responseCheck(await apiFeed.post('/get-profile', { actor: uuid }))
+
+  let privateKeyResponse = await apiFeed.post('/get-actor-private-key', { actor: uuid })
+  // auto retrieve privateKey, do not check error in this step
+  profile.privateKey = privateKeyResponse.data.privateKey
+
+  return profile
 }
 
 async function setActorPrivateKey (uuid, privateKey) {
   return responseCheck(await apiFeed.post('/set-actor-private-key',
     { actor: uuid,
-      privateKey: CryptoUtils.Uint8ArrayToB64(privateKey)
+      privateKey: privateKey
     }))
 }
 
 async function getActorPrivateKey (uuid) {
   let response = await apiFeed.post('/get-actor-private-key', { actor: uuid })
-  let data = responseCheck(response)
-  data.privateKey = CryptoUtils.B64ToUint8Array(data.privateKey)
-  return data
+  let { privateKey } = responseCheck(response)
+  return privateKey
 }
 
 export function userActive (username) {
