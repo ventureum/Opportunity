@@ -9,23 +9,34 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import TextField from '@material-ui/core/TextField'
 import SearchIcon from '@material-ui/icons/Search'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import numeral from 'numeral'
 import classNames from 'classnames'
 import update from 'immutability-helper'
+import Loading from '../Notification/Loading'
+import TransactionProgress from '../Notification/TransactionProgress'
+import Error from '../Error/ErrorComponent'
+import { processError } from '../Utils'
 
 class ProxyVotingComponent extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      isVoting: false,
       selectedValidatorActors: [],
       validatorPercentMap: {},
       sort: 'vote',
       voteStep: 0,
       keyword: '',
       showSearch: false
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    if (prevProps.requestStatus.delegate === false && this.props.requestStatus.delegate) {
+      this.setState({
+        voteStep: 0
+      })
+      this.props.refreshVoteInfo()
     }
   }
 
@@ -47,19 +58,19 @@ class ProxyVotingComponent extends Component {
   }
 
   formatVote = (pct) => {
-    if (this.props.voteInfo.votes * pct % 100 === 0) {
-      return this.props.voteInfo.votes * pct / 100
+    if (this.props.proxyVotingInfo.availableDelegateVotes * pct % 100 === 0) {
+      return this.props.proxyVotingInfo.availableDelegateVotes * pct / 100
     } else {
-      return numeral(this.props.voteInfo.votes * pct / 100).format('0.0a')
+      return numeral(this.props.proxyVotingInfo.availableDelegateVotes * pct / 100).format('0.0a')
     }
   }
 
   usedPercent = () => {
-    var proxyList = this.props.voteInfo.proxyList || []
+    var proxyList = this.props.proxyVotingInfo.proxyVotingList || []
     var usedPercent = 0
     if (this.state.voteStep === 0) {
       proxyList.forEach((proxy) => {
-        usedPercent += proxy.pct
+        usedPercent += proxy.votesInPercent
       })
     } else if (this.state.voteStep === 1) {
       this.state.selectedValidatorActors.forEach((actor) => {
@@ -70,13 +81,18 @@ class ProxyVotingComponent extends Component {
   }
 
   calcAvailableVotes = () => {
-    var votes = this.props.voteInfo.votes || 0
+    var votes = this.props.proxyVotingInfo.availableDelegateVotes || 0
     var usedPercent = this.usedPercent()
-    return numeral(votes * (100 - usedPercent) / 100).format('0a')
+    var avaliableVotes = votes * (100 - usedPercent) / 100
+    if (avaliableVotes === parseInt(avaliableVotes)) {
+      return avaliableVotes
+    } else {
+      return avaliableVotes.toFixed(1)
+    }
   }
 
   togglePerson = (actor) => {
-    if (this.state.isVoting) return
+    if (this.props.requestStatus.delegate === false) return
     if (this.state.selectedValidatorActors.indexOf(actor) >= 0) {
       this.removePerson(actor)
     } else {
@@ -88,7 +104,7 @@ class ProxyVotingComponent extends Component {
   }
 
   removePerson = (actor) => {
-    if (this.state.isVoting) return
+    if (this.props.requestStatus.delegate === false) return
     this.setState({
       selectedValidatorActors: update(this.state.selectedValidatorActors, { $splice: [[this.state.selectedValidatorActors.indexOf(actor), 1]] })
     })
@@ -103,9 +119,9 @@ class ProxyVotingComponent extends Component {
   edit = () => {
     let selectedValidatorActors = []
     let validatorPercentMap = {}
-    for (let item of this.props.voteInfo.proxyList) {
-      selectedValidatorActors.push(item.actor)
-      validatorPercentMap[item.actor] = item.pct
+    for (let item of this.props.proxyVotingInfo.proxyVotingList) {
+      selectedValidatorActors.push(item.proxy)
+      validatorPercentMap[item.proxy] = item.votesInPercent
     }
     this.setState({
       voteStep: 1,
@@ -123,10 +139,18 @@ class ProxyVotingComponent extends Component {
   }
 
   vote = () => {
-    this.setState({
-      isVoting: true
-    })
-    console.log('vote')
+    let proxyList = []
+    let pctList = []
+    for (let actor of this.state.selectedValidatorActors) {
+      let actorVoteInfo = this.actorToVoteInfo(actor)
+      let submitPct = this.state.validatorPercentMap[actor]
+      if ((!actorVoteInfo && submitPct !== 0) || (actorVoteInfo && submitPct !== actorVoteInfo.pct)) {
+        let validator = this.actorToValidator(actor)
+        proxyList.push(validator.publicKey)
+        pctList.push(submitPct)
+      }
+    }
+    this.props.delegate(this.props.project.projectId, proxyList, pctList)
   }
 
   search = () => {
@@ -143,9 +167,20 @@ class ProxyVotingComponent extends Component {
   }
 
   actorToValidator = (actor) => {
-    for (let validator of this.props.validators) {
+    for (let validator of this.props.proxyList) {
       if (validator.actor === actor) {
         return validator
+      }
+    }
+    return null
+  }
+
+  actorToVoteInfo = (actor) => {
+    if (this.props.proxyVotingInfo.proxyVotingList) {
+      for (let validator of this.props.proxyVotingInfo.proxyVotingList) {
+        if (validator.actor === actor) {
+          return validator
+        }
       }
     }
     return null
@@ -154,39 +189,41 @@ class ProxyVotingComponent extends Component {
   handleChange = (e) => {
     this.setState({
       keyword: e.target.value
-    })
+    }, this.search)
   }
 
   getVoteDom = () => {
-    const { classes, voteInfo } = this.props
-    const { isVoting, selectedValidatorActors, voteStep, validatorPercentMap } = this.state
+    const { classes, proxyVotingInfo } = this.props
+    const { selectedValidatorActors, voteStep, validatorPercentMap } = this.state
 
-    if (!voteInfo) {
+    if (!proxyVotingInfo) {
       return null
     } else {
       return (
         <Grid item xs={12} md={4}>
-          <div className={classNames(classes.voteWrapper, { [classes.isVoting]: isVoting })}>
-            <div className={classes.voteTitle}>My votes ({this.calcAvailableVotes()}/{voteInfo.votes} available)</div>
-            {voteStep === 0 && !voteInfo.proxyList &&
+          <div className={classes.voteWrapper}>
+            <div className={classes.voteTitle}>My votes ({this.calcAvailableVotes()}/{proxyVotingInfo.availableDelegateVotes} available)</div>
+            {voteStep === 0 && !proxyVotingInfo.proxyVotingList &&
               <div>
                 <div className={classes.voteText}>Start voting for your validators now!</div>
                 <img src='/vote-1.png' alt='' className={classes.voteImage} />
-                <Button onClick={() => this.setState({ voteStep: 1 })} className={classes.btnStartVoting}>
-                  Start Voting
-                </Button>
+                {proxyVotingInfo.availableDelegateVotes > 0 &&
+                  <Button onClick={() => this.setState({ voteStep: 1 })} className={classes.btnStartVoting}>
+                    Start Voting
+                  </Button>
+                }
               </div>
             }
-            {voteStep === 0 && voteInfo.proxyList &&
+            {voteStep === 0 && proxyVotingInfo.proxyVotingList &&
               <div>
-                {voteInfo.proxyList.map((item, i) => {
-                  let targetValidator = this.actorToValidator(item.actor)
+                {proxyVotingInfo.proxyVotingList.map((item, i) => {
+                  let targetValidator = this.actorToValidator(item.proxy)
                   return (
                     <div className={classes.personWrapper} key={i}>
                       <img className={classes.personAvatar} src={targetValidator.photoUrl} alt='' />
                       <div className={classes.personName}>{targetValidator.username}</div>
-                      <div className={classes.personPct}>{item.pct}%</div>
-                      <div>({this.formatVote(item.pct)} Votes)</div>
+                      <div className={classes.personPct}>{item.votesInPercent}%</div>
+                      <div className={classes.personVotes}>({this.formatVote(item.votesInPercent)} Votes)</div>
                     </div>
                   )
                 })}
@@ -218,7 +255,7 @@ class ProxyVotingComponent extends Component {
                         >
                           {this.getAvailablePercent(validatorPercentMap[actor]).map((val, i) => <MenuItem key={val} value={val}>{val}%</MenuItem>)}
                         </Select>
-                        <div className={classes.personVote}>{this.formatVote(validatorPercentMap[actor])} Votes</div>
+                        <div className={classes.personVotes}>{this.formatVote(validatorPercentMap[actor])} Votes</div>
                         <i onClick={() => { this.removePerson(actor) }} className={classNames('fas', 'fa-times-circle', classes.personClose)} />
                       </div>
                     )
@@ -228,7 +265,7 @@ class ProxyVotingComponent extends Component {
                   Cancel
                 </Button>
                 <Button onClick={this.vote} className={classNames({ [classes.btnVote]: selectedValidatorActors.length !== 0, [classes.btnVoteDisabled]: selectedValidatorActors.length === 0 })}>
-                  {isVoting ? <CircularProgress className={classes.progress} classes={{ svg: classes.progressSvg }} /> : 'Vote'}
+                  Vote
                 </Button>
               </div>
             }
@@ -239,16 +276,31 @@ class ProxyVotingComponent extends Component {
   }
 
   render () {
-    const { classes, validators } = this.props
+    const { classes, proxyList, requestStatus } = this.props
     const { selectedValidatorActors, sort, voteStep, keyword, showSearch } = this.state
 
-    let displayValidators = validators
+    if (processError(requestStatus)) {
+      return (
+        <div>
+          <Error error={processError(requestStatus)} />
+        </div>
+      )
+    }
+    if (!(requestStatus.getProxyList && requestStatus.getVoteInfo)) {
+      return (
+        <div>
+          <Loading />
+        </div>
+      )
+    }
+
+    let displayValidators = proxyList
     if (showSearch) {
       let lcKeyword = keyword.toLowerCase()
       displayValidators = displayValidators.filter((validator) => {
         let targetProperties = ['username', 'description']
         for (let name of targetProperties) {
-          if (validator[name].toLowerCase().indexOf(lcKeyword) >= 0) {
+          if (validator[name] && validator[name].toLowerCase().indexOf(lcKeyword) >= 0) {
             return true
           }
         }
@@ -257,17 +309,17 @@ class ProxyVotingComponent extends Component {
     } else {
       displayValidators.sort((a, b) => {
         if (sort === 'vote') {
-          return b.proxyVoting.receivedVotes - a.proxyVoting.receivedVotes
+          return b.proxyVoting.receivedDelegateVotes - a.proxyVoting.receivedDelegateVotes
         } else {
-          return b.reputation - a.reputation
+          return b.rewardsInfo.reputation - a.rewardsInfo.reputation
         }
       })
     }
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Grid container direction='row' className={classes.proxyVoting} justify='center'>
-          <Grid item xs={10}>
+        <Grid container className={classes.proxyVotingWrapper} onClick={this.props.handleClose} direction='row' justify='center' alignItems='center'>
+          <Grid item className={classes.proxyVoting} onClick={(e) => e.stopPropagation()} xs={10}>
             <Grid container direction='row' spacing={24}>
               <Grid item xs={12} md={8}>
                 <Grid container direction='row'>
@@ -317,11 +369,11 @@ class ProxyVotingComponent extends Component {
                         </Grid>
                         <Grid item xs={12} sm={4} className={classes.verticalCenter}>
                           <div className={classes.block}>
-                            <div className={classes.value}>{validator.reputation}</div>
+                            <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
                             <div>Reputation</div>
                           </div>
                           <div className={classes.block}>
-                            <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedVotes)}</div>
+                            <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
                             <div>Votes</div>
                           </div>
                           {voteStep === 1 &&
@@ -342,8 +394,12 @@ class ProxyVotingComponent extends Component {
               </Grid>
               {this.getVoteDom()}
             </Grid>
+            <div onClick={this.props.handleClose} className={classes.close}>
+              <i className='fas fa-times' />
+            </div>
           </Grid>
         </Grid>
+        { requestStatus.delegate === false && <TransactionProgress open /> }
       </MuiThemeProvider>
     )
   }
@@ -354,8 +410,14 @@ const theme = createMuiTheme({
     useNextVariants: true,
     suppressDeprecationWarnings: true
   },
+  proxyVotingWrapper: {
+    height: '100%'
+  },
   proxyVoting: {
-    marginTop: '40px',
+    position: 'relative',
+    backgroundColor: '#F3F6FC',
+    padding: '30px',
+    borderRadius: '5px',
     fontFamily: 'Helvetica Neue'
   },
   menu: {
@@ -460,10 +522,8 @@ const theme = createMuiTheme({
     borderRadius: '6px',
     backgroundColor: '#FFFFFF',
     boxShadow: '0 2px 5px 0 rgba(0,0,0,0.05)',
-    padding: '40px',
+    padding: '20px',
     textAlign: 'center'
-  },
-  isVoting: {
   },
   progress: {
     color: 'white',
@@ -487,9 +547,12 @@ const theme = createMuiTheme({
   },
   voteImage: {
     width: '50%',
-    marginBottom: '40px'
+    margin: '0 auto',
+    marginBottom: '40px',
+    display: 'block'
   },
   btnStartVoting: {
+    padding: '0',
     height: '50px',
     width: '168px',
     borderRadius: '4px',
@@ -516,6 +579,8 @@ const theme = createMuiTheme({
     marginRight: '9px'
   },
   personName: {
+    marginRight: '5px',
+    wordBreak: 'break-all',
     flex: '1'
   },
   personSelectWrapper: {
@@ -532,31 +597,40 @@ const theme = createMuiTheme({
   },
   personSelectRoot: {
     height: '34px',
+    width: '60px',
     backgroundColor: '#F8F9FC',
     borderRadius: '4px',
     border: '1px solid #D2D5DB',
     paddingLeft: '10px'
   },
   personSelect: {
-    paddingRight: '20px'
+    paddingRight: '20px',
+    '&:focus': {
+      background: 'none'
+    }
   },
   personPct: {
     marginLeft: '10px'
   },
+  personVotes: {
+    wordBreak: 'break-word',
+    width: '20%',
+    textAlign: 'right'
+  },
   btnEdit: {
+    padding: '0',
     width: '168px',
-    height: '50px',
+    minHeight: '50px',
     backgroundColor: 'white',
     borderRadius: '4px',
     border: '1px solid #01A78D',
     color: '#01A78D',
     fontSize: '18px',
-    fontWeight: '500',
-    marginRight: '10%'
+    fontWeight: '500'
   },
   btnCancel: {
     width: '45%',
-    height: '50px',
+    minHeight: '50px',
     backgroundColor: 'white',
     borderRadius: '4px',
     border: '1px solid #01A78D',
@@ -583,6 +657,15 @@ const theme = createMuiTheme({
   },
   personClose: {
     marginLeft: '18px',
+    '&:hover': {
+      cursor: 'pointer'
+    }
+  },
+  close: {
+    position: 'absolute',
+    right: '10px',
+    top: '8px',
+    fontSize: '20px',
     '&:hover': {
       cursor: 'pointer'
     }

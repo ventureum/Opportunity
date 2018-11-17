@@ -2,8 +2,8 @@ import Web3 from 'web3'
 import delay from 'delay'
 import * as api from './apis'
 import { generatePrivateKey } from '../wallet'
-import Contract from '../contract'
-import { getUUID, getRawUUID } from '../utils/index'
+import { getUUID, getRawUUID } from '../Utils'
+import c from '../contract'
 
 const userTypeMap = {
   'USER': '0x2db9fd3d',
@@ -23,7 +23,7 @@ async function postTelegramLogin (loginData) {
     rv.userInfo.newUser = false
     rv.userInfo.isAuthenticated = true
   } catch (err) {
-    if (err.message.errorCode === 'NoActorExisting') {
+    if (err.message && err.message.errorCode === 'NoActorExisting') {
       rv.userInfo.newUser = true
       return rv
     } else {
@@ -49,8 +49,6 @@ async function _register (userInfo) {
       telegramId: userInfo.id.toString(),
       phoneNumber: userInfo.phone_number
     }
-
-    let c = new Contract()
     await c.start(privateKey)
     await c.registerUser(rawUUID, user, userType, reputation, JSON.stringify(meta))
     await c.disconnect()
@@ -62,7 +60,7 @@ async function _register (userInfo) {
     // now, fetch user profile
     let uuid = getUUID(userInfo.id)
 
-    let profile = await api.getProfile(uuid)
+    let profile = await api.getProfile(uuid, false)
 
     // successfully retrieved profile, now register privateKey
     await api.setActorPrivateKey(uuid, privateKey)
@@ -90,31 +88,59 @@ function onLogin (loginData) {
   }
 }
 
-export function getProfile (username) {
+function addWallet (actor, walletAddress) {
+  return {
+    type: 'ADD_WALLET',
+    payload: api.addWallet(actor, walletAddress)
+  }
+}
+
+function removeWallet (actor, walletAddress) {
+  return {
+    type: 'REMOVE_WALLET',
+    payload: api.removeWallet(actor, walletAddress)
+  }
+}
+
+function getWallets (actor) {
+  return {
+    type: 'GET_WALLETS',
+    payload: api.getWallets(actor)
+  }
+}
+
+function getProfile (actor) {
   return {
     type: 'PROFILE_DATA',
-    payload: api.getProfile(username)
+    payload: api.getProfile(actor)
   }
 }
 
-export function getVoteList (username) {
+function getBatchProfiles (actors) {
+  return {
+    type: 'GET_BATCH_PROFILES',
+    payload: api.getBatchProfiles(actors)
+  }
+}
+
+function getVoteList (actor) {
   return {
     type: 'VOTE_LIST',
-    payload: api.getVoteList(username)
+    payload: api.getVoteList(actor)
   }
 }
 
-export function getPostList (username) {
+function getPostList (actor) {
   return {
     type: 'POST_LIST',
-    payload: api.getPostList(username)
+    payload: api.getPostList(actor)
   }
 }
 
-export function getReplyList (username) {
+function getReplyList (actor) {
   return {
     type: 'REPLY_LIST',
-    payload: api.getReplyList(username)
+    payload: api.getReplyList(actor)
   }
 }
 
@@ -124,4 +150,4 @@ function logout () {
   }
 }
 
-export { onLogin, logout, register }
+export { onLogin, logout, register, getWallets, getProfile, getBatchProfiles, getVoteList, getPostList, getReplyList, addWallet, removeWallet }

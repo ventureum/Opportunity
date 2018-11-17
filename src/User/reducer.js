@@ -4,10 +4,13 @@ const initState = {
   userInfo: {
     isAuthenticated: false
   },
+  wallets: [],
   profile: null,
-  voteList: null,
-  postList: null,
-  replyList: null
+  profiles: [],
+  finalizedValidators: [],
+  voteList: [],
+  postList: [],
+  replyList: []
 }
 
 export default function (state = initState, action) {
@@ -37,6 +40,24 @@ export default function (state = initState, action) {
         profile: action.payload.profile,
         userInfo: action.payload.userInfo
       }
+    case 'GET_WALLETS_FULFILLED':
+    case 'ADD_WALLET_FULFILLED':
+    case 'REMOVE_WALLET_FULFILLED':
+      return {
+        ...state,
+        wallets: action.payload
+      }
+    case 'GET_BATCH_PROFILES_FULFILLED':
+      return {
+        ...state,
+        profiles: action.payload
+      }
+    case 'GET_PROJECT_PAGE_DATA_FULFILLED': {
+      return {
+        ...state,
+        ...action.payload.userData
+      }
+    }
     case 'PROFILE_DATA_FULFILLED':
       return {
         ...state,

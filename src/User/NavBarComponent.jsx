@@ -27,7 +27,7 @@ class NavBarComponent extends Component {
   }
 
   render () {
-    const { classes, userInfo } = this.props
+    const { classes, profile } = this.props
     const { open } = this.state
     const anchorEl = window.document.querySelector('header')
 
@@ -41,9 +41,9 @@ class NavBarComponent extends Component {
             </Typography>
           </div>
           <div className={classes.user} onClick={this.handleOpen}>
-            <img className={classes.avatar} src={userInfo.photo_url} alt='' />
+            <img className={classes.avatar} src={profile.photoUrl} alt='' />
             <Typography variant='body1' className={classes.username}>
-              {userInfo.username}
+              {profile.username}
             </Typography>
           </div>
           <Menu

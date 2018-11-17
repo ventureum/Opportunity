@@ -207,10 +207,10 @@ class ProfileComponent extends Component {
   }
 
   componentDidMount () {
-    this.props.getProfile(this.props.userInfo.username).then(() => {
-      this.props.getVoteList(this.props.userInfo.username)
-      this.props.getPostList(this.props.userInfo.username)
-      this.props.getReplyList(this.props.userInfo.username)
+    this.props.getProfile(this.props.userInfo.actor).then(() => {
+      this.props.getVoteList(this.props.userInfo.actor)
+      this.props.getPostList(this.props.userInfo.actor)
+      this.props.getReplyList(this.props.userInfo.actor)
     })
   }
 
