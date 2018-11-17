@@ -125,9 +125,9 @@ class MilestoneDetailComponent extends Component {
             <div className={classes.ratingScore}>{milestone.avgRating}</div>
             <div className={classes.evaluator}>
               {evaluatorList.map((person, i) => {
-                 return (
-                   <img key={i} className={classes.avatar} src={person.avatar} alt='' />
-                 )
+                return (
+                  <img key={i} className={classes.avatar} src={person.avatar} alt='' />
+                )
               })}
               <div className={classes.evaluatorNote}>
                 Voted by {evaluatorList.length} evaluators
@@ -137,24 +137,24 @@ class MilestoneDetailComponent extends Component {
           <Grid item>
             <Grid container direction='column' className={classes.objWrapper}>
               {milestone.objectives.map((obj, i) => {
-                 return (
-                   <Grid item xs={12} className={classes.obj} key={i}>
-                     <div className={classes.objId}>
+                return (
+                  <Grid item xs={12} className={classes.obj} key={i}>
+                    <div className={classes.objId}>
                        Objective&nbsp;{(i + 1)}
-                       <div className={classes.objRating}>
-                         {obj.avgRating}
-                       </div>
-                     </div>
-                     <div>
-                       <div className={classes.objTitle}>
-                         {obj.content.title}
-                       </div>
-                       <div className={classes.objDesc}>
-                         {obj.content.description}
-                       </div>
-                     </div>
-                   </Grid>
-                 )
+                      <div className={classes.objRating}>
+                        {obj.avgRating}
+                      </div>
+                    </div>
+                    <div>
+                      <div className={classes.objTitle}>
+                        {obj.content.title}
+                      </div>
+                      <div className={classes.objDesc}>
+                        {obj.content.description}
+                      </div>
+                    </div>
+                  </Grid>
+                )
               })}
             </Grid>
           </Grid>
@@ -171,12 +171,12 @@ class MilestoneDetailComponent extends Component {
                 Attached Files
               </Grid>
               {fileList.map((file, i) => {
-                 return (
-                   <Grid item xs={12} key={i} className={classes.file}>
-                     <i className={classNames('fas', 'fa-file', classes.fileIcon)} />
-                     <a className={classes.fileName} href={file.link} target='_blank'>{file.name}</a>
-                   </Grid>
-                 )
+                return (
+                  <Grid item xs={12} key={i} className={classes.file}>
+                    <i className={classNames('fas', 'fa-file', classes.fileIcon)} />
+                    <a className={classes.fileName} href={file.link} target='_blank'>{file.name}</a>
+                  </Grid>
+                )
               })}
             </Grid>
           </Grid>
@@ -186,15 +186,15 @@ class MilestoneDetailComponent extends Component {
                 Related Posts
               </Grid>
               {relatedPosts.map((post, i) => {
-                 return (
-                   <Grid item xs={12} key={i} className={classes.post}>
-                     <img src={post.avatar} alt='' className={classes.postAvatar} />
-                     <div className={classes.postContent}>
-                       <a href={post.link} target='_blank' className={classes.postTitle}>{post.title}</a>
-                       <div className={classes.postAuthor}>{post.author}</div>
-                     </div>
-                   </Grid>
-                 )
+                return (
+                  <Grid item xs={12} key={i} className={classes.post}>
+                    <img src={post.avatar} alt='' className={classes.postAvatar} />
+                    <div className={classes.postContent}>
+                      <a href={post.link} target='_blank' className={classes.postTitle}>{post.title}</a>
+                      <div className={classes.postAuthor}>{post.author}</div>
+                    </div>
+                  </Grid>
+                )
               })}
             </Grid>
           </Grid>

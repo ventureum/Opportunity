@@ -34,7 +34,6 @@ const projectReducer = (state = initState, action) => {
         proxyList: action.payload
       }
     case 'GET_VOTE_INFO_FULFILLED':
-      let voteInfo
       for (let i = 0; i < state.proxyVotingInfoList.length; i++) {
         if (state.proxyVotingInfoList[i].projectId === action.payload.projectId) {
           state.proxyVotingInfoList.splice(i, 1, {
