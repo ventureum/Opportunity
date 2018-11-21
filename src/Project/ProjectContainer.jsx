@@ -19,8 +19,8 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { profile, projectData, ...other } = this.props
-    return (<Project profile={profile} projectData={projectData} {...other} />)
+    let { profile, projectData, error } = this.props
+    return (<Project profile={profile} projectData={projectData} error={error} />)
   }
 }
 
@@ -28,7 +28,6 @@ const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
     projectData: state.projectReducer.projectData,
-    transactionPending: state.projectReducer.transactionPending,
     error: state.projectReducer.error
   }
 }

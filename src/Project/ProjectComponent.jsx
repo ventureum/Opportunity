@@ -19,7 +19,7 @@ import Tab from '@material-ui/core/Tab'
 import Modal from '@material-ui/core/Modal'
 import ProjectDetail from './ProjectDetailComponent'
 import classNames from 'classnames'
-import MilestoneDetail from './MilestoneDetailComponent'
+import MilestoneDetail from './MilestoneDetailContainer'
 import ProxyVoting from './ProxyVotingContainer'
 import NavBar from '../User/NavBarContainer'
 import Error from '../Error/ErrorComponent'
@@ -187,7 +187,7 @@ class ProjectComponent extends Component {
 
   render () {
     let { open, tabValue, selectedMilestone } = this.state
-    let { classes, profile, projectData, rateObj, transactionPending, error } = this.props
+    let { classes, projectData, error } = this.props
 
     if (error) {
       return (<Error error={error} />)
@@ -272,11 +272,7 @@ class ProjectComponent extends Component {
                   <Grid className={classes.milestoneModal} item xs={12} sm={8} md={6}>
                     <MilestoneDetail
                       handleClose={this.handleClose}
-                      profile={profile}
                       milestone={selectedMilestone}
-                      rateObj={rateObj}
-                      transactionPending={transactionPending}
-                      error={error}
                     />
                   </Grid>
                 </Grid>

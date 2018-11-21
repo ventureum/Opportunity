@@ -22,6 +22,18 @@
   font-size: large;
 }
 
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker-popper {
+  z-index: 10;
+}
+
+.react-datepicker-wrapper > div {
+  width: 100%;
+}
+
 * {
   font-family: "Noto Sans";
 }
