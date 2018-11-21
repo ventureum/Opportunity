@@ -48,6 +48,7 @@ class NavBarComponent extends Component {
           </div>
           <Menu
             anchorEl={anchorEl}
+            getContentAnchorEl={null}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'right'
@@ -61,6 +62,13 @@ class NavBarComponent extends Component {
               <Link to='/my-projects' className={classes.link}>
                 <Typography variant='body2'>
                   My Projects
+                </Typography>
+              </Link>
+            </MenuItem>
+            <MenuItem onClick={this.handleClose}>
+              <Link to='/project-management' className={classes.link}>
+                <Typography variant='body2'>
+                  Project Management
                 </Typography>
               </Link>
             </MenuItem>

@@ -12,6 +12,7 @@ import Login from './User/LoginContainer'
 import Project from './Project/ProjectContainer'
 import ProjectList from './Project/ProjectListContainer'
 import MyProjects from './User/MyProjectsContainer'
+import ProjectManagement from './User/ProjectManagementContainer'
 
 const userIsAuthenticated = connectedRouterRedirect({
   // The url to redirect user to if they fail
@@ -46,6 +47,7 @@ class App extends Component {
           <Route exact path='/' component={userIsAuthenticated(ProjectList)} />
           <Route path='/project/:projectId' component={Project} />
           <Route path='/my-projects' component={userIsAuthenticated(MyProjects)} />
+          <Route path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
         </Switch>
       </Router>
     )
