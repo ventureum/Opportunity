@@ -1,9 +1,12 @@
 import Web3 from 'web3'
 import delay from 'delay'
+import axios from 'axios'
 import * as api from './apis'
 import { generatePrivateKey } from '../wallet'
-import { getUUID, getRawUUID } from '../Utils'
+import { getRawUUID } from '../Utils'
 import c from '../contract'
+import jwt from 'jsonwebtoken'
+import JWTRS256_PUBLIC from '../publicKey'
 
 const userTypeMap = {
   'USER': '0x2db9fd3d',
@@ -11,10 +14,13 @@ const userTypeMap = {
   'PF': '0x5707a2a6'
 }
 
-async function postTelegramLogin (loginData) {
-  let uuid = getUUID(loginData.id)
+async function postTelegramLogin (loginData, accessToken) {
+  let uuid = loginData.actor
   let rv = { userInfo: loginData, profile: {} }
   rv.userInfo.isAuthenticated = false
+
+  // now, store encoded access token in header globally
+  axios.defaults.headers.common['Authorization'] = accessToken.encodedToken
 
   try {
     // next, fetch user profile from our database
@@ -31,6 +37,7 @@ async function postTelegramLogin (loginData) {
       throw err
     }
   }
+
   return rv
 }
 
@@ -39,14 +46,14 @@ async function _register (userInfo) {
     // generate a new private key
     let { privateKey, address } = generatePrivateKey()
     privateKey = Web3.utils.bytesToHex(privateKey)
-    let rawUUID = getRawUUID(userInfo.id)
+    let rawUUID = getRawUUID(userInfo.telegramId)
     let user = address
     let userType = userTypeMap['USER']
     let reputation = 0
     let meta = {
       username: userInfo.username,
       photoUrl: userInfo.photo_url,
-      telegramId: userInfo.id.toString(),
+      telegramId: userInfo.telegramId.toString(),
       phoneNumber: userInfo.phone_number
     }
     await c.start(privateKey)
@@ -58,7 +65,7 @@ async function _register (userInfo) {
     await delay(2000)
 
     // now, fetch user profile
-    let uuid = getUUID(userInfo.id)
+    let uuid = userInfo.actor
 
     let profile = await api.getProfile(uuid, false)
 
@@ -72,6 +79,36 @@ async function _register (userInfo) {
   } catch (err) {
     throw err
   }
+}
+
+async function _fetchAccessToken (requestToken) {
+  // max 20 retries
+  for (let i = 0; i < 20; i++) {
+    let accessToken = null
+    try {
+      accessToken = await api.fetchAccessToken(requestToken)
+    } catch (error) {
+      console.log('Retrying [fetchAccessToken] ...', error)
+    }
+
+    if (accessToken) {
+      // successfully retrieved our access token
+
+      // decode access token
+      const verifiedToken = jwt.verify(accessToken, JWTRS256_PUBLIC, { algorithms: ['RS256'] })
+
+      // add original encoded token to verified token
+      verifiedToken.encodedToken = accessToken
+
+      // pass token data
+      let _data = await postTelegramLogin(verifiedToken.data, verifiedToken)
+      return _data
+    }
+
+    await delay(2000)
+  }
+
+  throw new Error('Failed to retrieve access token.')
 }
 
 function register (userInfo) {
@@ -150,4 +187,11 @@ function logout () {
   }
 }
 
-export { onLogin, logout, register, getWallets, getProfile, getBatchProfiles, getVoteList, getPostList, getReplyList, addWallet, removeWallet }
+function fetchAccessToken (requestToken) {
+  return {
+    type: 'FETCH_ACCESS_TOKEN',
+    payload: _fetchAccessToken(requestToken)
+  }
+}
+
+export { onLogin, logout, register, getWallets, getProfile, getBatchProfiles, getVoteList, getPostList, getReplyList, addWallet, removeWallet, fetchAccessToken }

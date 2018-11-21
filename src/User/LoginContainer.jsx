@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Login from './LoginComponent'
-import { onLogin, register } from './actions'
+import { onLogin, register, fetchAccessToken } from './actions'
 
 class LoginContainer extends Component {
   constructor () {
@@ -21,6 +21,7 @@ class LoginContainer extends Component {
         onLogin={this.props.onLogin}
         register={this.props.register}
         userInfo={this.props.userInfo}
+        fetchAccessToken={this.props.fetchAccessToken}
         transactionPending={this.props.transactionPending}
         error={this.props.error}
       />)
@@ -30,7 +31,8 @@ class LoginContainer extends Component {
 const mapDispatchToProps = dispatch => {
   return {
     onLogin: loginData => dispatch(onLogin(loginData)),
-    register: userInfo => dispatch(register(userInfo))
+    register: userInfo => dispatch(register(userInfo)),
+    fetchAccessToken: requestToken => dispatch(fetchAccessToken(requestToken))
   }
 }
 

@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import TelegramLoginButton from 'react-telegram-login'
 import Typography from '@material-ui/core/Typography'
 import { createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -8,13 +7,30 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
-
+import nanoid from 'nanoid/non-secure'
 import logo from '../logo.svg'
+import moment from 'moment'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 class Login extends Component {
-  state = {
-    redirectToReferrer: false,
-    agreementChecked: false
+  constructor (props) {
+    super(props)
+    let { userInfo } = this.props
+    this.state = {
+      redirectToReferrer: false,
+      agreementChecked: false,
+      requestToken: nanoid(24) + '_WEB',
+      accessTokenExpired: !userInfo.accessToken || (moment().unix() >= userInfo.accessToken.exp)
+    }
+  }
+
+  componentDidMount () {
+    let { userInfo, onLogin } = this.props
+    if (!this.state.accessTokenExpired) {
+      // auto login if access token has not expired
+      // also refresh profile data
+      onLogin(userInfo, userInfo.accessToken)
+    }
   }
 
   handleTelegramResponse = (response) => {
@@ -30,6 +46,10 @@ class Login extends Component {
 
   handleCompleteRegistration = event => {
     this.props.register(this.props.userInfo)
+  }
+
+  onLogin = event => {
+    this.props.fetchAccessToken(this.state.requestToken)
   }
 
   renderRegistration = () => {
@@ -71,18 +91,45 @@ class Login extends Component {
 
   renderLoginBtn = () => {
     let { classes } = this.props
+    let { requestToken } = this.state
     return (
       <Grid item className={classes.loginButton} align='center'>
-        <TelegramLoginButton dataOnauth={this.handleTelegramResponse} botName='ventureum_bot' />
+        <Button variant='contained'
+          color='primary'
+          onClick={this.onLogin}>
+          <a
+            className={classes.loginBtnLink}
+            rel='noopener noreferrer'
+            href={`https://telegram.me/Milestone_Auth_bot?start=${requestToken}`}
+            target='_blank'>
+            Login with Telegram
+          </a>
+        </Button>
       </Grid>
     )
   }
 
   render () {
+    let { accessTokenExpired } = this.state
     let { classes, userInfo, transactionPending, error } = this.props
     if (error) {
       return (<Error error={error} />)
     }
+
+    if (!accessTokenExpired) {
+      // access token is still valid, use it instead of fetching a new one
+      // in the meanwhile, refresh user profile and disply a spinner
+      return (
+        <Grid container className={classes.root} direction='column' justify='center' alignItems='center'>
+          <Grid item>
+            <Grid container direction='column' justify='center' alignItems='center'>
+              <CircularProgress className={classes.progress} />
+            </Grid>
+          </Grid>
+        </Grid>
+      )
+    }
+
     return (
       <Grid container className={classes.root} direction='column' justify='center' alignItems='center'>
         <Grid item>
@@ -140,6 +187,10 @@ const theme = createMuiTheme({
     color: 'black',
     height: '200px',
     minWidth: '800px'
+  },
+  loginBtnLink: {
+    color: 'white',
+    textDecoration: 'none'
   },
   palette: {
     primary: {
