@@ -5,8 +5,10 @@ import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+import Avatar from '@material-ui/core/Avatar'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import logo from '../logo.svg'
+import Chip from '@material-ui/core/Chip'
 
 class NavBarComponent extends Component {
   state = {
@@ -41,7 +43,8 @@ class NavBarComponent extends Component {
             </Typography>
           </div>
           <div className={classes.user} onClick={this.handleOpen}>
-            <img className={classes.avatar} src={profile.photoUrl} alt='' />
+            { profile.photoUrl && <Avatar src={profile.photoUrl} className={classes.avatar} /> }
+            { !profile.photoUrl && <Avatar className={classes.avatar}> {profile.username.charAt(0)} </Avatar> }
             <Typography variant='body1' className={classes.username}>
               {profile.username}
             </Typography>
@@ -58,6 +61,10 @@ class NavBarComponent extends Component {
             classes={{ paper: classes.menu }}
             MenuListProps={{ disablePadding: true }}
           >
+            <MenuItem>
+              { profile.actorType === 'KOL' && <Chip label='Validator' className={classes.userTypeValidatorChip} /> }
+              { profile.actorType !== 'PF' && <Chip label='Project Founder' className={classes.userTypeProjectFounderChip} /> }
+            </MenuItem>
             <MenuItem onClick={this.handleClose}>
               <Link to='/my-projects' className={classes.link}>
                 <Typography variant='body2'>
@@ -163,6 +170,14 @@ const theme = createMuiTheme({
   bottomLine: {
     height: '1px',
     backgroundColor: '#E9E9E9'
+  },
+  userTypeValidatorChip: {
+    backgroundColor: '#01A78D',
+    color: 'white'
+  },
+  userTypeProjectFounderChip: {
+    backgroundColor: '#0C87CD',
+    color: 'white'
   }
 })
 

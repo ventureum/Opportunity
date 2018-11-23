@@ -6,7 +6,7 @@ import TextField from '@material-ui/core/TextField'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import classNames from 'classnames'
 import web3 from 'web3'
-import { sha3_256 } from 'js-sha3'
+import { sha3_256 } from 'js-sha3' // eslint-disable-line
 import MessageUtils from './messageUtils'
 
 class AddWalletComponent extends Component {

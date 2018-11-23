@@ -82,6 +82,12 @@ export default function (state = initState, action) {
       return {
         ...initState
       }
+    case 'FETCH_ACCESS_TOKEN_FULFILLED':
+      return {
+        ...state,
+        profile: action.payload.profile,
+        userInfo: action.payload.userInfo
+      }
     default: // need this for default case
       return state
   }

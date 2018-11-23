@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import MyProjects from './MyProjectsComponent'
 import { getProjectPageData } from '../Project/actions'
 import { getWallets, addWallet, removeWallet } from './actions'
+import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class MyProjectsContainer extends Component {
   componentWillMount () {
@@ -19,19 +20,40 @@ class MyProjectsContainer extends Component {
   }
 
   render () {
+    let {
+      wallets,
+      projects,
+      finalizedValidators,
+      proxyVotingInfoList,
+      profiles,
+      profile,
+      actionsPending
+    } = this.props
+
     return (<MyProjects
-      wallets={this.props.wallets}
-      projects={this.props.projects}
-      finalizedValidators={this.props.finalizedValidators}
-      proxyVotingInfoList={this.props.proxyVotingInfoList}
-      profiles={this.props.profiles}
-      profile={this.props.profile}
-      requestStatus={this.props.requestStatus}
+      wallets={wallets}
+      projects={projects}
+      finalizedValidators={finalizedValidators}
+      proxyVotingInfoList={proxyVotingInfoList}
+      profiles={profiles}
+      profile={profile}
       addWallet={this.addWallet}
       removeWallet={this.removeWallet}
+      actionsPending={actionsPending}
     />)
   }
 }
+
+const getProjectPageDataLoadingSelector = createLoadingSelector(['GET_PROJECT_PAGE_DATA'])
+const getWalletsLoadingSelector = createLoadingSelector(['GET_WALLETS'])
+const addWalletLoadingSelector = createLoadingSelector(['ADD_WALLET'])
+const removeWalletLoadingSelector = createLoadingSelector(['REMOVE_WALLET'])
+
+const errorSelector = createErrorSelector(
+  ['GET_PROJECT_PAGE_DATA',
+    'GET_WALLETS',
+    'REMOVE_WALLET',
+    'ADD_WALLET'])
 
 const mapStateToProps = state => {
   return {
@@ -41,7 +63,13 @@ const mapStateToProps = state => {
     finalizedValidators: state.projectReducer.finalizedValidators,
     proxyVotingInfoList: state.projectReducer.proxyVotingInfoList,
     profiles: state.userReducer.profiles,
-    requestStatus: state.requestReducer
+    actionsPending: {
+      getProjectPageData: getProjectPageDataLoadingSelector(state),
+      getWallets: getWalletsLoadingSelector(state),
+      addWallet: addWalletLoadingSelector(state),
+      removeWallet: removeWalletLoadingSelector(state)
+    },
+    error: errorSelector(state)
   }
 }
 

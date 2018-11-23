@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/exp'
+let authUrl = 'https://8r20kpyoif.execute-api.us-west-1.amazonaws.com/alpha'
 
 const apiFeed = axios.create({
   baseURL: baseUrl,
@@ -9,7 +10,23 @@ const apiFeed = axios.create({
   }
 })
 
+const apiAuth = axios.create({
+  baseURL: authUrl,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+})
+
 apiFeed.interceptors.response.use(function (response) {
+  if (!response.data.ok) {
+    throw response.data
+  }
+  return response
+}, function (error) {
+  return Promise.reject(error)
+})
+
+apiAuth.interceptors.response.use(function (response) {
   if (!response.data.ok) {
     throw response.data
   }
@@ -171,4 +188,9 @@ async function removeWallet (actor, walletAddress) {
   return wallets
 }
 
-export { getProfile, setActorPrivateKey, getActorPrivateKey, getWallets, getBatchProfiles, getVoteList, getPostList, getReplyList, getBatchPosts, addWallet, removeWallet }
+async function fetchAccessToken (requestToken) {
+  let rv = await apiAuth.get(`/get-access-token?key=${requestToken}`)
+  return rv.data.accessToken
+}
+
+export { getProfile, setActorPrivateKey, getActorPrivateKey, getWallets, getBatchProfiles, getVoteList, getPostList, getReplyList, getBatchPosts, addWallet, removeWallet, fetchAccessToken }
