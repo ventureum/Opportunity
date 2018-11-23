@@ -42,7 +42,7 @@ class WalletListComponent extends Component {
   }
 
   render () {
-    const { classes, wallets, addWallet, handleClose, isAddingWallet } = this.props
+    const { classes, wallets, addWallet, handleClose, actionsPending } = this.props
     const { modalOpen, dialogOpen } = this.state
 
     return (
@@ -83,7 +83,7 @@ class WalletListComponent extends Component {
                 open={modalOpen}
                 onClose={() => this.handleClose('modal')}
               >
-                <AddWallet isAddingWallet={isAddingWallet} handleClose={() => this.handleClose('modal')} addWallet={addWallet} />
+                <AddWallet isAddingWallet={actionsPending.addWallet} handleClose={() => this.handleClose('modal')} addWallet={addWallet} />
               </Modal>
             </Grid>
             <div onClick={handleClose} className={classes.close}>

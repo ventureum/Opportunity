@@ -14,13 +14,14 @@ const userTypeMap = {
   'PF': '0x5707a2a6'
 }
 
-async function postTelegramLogin (loginData, accessToken) {
+async function postTelegramLogin (loginData) {
   let uuid = loginData.actor
   let rv = { userInfo: loginData, profile: {} }
   rv.userInfo.isAuthenticated = false
 
   // now, store encoded access token in header globally
-  axios.defaults.headers.common['Authorization'] = accessToken.encodedToken
+  axios.defaults.headers.post['Authorization'] = loginData.accessToken
+  axios.defaults.headers.post['Content-Type'] = 'application/json'
 
   try {
     // next, fetch user profile from our database
@@ -96,12 +97,13 @@ async function _fetchAccessToken (requestToken) {
 
       // decode access token
       const verifiedToken = jwt.verify(accessToken, JWTRS256_PUBLIC, { algorithms: ['RS256'] })
-
-      // add original encoded token to verified token
-      verifiedToken.encodedToken = accessToken
-
+      let data = {
+        ...verifiedToken.data,
+        accessToken: accessToken,
+        accessTokenExp: verifiedToken.exp
+      }
       // pass token data
-      let _data = await postTelegramLogin(verifiedToken.data, verifiedToken)
+      let _data = await postTelegramLogin(data)
       return _data
     }
 

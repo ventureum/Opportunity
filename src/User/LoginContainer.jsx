@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Login from './LoginComponent'
 import { onLogin, register, fetchAccessToken } from './actions'
+import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class LoginContainer extends Component {
   constructor () {
@@ -16,14 +17,14 @@ class LoginContainer extends Component {
   }
 
   render () {
+    let { onLogin, register, userInfo, fetchAccessToken, ...others } = this.props
     return (
       <Login
-        onLogin={this.props.onLogin}
-        register={this.props.register}
-        userInfo={this.props.userInfo}
-        fetchAccessToken={this.props.fetchAccessToken}
-        transactionPending={this.props.transactionPending}
-        error={this.props.error}
+        onLogin={onLogin}
+        register={register}
+        userInfo={userInfo}
+        fetchAccessToken={fetchAccessToken}
+        {...others}
       />)
   }
 }
@@ -36,11 +37,20 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+const fetchLoginDataLoadingSelector = createLoadingSelector(['FETCH_LOGIN_DATA'])
+const fetchAccessTokenLoadingSelector = createLoadingSelector(['FETCH_ACCESS_TOKEN'])
+const registerLoadingSelector = createLoadingSelector(['REGISTER'])
+const errorSelector = createErrorSelector(['FETCH_LOGIN_DATA', 'FETCH_ACCESS_TOKEN'])
+
 const mapStateToProps = state => {
   return {
     userInfo: state.userReducer.userInfo,
-    transactionPending: state.userReducer.transactionPending,
-    error: state.userReducer.error
+    actionsPending: {
+      fetchLoginData: fetchLoginDataLoadingSelector(state),
+      fetchAccessToken: fetchAccessTokenLoadingSelector(state),
+      register: registerLoadingSelector(state)
+    },
+    error: errorSelector(state)
   }
 }
 

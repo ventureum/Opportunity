@@ -8,7 +8,6 @@ import ProxyVoting from '../Project/ProxyVotingContainer'
 import NavBar from './NavBarContainer'
 import Loading from '../Notification/Loading'
 import Error from '../Error/ErrorComponent'
-import { processError } from '../Utils'
 var commafy = require('commafy')
 var moment = require('moment')
 
@@ -53,18 +52,22 @@ class MyProjectsComponent extends Component {
   }
 
   render () {
-    const { classes, wallets, addWallet, removeWallet, projects, requestStatus, proxyVotingInfoList } = this.props
+    const {
+      classes,
+      wallets,
+      addWallet,
+      removeWallet,
+      projects,
+      proxyVotingInfoList,
+      actionsPending,
+      error } = this.props
     const { selectedVoteInfo, selectedProject, proxyVotingOpen, walletListOpen } = this.state
 
-    if (processError(requestStatus)) {
-      return (
-        <div>
-          <NavBar />
-          <Error error={processError(requestStatus)} />
-        </div>
-      )
+    if (error) {
+      return (<Error error={error} />)
     }
-    if (!requestStatus.getProjectPageData) {
+
+    if (actionsPending.getProjectPageData) {
       return (
         <div>
           <NavBar />
@@ -90,7 +93,7 @@ class MyProjectsComponent extends Component {
             >
               <Grid onClick={() => this.handleClose('walletList')} container direction='row' justify='flex-end'>
                 <Grid className={classes.walletListModal} item xs={12} sm={6} md={4}>
-                  <WalletList isAddingWallet={requestStatus.addWallet === false} handleClose={() => this.handleClose('walletList')} wallets={wallets} addWallet={addWallet} removeWallet={removeWallet} />
+                  <WalletList actionsPending={actionsPending} handleClose={() => this.handleClose('walletList')} wallets={wallets} addWallet={addWallet} removeWallet={removeWallet} />
                 </Grid>
               </Grid>
             </Modal>
@@ -122,9 +125,9 @@ class MyProjectsComponent extends Component {
                                   <div className={classes.avatarWrapper}>
                                     <img className={classes.avatar} src={this.getValidatorProfile(validator.proxy).photoUrl} alt='' />
                                     {this.isFinalizedValidator(i, validator.proxy) &&
-                                      <div className={classes.mark}>
-                                        <i className='fas fa-check' />
-                                      </div>
+                                    <div className={classes.mark}>
+                                      <i className='fas fa-check' />
+                                    </div>
                                     }
                                   </div>
                                   <div>
@@ -151,14 +154,14 @@ class MyProjectsComponent extends Component {
                           }
                         </div>
                         {proxyVotingInfoList[i].proxyVotingList &&
-                          <div onClick={() => this.handleOpenVote(i)} className={classes.btnUpdate}>
+                        <div onClick={() => this.handleOpenVote(i)} className={classes.btnUpdate}>
                             Update Voting
-                          </div>
+                        </div>
                         }
                         {!proxyVotingInfoList[i].proxyVotingList &&
-                          <Button onClick={() => this.handleOpenVote(i)} className={classes.btnVote}>
+                        <Button onClick={() => this.handleOpenVote(i)} className={classes.btnVote}>
                             Vote
-                          </Button>
+                        </Button>
                         }
                       </div>
                     </div>

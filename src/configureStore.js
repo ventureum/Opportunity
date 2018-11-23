@@ -19,14 +19,7 @@ function configureStore (reducers) {
 const loadPartialLoginFilter = createFilter(
   'userReducer',
   null,
-  ['userInfo.isAuthenticated', 'loading', 'error', 'transactionPending'],
-  'blacklist'
-)
-
-const loadPartialProjectFilter = createFilter(
-  'projectReducer',
-  null,
-  ['loading', 'error', 'transactionPending'],
+  ['userInfo.isAuthenticated'],
   'blacklist'
 )
 
@@ -35,9 +28,9 @@ const persistConfig = {
   storage,
   stateReconciler: autoMergeLevel2,
   transforms: [
-    loadPartialLoginFilter,
-    loadPartialProjectFilter
-  ]
+    loadPartialLoginFilter
+  ],
+  whitelist: ['userReducer']
 }
 
 const persistedReducer = persistReducer(persistConfig, reducers)

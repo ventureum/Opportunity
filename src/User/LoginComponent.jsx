@@ -20,7 +20,7 @@ class Login extends Component {
       redirectToReferrer: false,
       agreementChecked: false,
       requestToken: nanoid(24) + '_WEB',
-      accessTokenExpired: !userInfo.accessToken || (moment().unix() >= userInfo.accessToken.exp)
+      accessTokenExpired: !userInfo.accessToken || (moment().unix() >= userInfo.accessTokenExp)
     }
   }
 
@@ -29,7 +29,7 @@ class Login extends Component {
     if (!this.state.accessTokenExpired) {
       // auto login if access token has not expired
       // also refresh profile data
-      onLogin(userInfo, userInfo.accessToken)
+      onLogin(userInfo)
     }
   }
 
@@ -90,33 +90,36 @@ class Login extends Component {
   }
 
   renderLoginBtn = () => {
-    let { classes } = this.props
+    let { classes, actionsPending } = this.props
     let { requestToken } = this.state
     return (
       <Grid item className={classes.loginButton} align='center'>
-        <Button variant='contained'
-          color='primary'
-          onClick={this.onLogin}>
-          <a
-            className={classes.loginBtnLink}
-            rel='noopener noreferrer'
-            href={`https://telegram.me/Milestone_Auth_bot?start=${requestToken}`}
-            target='_blank'>
-            Login with Telegram
-          </a>
-        </Button>
+        { actionsPending.fetchAccessToken && <CircularProgress /> }
+        { !actionsPending.fetchAccessToken &&
+          <Button variant='contained'
+            color='primary'
+            onClick={this.onLogin}>
+            <a
+              className={classes.loginBtnLink}
+              rel='noopener noreferrer'
+              href={`https://telegram.me/Milestone_Auth_bot?start=${requestToken}`}
+              target='_blank'>
+              Login with Telegram
+            </a>
+          </Button>
+        }
       </Grid>
     )
   }
 
   render () {
     let { accessTokenExpired } = this.state
-    let { classes, userInfo, transactionPending, error } = this.props
+    let { classes, userInfo, actionsPending, error } = this.props
     if (error) {
       return (<Error error={error} />)
     }
 
-    if (!accessTokenExpired) {
+    if (!accessTokenExpired && actionsPending.fetchLoginData) {
       // access token is still valid, use it instead of fetching a new one
       // in the meanwhile, refresh user profile and disply a spinner
       return (
@@ -148,7 +151,7 @@ class Login extends Component {
             { userInfo.newUser ? this.renderRegistration() : this.renderLoginBtn() }
           </Grid>
         </Grid>
-        { transactionPending && <TransactionProgress open /> }
+        { actionsPending.register && <TransactionProgress open /> }
       </Grid>
     )
   }
