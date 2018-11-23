@@ -5,6 +5,7 @@ import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'
 import Menu from '@material-ui/core/Menu'
+import Avatar from '@material-ui/core/Avatar'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import logo from '../logo.svg'
 
@@ -41,7 +42,8 @@ class NavBarComponent extends Component {
             </Typography>
           </div>
           <div className={classes.user} onClick={this.handleOpen}>
-            <img className={classes.avatar} src={profile.photoUrl} alt='' />
+            { profile.photoUrl && <Avatar src={profile.photoUrl} className={classes.avatar} /> }
+            { !profile.photoUrl && <Avatar className={classes.avatar}> {profile.username.charAt(0)} </Avatar> }
             <Typography variant='body1' className={classes.username}>
               {profile.username}
             </Typography>
