@@ -5,7 +5,7 @@ import * as userApi from '../User/apis'
 
 const baseUrl = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/exp'
 
-const apiTcr = axios.create({
+var apiTcr = axios.create({
   baseURL: baseUrl,
   headers: {
     'Content-Type': 'application/json'
@@ -163,4 +163,4 @@ async function getProjectPageData (actor) {
   }
 }
 
-export { getProject, getProjects, rateObj, getProxyList, getVoteInfo, delegate, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData }
+export { getProject, getProjects, rateObj, getProxyList, getVoteInfo, delegate, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData, apiTcr }

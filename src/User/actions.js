@@ -1,7 +1,7 @@
 import Web3 from 'web3'
 import delay from 'delay'
-import axios from 'axios'
-import * as api from './apis'
+import * as apiUser from './apis'
+import * as apiProject from '../Project/apis'
 import { generatePrivateKey } from '../wallet'
 import { getRawUUID } from '../Utils'
 import c from '../contract'
@@ -20,12 +20,12 @@ async function postTelegramLogin (loginData) {
   rv.userInfo.isAuthenticated = false
 
   // now, store encoded access token in header globally
-  axios.defaults.headers.post['Authorization'] = loginData.accessToken
-  axios.defaults.headers.post['Content-Type'] = 'application/json'
+  apiUser.apiFeed.defaults.headers.common['Authorization'] = loginData.accessToken
+  apiProject.apiTcr.defaults.headers.common['Authorization'] = loginData.accessToken
 
   try {
     // next, fetch user profile from our database
-    let profile = await api.getProfile(uuid)
+    let profile = await apiUser.getProfile(uuid)
     rv.profile = profile
     rv.userInfo.newUser = false
     rv.userInfo.isAuthenticated = true
@@ -68,10 +68,10 @@ async function _register (userInfo) {
     // now, fetch user profile
     let uuid = userInfo.actor
 
-    let profile = await api.getProfile(uuid, false)
+    let profile = await apiUser.getProfile(uuid, false)
 
     // successfully retrieved profile, now register privateKey
-    await api.setActorPrivateKey(uuid, privateKey)
+    await apiUser.setActorPrivateKey(uuid, privateKey)
 
     // set profile's privateKey manually
     profile.privateKey = privateKey
@@ -87,7 +87,7 @@ async function _fetchAccessToken (requestToken) {
   for (let i = 0; i < 20; i++) {
     let accessToken = null
     try {
-      accessToken = await api.fetchAccessToken(requestToken)
+      accessToken = await apiUser.fetchAccessToken(requestToken)
     } catch (error) {
       console.log('Retrying [fetchAccessToken] ...', error)
     }
@@ -130,56 +130,56 @@ function onLogin (loginData) {
 function addWallet (actor, walletAddress) {
   return {
     type: 'ADD_WALLET',
-    payload: api.addWallet(actor, walletAddress)
+    payload: apiUser.addWallet(actor, walletAddress)
   }
 }
 
 function removeWallet (actor, walletAddress) {
   return {
     type: 'REMOVE_WALLET',
-    payload: api.removeWallet(actor, walletAddress)
+    payload: apiUser.removeWallet(actor, walletAddress)
   }
 }
 
 function getWallets (actor) {
   return {
     type: 'GET_WALLETS',
-    payload: api.getWallets(actor)
+    payload: apiUser.getWallets(actor)
   }
 }
 
 function getProfile (actor) {
   return {
     type: 'PROFILE_DATA',
-    payload: api.getProfile(actor)
+    payload: apiUser.getProfile(actor)
   }
 }
 
 function getBatchProfiles (actors) {
   return {
     type: 'GET_BATCH_PROFILES',
-    payload: api.getBatchProfiles(actors)
+    payload: apiUser.getBatchProfiles(actors)
   }
 }
 
 function getVoteList (actor) {
   return {
     type: 'VOTE_LIST',
-    payload: api.getVoteList(actor)
+    payload: apiUser.getVoteList(actor)
   }
 }
 
 function getPostList (actor) {
   return {
     type: 'POST_LIST',
-    payload: api.getPostList(actor)
+    payload: apiUser.getPostList(actor)
   }
 }
 
 function getReplyList (actor) {
   return {
     type: 'REPLY_LIST',
-    payload: api.getReplyList(actor)
+    payload: apiUser.getReplyList(actor)
   }
 }
 

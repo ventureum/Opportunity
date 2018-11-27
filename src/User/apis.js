@@ -193,4 +193,4 @@ async function fetchAccessToken (requestToken) {
   return rv.data.accessToken
 }
 
-export { getProfile, setActorPrivateKey, getActorPrivateKey, getWallets, getBatchProfiles, getVoteList, getPostList, getReplyList, getBatchPosts, addWallet, removeWallet, fetchAccessToken }
+export { getProfile, setActorPrivateKey, getActorPrivateKey, getWallets, getBatchProfiles, getVoteList, getPostList, getReplyList, getBatchPosts, addWallet, removeWallet, fetchAccessToken, apiAuth, apiFeed }
