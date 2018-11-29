@@ -45,7 +45,7 @@ class App extends Component {
         <Switch>
           <Route path='/login' component={userIsNotAuthenticated(Login)} />
           <Route exact path='/' component={userIsAuthenticated(ProjectList)} />
-          <Route path='/project/:projectId' component={Project} />
+          <Route path='/project/:projectId' component={userIsAuthenticated(Project)} />
           <Route path='/my-projects' component={userIsAuthenticated(MyProjects)} />
           <Route path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
         </Switch>
