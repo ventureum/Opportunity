@@ -84,13 +84,16 @@ class NavBarComponent extends Component {
                 </Typography>
               </Link>
             </MenuItem>
-            <MenuItem onClick={this.handleClose}>
-              <Link to='/' className={classes.link}>
-                <Typography variant='body2'>
+            {profile.actorType !== 'USER'
+              ? <MenuItem onClick={this.handleClose}>
+                <Link to='/' className={classes.link}>
+                  <Typography variant='body2'>
                   Account Settings&nbsp;
-                </Typography>
-              </Link>
-            </MenuItem>
+                  </Typography>
+                </Link>
+              </MenuItem>
+              : null
+            }
             <div className={classes.bottomLine} />
             <MenuItem className={classes.logout} onClick={this.logout}>
               <Typography variant='body2'>
