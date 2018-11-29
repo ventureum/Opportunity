@@ -15,7 +15,6 @@ import update from 'immutability-helper'
 import Loading from '../Notification/Loading'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
-import { processError } from '../Utils'
 
 class ProxyVotingComponent extends Component {
   constructor (props) {
@@ -32,7 +31,7 @@ class ProxyVotingComponent extends Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (prevProps.requestStatus.delegate === false && this.props.requestStatus.delegate) {
+    if (prevProps.actionsPending.delegate && !this.props.actionsPending.delegate) {
       this.setState({
         voteStep: 0
       })
@@ -92,7 +91,7 @@ class ProxyVotingComponent extends Component {
   }
 
   togglePerson = (actor) => {
-    if (this.props.requestStatus.delegate === false) return
+    if (this.props.actionsPending.delegate) return
     if (this.state.selectedValidatorActors.indexOf(actor) >= 0) {
       this.removePerson(actor)
     } else {
@@ -104,7 +103,7 @@ class ProxyVotingComponent extends Component {
   }
 
   removePerson = (actor) => {
-    if (this.props.requestStatus.delegate === false) return
+    if (this.props.actionsPending.delegate) return
     this.setState({
       selectedValidatorActors: update(this.state.selectedValidatorActors, { $splice: [[this.state.selectedValidatorActors.indexOf(actor), 1]] })
     })
@@ -276,17 +275,14 @@ class ProxyVotingComponent extends Component {
   }
 
   render () {
-    const { classes, proxyList, requestStatus } = this.props
+    const { classes, proxyList, actionsPending, error } = this.props
     const { selectedValidatorActors, sort, voteStep, keyword, showSearch } = this.state
 
-    if (processError(requestStatus)) {
-      return (
-        <div>
-          <Error error={processError(requestStatus)} />
-        </div>
-      )
+    if (error) {
+      return (<Error error={error} />)
     }
-    if (!(requestStatus.getProxyList && requestStatus.getVoteInfo)) {
+
+    if (actionsPending.getProxyList || actionsPending.getVoteInfo) {
       return (
         <div>
           <Loading />
@@ -377,14 +373,14 @@ class ProxyVotingComponent extends Component {
                             <div>Votes</div>
                           </div>
                           {voteStep === 1 &&
-                            <div>
-                              <Checkbox
-                                classes={{ root: classes.checkbox }}
-                                checked={selectedValidatorActors.indexOf(validator.actor) >= 0}
-                                onChange={() => this.togglePerson(validator.actor)}
-                                color='primary'
-                              />
-                            </div>
+                          <div>
+                            <Checkbox
+                              classes={{ root: classes.checkbox }}
+                              checked={selectedValidatorActors.indexOf(validator.actor) >= 0}
+                              onChange={() => this.togglePerson(validator.actor)}
+                              color='primary'
+                            />
+                          </div>
                           }
                         </Grid>
                       </Grid>
@@ -399,7 +395,7 @@ class ProxyVotingComponent extends Component {
             </div>
           </Grid>
         </Grid>
-        { requestStatus.delegate === false && <TransactionProgress open /> }
+        { actionsPending.delegate && <TransactionProgress open /> }
       </MuiThemeProvider>
     )
   }

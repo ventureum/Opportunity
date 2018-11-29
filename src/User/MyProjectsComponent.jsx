@@ -40,15 +40,18 @@ class MyProjectsComponent extends Component {
   }
 
   getValidatorProfile = (actor) => {
-    for (let validator of this.props.profiles) {
-      if (validator.actor === actor) {
-        return validator
-      }
+    let { profiles } = this.props
+    if (profiles) {
+      return profiles.find(function (p) { return p.actor === actor })
     }
   }
 
   isFinalizedValidator = (i, actor) => {
-    return this.props.finalizedValidators[i] && this.props.finalizedValidators[i].indexOf(actor) >= 0
+    let { finalizedValidators } = this.props
+    return finalizedValidators &&
+           finalizedValidators[i] &&
+           finalizedValidators[i].validators &&
+           finalizedValidators[i].validators.indexOf(actor) >= 0
   }
 
   render () {
@@ -69,10 +72,7 @@ class MyProjectsComponent extends Component {
 
     if (actionsPending.getProjectPageData) {
       return (
-        <div>
-          <NavBar />
-          <Loading />
-        </div>
+        <Loading />
       )
     }
 
@@ -100,74 +100,77 @@ class MyProjectsComponent extends Component {
           </Grid>
           <Grid item xs={10}>
             <Grid container direction='row' spacing={16}>
-              {projects.map((project, i) => {
-                return (
-                  <Grid item xs={12} sm={6} md={4} xl={3} key={i}>
-                    <div className={classes.project}>
-                      <div className={classes.info}>
-                        <img src={project.content.logo} alt='' className={classes.logo} />
-                        <div>
-                          <div className={classes.name}>{project.content.name}</div>
-                          <div className={classes.vote}>You have {commafy(proxyVotingInfoList[i].availableDelegateVotes)} votes</div>
+              { proxyVotingInfoList.length === projects.length && // must have the same length
+                projects.map((project, i) => {
+                  return (
+                    <Grid item xs={12} sm={6} md={4} xl={3} key={i}>
+                      <div className={classes.project}>
+                        <div className={classes.info}>
+                          <img src={project.content.logo} alt='' className={classes.logo} />
+                          <div>
+                            <div className={classes.name}>{project.content.name}</div>
+                            <div className={classes.vote}>You have {commafy(proxyVotingInfoList[i].availableDelegateVotes)} votes</div>
+                          </div>
                         </div>
-                      </div>
-                      <div className={classes.milestone}>
-                        <div>Upcoming Milestone</div>
-                        <div>{project.upcomingMilestone ? moment.unix(project.upcomingMilestone.startDate).format('MMM Do, YYYY') : 'Not set' }</div>
-                      </div>
-                      <div className={classes.validatorWrapper}>
-                        <div className={classes.validatorTitle}>My voted validators</div>
-                        <div className={classes.validatorList}>
+                        <div className={classes.milestone}>
+                          <div>Upcoming Milestone</div>
+                          <div>{project.upcomingMilestone ? moment.unix(project.upcomingMilestone.startDate).format('MMM Do, YYYY') : 'Not set' }</div>
+                        </div>
+                        <div className={classes.validatorWrapper}>
+                          <div className={classes.validatorTitle}>My voted validators</div>
+                          <div className={classes.validatorList}>
+                            {proxyVotingInfoList[i].proxyVotingList &&
+                             proxyVotingInfoList[i].proxyVotingList.map((validator, i) => {
+                               let validatorProfile = this.getValidatorProfile(validator.proxy)
+                               let validatorPhoto = validatorProfile ? validatorProfile.photoUrl : null
+                               return (
+                                 <div className={classes.validator} key={i}>
+                                   <div className={classes.avatarWrapper}>
+                                     <img className={classes.avatar} src={validatorPhoto} alt='' />
+                                     {this.isFinalizedValidator(i, validator.proxy) &&
+                                     <div className={classes.mark}>
+                                       <i className='fas fa-check' />
+                                     </div>
+                                     }
+                                   </div>
+                                   <div>
+                                     {validator.votesInPercent}%
+                                   </div>
+                                 </div>
+                               )
+                             })
+                            }
+                            {!proxyVotingInfoList[i].proxyVotingList && [
+                              <div key={0} className={classes.iconPlus}>
+                                <i className='fas fa-plus' />
+                              </div>,
+                              <div key={1} className={classes.iconPlus}>
+                                <i className='fas fa-plus' />
+                              </div>,
+                              <div key={2} className={classes.iconPlus}>
+                                <i className='fas fa-plus' />
+                              </div>,
+                              <div key={3} className={classes.iconPlus}>
+                                <i className='fas fa-plus' />
+                              </div>
+                            ]
+                            }
+                          </div>
                           {proxyVotingInfoList[i].proxyVotingList &&
-                            proxyVotingInfoList[i].proxyVotingList.map((validator, i) => {
-                              return (
-                                <div className={classes.validator} key={i}>
-                                  <div className={classes.avatarWrapper}>
-                                    <img className={classes.avatar} src={this.getValidatorProfile(validator.proxy).photoUrl} alt='' />
-                                    {this.isFinalizedValidator(i, validator.proxy) &&
-                                    <div className={classes.mark}>
-                                      <i className='fas fa-check' />
-                                    </div>
-                                    }
-                                  </div>
-                                  <div>
-                                    {validator.votesInPercent}%
-                                  </div>
-                                </div>
-                              )
-                            })
+                          <div onClick={() => this.handleOpenVote(i)} className={classes.btnUpdate}>
+                             Update Voting
+                          </div>
                           }
-                          {!proxyVotingInfoList[i].proxyVotingList && [
-                            <div key={0} className={classes.iconPlus}>
-                              <i className='fas fa-plus' />
-                            </div>,
-                            <div key={1} className={classes.iconPlus}>
-                              <i className='fas fa-plus' />
-                            </div>,
-                            <div key={2} className={classes.iconPlus}>
-                              <i className='fas fa-plus' />
-                            </div>,
-                            <div key={3} className={classes.iconPlus}>
-                              <i className='fas fa-plus' />
-                            </div>
-                          ]
+                          {!proxyVotingInfoList[i].proxyVotingList &&
+                          <Button onClick={() => this.handleOpenVote(i)} className={classes.btnVote}>
+                             Vote
+                          </Button>
                           }
                         </div>
-                        {proxyVotingInfoList[i].proxyVotingList &&
-                        <div onClick={() => this.handleOpenVote(i)} className={classes.btnUpdate}>
-                            Update Voting
-                        </div>
-                        }
-                        {!proxyVotingInfoList[i].proxyVotingList &&
-                        <Button onClick={() => this.handleOpenVote(i)} className={classes.btnVote}>
-                            Vote
-                        </Button>
-                        }
                       </div>
-                    </div>
-                  </Grid>
-                )
-              })}
+                    </Grid>
+                  )
+                })}
             </Grid>
           </Grid>
         </Grid>

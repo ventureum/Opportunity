@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button'
 import MilestoneObjVote from './MilestoneObjVoteComponent'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
-import { processError } from '../Utils'
 
 var moment = require('moment')
 
@@ -103,15 +102,11 @@ class MilestoneDetailComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, profile, handleClose, rateObj, requestStatus } = this.props
+    const { classes, milestone, profile, handleClose, rateObj, actionsPending, error } = this.props
     const { evaluatorList, fileList, relatedPosts } = this.state
 
-    if (processError(requestStatus)) {
-      return (
-        <div>
-          <Error error={processError(requestStatus)} />
-        </div>
-      )
+    if (error) {
+      return (<Error error={error} />)
     }
 
     return (
@@ -212,7 +207,7 @@ class MilestoneDetailComponent extends Component {
             milestone={milestone}
             rateObj={rateObj}
           />
-          { requestStatus.rateObj === false && <TransactionProgress open /> }
+          { actionsPending.rateObj && <TransactionProgress open /> }
         </Grid>
       </MuiThemeProvider>
     )
