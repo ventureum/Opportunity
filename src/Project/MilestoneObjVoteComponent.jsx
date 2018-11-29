@@ -66,6 +66,7 @@ class MilestoneObjVoteComponent extends Component {
       text: comment
     }
     rateObj(milestone.projectId, milestone.milestoneId, objRating, JSON.stringify(commentContent))
+    this.props.onClose()
   }
 
   renderObj = (obj) => {
@@ -111,7 +112,7 @@ class MilestoneObjVoteComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, onClose, fullScreen, ...other } = this.props
+    const { classes, milestone, onClose, fullScreen, open } = this.props
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -122,7 +123,7 @@ class MilestoneObjVoteComponent extends Component {
           fullScreen={fullScreen}
           maxWidth='md'
           aria-labelledby='obj-vote-dialog-title'
-          {...other}
+          open={open}
         >
           <DialogTitle id='obj-vote-dialog-title'> {milestone.content.title} Rating </DialogTitle>
           <DialogContent>
