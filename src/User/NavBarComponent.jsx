@@ -36,12 +36,14 @@ class NavBarComponent extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <AppBar classes={{ root: classes.bar }}>
-          <div className={classes.logoWrapper}>
-            <img className={classes.logo} src={logo} alt='' />
-            <Typography className={classes.logoText}>
+          <Link to='/' className={classes.link}>
+            <div className={classes.logoWrapper}>
+              <img className={classes.logo} src={logo} alt='' />
+              <Typography className={classes.logoText}>
               Milestone
-            </Typography>
-          </div>
+              </Typography>
+            </div>
+          </Link>
           <div className={classes.user} onClick={this.handleOpen}>
             { profile.photoUrl && <Avatar src={profile.photoUrl} className={classes.avatar} /> }
             { !profile.photoUrl && <Avatar className={classes.avatar}> {profile.username.charAt(0)} </Avatar> }
@@ -61,10 +63,13 @@ class NavBarComponent extends Component {
             classes={{ paper: classes.menu }}
             MenuListProps={{ disablePadding: true }}
           >
-            <MenuItem>
-              { profile.actorType === 'KOL' && <Chip label='Validator' className={classes.userTypeValidatorChip} /> }
-              { profile.actorType !== 'PF' && <Chip label='Project Founder' className={classes.userTypeProjectFounderChip} /> }
-            </MenuItem>
+            {profile.actorType !== 'USER'
+              ? <MenuItem>
+                { profile.actorType === 'KOL' && <Chip label='Validator' className={classes.userTypeValidatorChip} /> }
+                { profile.actorType === 'PF' && <Chip label='Project Founder' className={classes.userTypeProjectFounderChip} /> }
+              </MenuItem>
+              : null
+            }
             <MenuItem onClick={this.handleClose}>
               <Link to='/my-projects' className={classes.link}>
                 <Typography variant='body2'>
@@ -79,13 +84,16 @@ class NavBarComponent extends Component {
                 </Typography>
               </Link>
             </MenuItem>
-            <MenuItem onClick={this.handleClose}>
-              <Link to='/' className={classes.link}>
-                <Typography variant='body2'>
+            {profile.actorType !== 'USER'
+              ? <MenuItem onClick={this.handleClose}>
+                <Link to='/' className={classes.link}>
+                  <Typography variant='body2'>
                   Account Settings&nbsp;
-                </Typography>
-              </Link>
-            </MenuItem>
+                  </Typography>
+                </Link>
+              </MenuItem>
+              : null
+            }
             <div className={classes.bottomLine} />
             <MenuItem className={classes.logout} onClick={this.logout}>
               <Typography variant='body2'>
