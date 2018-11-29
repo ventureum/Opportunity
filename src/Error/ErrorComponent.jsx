@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
@@ -25,9 +26,11 @@ class ErrorComponent extends Component {
                   </Typography>
                   <Grid container direction='row' className={classes.btnContainer}>
                     <Grid item>
-                      <Button variant='outlined' className={classes.homeBtn}>
+                      <Link to='/' className={classes.link}>
+                        <Button variant='outlined' className={classes.homeBtn}>
                         GO TO HOMEPAGE
-                      </Button>
+                        </Button>
+                      </Link>
                     </Grid>
                     <Grid item>
                       <Button variant='outlined' className={classes.reportBtn}>
@@ -84,6 +87,11 @@ const theme = createMuiTheme({
   },
   btnContainer: {
     marginTop: '45px'
+  },
+  link: {
+    color: '#333333',
+    textDecoration: 'none',
+    display: 'block'
   }
 })
 
