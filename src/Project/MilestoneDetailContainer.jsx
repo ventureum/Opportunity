@@ -2,25 +2,33 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MilestoneDetail from './MilestoneDetailComponent'
 import { rateObj } from './actions'
+import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class MilestoneDetailContainer extends Component {
   render () {
+    let { handleClose, profile, milestone, rateObj, ...others } = this.props
     return (
       <MilestoneDetail
-        handleClose={this.props.handleClose}
-        profile={this.props.profile}
-        milestone={this.props.milestone}
-        rateObj={this.props.rateObj}
-        requestStatus={this.props.requestStatus}
+        handleClose={handleClose}
+        profile={profile}
+        milestone={milestone}
+        rateObj={rateObj}
+        {...others}
       />
     )
   }
 }
 
+const rateObjLoadingSelector = createLoadingSelector(['RATE_OBJ'])
+const errorSelector = createErrorSelector(['RATE_OBJ'])
+
 const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
-    requestStatus: state.requestReducer
+    actionsPending: {
+      rateObj: rateObjLoadingSelector(state)
+    },
+    error: errorSelector(state)
   }
 }
 

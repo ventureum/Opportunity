@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProxyVoting from './ProxyVotingComponent'
 import { getProxyList, getVoteInfo, delegate } from './actions'
+import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class ProxyVotingContainer extends Component {
   componentDidMount () {
@@ -16,7 +17,7 @@ class ProxyVotingContainer extends Component {
   }
 
   render () {
-    let { handleClose, proxyList, proxyVotingInfo, delegate, profile, requestStatus, project } = this.props
+    let { handleClose, proxyList, proxyVotingInfo, delegate, profile, project, ...others } = this.props
     return (<ProxyVoting
       handleClose={handleClose}
       proxyList={proxyList}
@@ -24,18 +25,28 @@ class ProxyVotingContainer extends Component {
       delegate={delegate}
       project={project}
       profile={profile}
-      requestStatus={requestStatus}
       refreshVoteInfo={this.refreshVoteInfo}
+      {...others}
     />)
   }
 }
+
+const getVoteInfoLoadingSelector = createLoadingSelector(['GET_VOTE_INFO'])
+const getProxyListLoadingSelector = createLoadingSelector(['GET_PROXY_LIST'])
+const delegateLoadingSelector = createLoadingSelector(['DELEGATE'])
+const errorSelector = createErrorSelector(['GET_VOTE_INFO', 'GET_PROXY_LIST', 'DELEGATE'])
 
 const mapStateToProps = state => {
   return {
     proxyVotingInfo: state.projectReducer.proxyVotingInfo,
     profile: state.userReducer.profile,
     proxyList: state.projectReducer.proxyList,
-    requestStatus: state.requestReducer
+    actionsPending: {
+      getVoteInfo: getVoteInfoLoadingSelector(state),
+      getProxyList: getProxyListLoadingSelector(state),
+      delegate: delegateLoadingSelector(state)
+    },
+    error: errorSelector(state)
   }
 }
 
