@@ -20,7 +20,6 @@ import Modal from '@material-ui/core/Modal'
 import ProjectDetail from './ProjectDetailComponent'
 import classNames from 'classnames'
 import MilestoneDetail from './MilestoneDetailContainer'
-import ProxyVoting from './ProxyVotingContainer'
 import NavBar from '../User/NavBarContainer'
 import Error from '../Error/ErrorComponent'
 
@@ -185,6 +184,53 @@ class ProjectComponent extends Component {
     )
   }
 
+  renderValidators = () => {
+    const { proxyList, classes } = this.props
+    proxyList.sort((a, b) => {
+      const votesA = a.proxyVoting.receivedDelegateVotes
+      const votesB = b.proxyVoting.receivedDelegateVotes
+      return votesB - votesA
+    })
+    return (
+      <Grid container alignItems='center' direction='column' className={classes.validatorSection}>
+        {proxyList.map((validator, i) => (
+          <Grid key={i} container direction='row' className={classes.validator}>
+            <Grid item xs={12} sm={8} className={classes.validatorInfo}>
+              <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
+              <div>
+                <div className={classes.validatorName}>{validator.username}</div>
+                {/* <div className={classes.validatorDesc}>{validator.description}</div> */}
+                <div className={classes.validatorDesc}>PhD | Entrepreneur | CEO | ICO Advisor | Crypto enthusiast | BlockChain expert</div>
+              </div>
+            </Grid>
+            <Grid item xs={12} sm={4} className={classes.verticalCenter}>
+              <div className={classes.block}>
+                <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
+                <div>Reputation</div>
+              </div>
+              <div className={classes.block}>
+                <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
+                <div>Votes</div>
+              </div>
+            </Grid>
+          </Grid>
+        ))
+        }
+      </Grid>
+    )
+  }
+
+  formatNumber = (val) => {
+    let result
+    if (val <= 1000) {
+      val = parseInt(val, 10).toString()
+      result = numeral(val).format('0,0a')
+    } else {
+      result = numeral(val).format('0,0.00a')
+    }
+    return result
+  }
+
   render () {
     let { open, tabValue, selectedMilestone } = this.state
     let { classes, projectData, error } = this.props
@@ -253,13 +299,13 @@ class ProjectComponent extends Component {
                   <Tabs indicatorColor='primary' value={tabValue} onChange={this.handleTabChange} centered >
                     <Tab label='MILESTONES' />
                     <Tab label='INFO' />
-                    <Tab label='VOTING' />
+                    <Tab label='VALIDATORS' />
                   </Tabs>
                 </AppBar>
               </Grid>
               { tabValue === 0 && this.renderTimeline() }
               { tabValue === 1 && this.renderDetail() }
-              { tabValue === 2 && <ProxyVoting /> }
+              { tabValue === 2 && this.renderValidators() }
               <Modal
                 disableRestoreFocus
                 disableEnforceFocus
@@ -415,6 +461,56 @@ const theme = createMuiTheme({
       dark: '#ba000d',
       contrastText: '#000'
     }
+  },
+  validator: {
+    borderRadius: '6px',
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0 2px 5px 0 rgba(0,0,0,0.05)',
+    marginBottom: '10px',
+    padding: '28px',
+    width: '60%'
+  },
+  validatorInfo: {
+    display: 'flex'
+  },
+  validatorAvatar: {
+    height: '53px',
+    width: 'auto',
+    borderRadius: '30px',
+    marginRight: '19px'
+  },
+  validatorName: {
+    color: '#464C4E',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    lineHeight: '23px',
+    marginBottom: '8px'
+  },
+  validatorDesc: {
+    color: '#333333',
+    fontSize: '14px',
+    lineHeight: '16px'
+  },
+  verticalCenter: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '10px 0'
+  },
+  block: {
+    width: '50%',
+    textAlign: 'center',
+    fontSize: '12px',
+    lineHeight: '14px'
+  },
+  value: {
+    color: '#464C4E',
+    fontSize: '18px',
+    fontWeight: 'bold',
+    lineHeight: '23px',
+    marginBottom: '2px'
+  },
+  validatorSection: {
+    marginTop: '60px'
   }
 })
 
