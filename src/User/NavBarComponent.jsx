@@ -77,23 +77,23 @@ class NavBarComponent extends Component {
                 </Typography>
               </Link>
             </MenuItem>
-            <MenuItem onClick={this.handleClose}>
-              <Link to='/project-management' className={classes.link}>
-                <Typography variant='body2'>
-                  Project Management
-                </Typography>
-              </Link>
-            </MenuItem>
             {profile.actorType !== 'USER'
               ? <MenuItem onClick={this.handleClose}>
-                <Link to='/' className={classes.link}>
+                <Link to='/project-management' className={classes.link}>
                   <Typography variant='body2'>
-                  Account Settings&nbsp;
+                  Project Management
                   </Typography>
                 </Link>
               </MenuItem>
               : null
             }
+            <MenuItem onClick={this.handleClose}>
+              <Link to='/' className={classes.link}>
+                <Typography variant='body2'>
+                  Account Settings&nbsp;
+                </Typography>
+              </Link>
+            </MenuItem>
             <div className={classes.bottomLine} />
             <MenuItem className={classes.logout} onClick={this.logout}>
               <Typography variant='body2'>

@@ -143,7 +143,7 @@ class ProxyVotingComponent extends Component {
     for (let actor of this.state.selectedValidatorActors) {
       let actorVoteInfo = this.actorToVoteInfo(actor)
       let submitPct = this.state.validatorPercentMap[actor]
-      if ((!actorVoteInfo && submitPct !== 0) || (actorVoteInfo && submitPct !== actorVoteInfo.pct)) {
+      if (!actorVoteInfo || (actorVoteInfo && submitPct !== actorVoteInfo.pct)) {
         let validator = this.actorToValidator(actor)
         proxyList.push(validator.publicKey)
         pctList.push(submitPct)

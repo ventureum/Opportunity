@@ -7,6 +7,10 @@ import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class MyProjectsContainer extends Component {
   componentWillMount () {
+    this.getData()
+  }
+
+  getData = () => {
     this.props.getWallets(this.props.profile.actor)
     this.props.getProjectPageData(this.props.profile.actor)
   }
@@ -40,6 +44,7 @@ class MyProjectsContainer extends Component {
       addWallet={this.addWallet}
       removeWallet={this.removeWallet}
       actionsPending={actionsPending}
+      getData={this.getData}
     />)
   }
 }
