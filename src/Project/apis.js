@@ -2,6 +2,7 @@ import axios from 'axios'
 import delay from 'delay'
 import c from '../contract'
 import * as userApi from '../User/apis'
+import { encodeObjData } from '../Utils'
 
 const baseUrl = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/exp'
 
@@ -163,4 +164,39 @@ async function getProjectPageData (actor) {
   }
 }
 
-export { getProject, getProjects, rateObj, getProxyList, getVoteInfo, delegate, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData, apiTcr }
+async function getProjectByAdmin (actor) {
+  let rv = await apiTcr.post('/get-project-id-by-admin', {
+    admin: actor
+  })
+  if (rv.data.projectId) {
+    let project = await getProject(rv.data.projectId)
+    return project
+  }
+}
+
+async function activateMilestone (projectId, milestoneId, startTime) {
+  await c.activateMilestone(projectId, milestoneId, startTime)
+  await delay(2000)
+}
+
+async function finalizeMilestone (projectId, milestoneId, endTime) {
+  await c.finalizeMilestone(projectId, milestoneId, endTime)
+  await delay(2000)
+}
+
+async function removeMilestone (projectId, milestoneId) {
+  await c.removeMilestone(projectId, milestoneId)
+  await delay(2000)
+}
+
+async function modifyMilestone (projectId, milestoneId, content, commands, ids, contents) {
+  await c.modifyMilestone(projectId, milestoneId, JSON.stringify(content), encodeObjData(commands, ids, contents))
+  await delay(2500)
+}
+
+async function addMilestone (projectId, content, commands, ids, contents) {
+  await c.addMilestone(projectId, JSON.stringify(content), encodeObjData(commands, ids, contents))
+  await delay(2500)
+}
+
+export { getProject, getProjects, rateObj, getProxyList, getVoteInfo, delegate, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData, apiTcr, getProjectByAdmin, activateMilestone, finalizeMilestone, removeMilestone, modifyMilestone, addMilestone }

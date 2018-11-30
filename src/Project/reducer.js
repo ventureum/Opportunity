@@ -3,7 +3,8 @@ const initState = {
   proxyList: [],
   finalizedValidator: [],
   proxyVotingInfoList: [],
-  proxyVotingInfo: null
+  proxyVotingInfo: null,
+  projectByAdmin: null
 }
 
 const projectReducer = (state = initState, action) => {
@@ -68,6 +69,12 @@ const projectReducer = (state = initState, action) => {
       return {
         ...state,
         ...action.payload.projectData
+      }
+    }
+    case 'GET_PROJECT_BY_ADMIN_FULFILLED': {
+      return {
+        ...state,
+        projectByAdmin: action.payload
       }
     }
     default: // need this for default case

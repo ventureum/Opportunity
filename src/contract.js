@@ -95,11 +95,39 @@ class Contract {
   async rateObj (projectId, milestoneId, ratings, comment) {
     return this.milestoneInstance.methods.rateObj(projectId, milestoneId, ratings, comment).send()
   }
+
+  async activateMilestone (projectId, milestoneId) {
+    return this.milestoneInstance.methods.activateMilestone(projectId, milestoneId).send()
+  }
+
+  async finalizeMilestone (projectId, milestoneId) {
+    return this.milestoneInstance.methods.finalizeMilestone(projectId, milestoneId).send()
+  }
+
+  async removeMilestone (projectId, milestoneId) {
+    return this.milestoneInstance.methods.removeMilestone(projectId, milestoneId).send()
+  }
+
+  async modifyMilestone (projectId, milestoneId, content, objData) {
+    return this.milestoneInstance.methods.modifyMilestone(projectId, milestoneId, content, objData.objMetaCompact, objData.objContent).send()
+  }
+
+  async addMilestone (projectId, content, objData) {
+    return this.milestoneInstance.methods.addMilestone(projectId, content, objData.objMetaCompact, objData.objContent).send()
+  }
 }
 
 let handler = {
   get: (target, name) => {
-    let needInstanceList = ['delegate', 'rateObj']
+    let needInstanceList = [
+      'delegate',
+      'rateObj',
+      'activateMilestone',
+      'finalizeMilestone',
+      'removeMilestone',
+      'modifyMilestone',
+      'addMilestone'
+    ]
     if (needInstanceList.indexOf(name) >= 0) {
       let state = store.getState()
       if (state.userReducer.profile && state.userReducer.profile.privateKey) {
