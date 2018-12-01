@@ -11,7 +11,6 @@ import TextField from '@material-ui/core/TextField'
 import SearchIcon from '@material-ui/icons/Search'
 import numeral from 'numeral'
 import classNames from 'classnames'
-import update from 'immutability-helper'
 import Loading from '../Notification/Loading'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
@@ -21,8 +20,7 @@ class ProxyVotingComponent extends Component {
     super(props)
 
     this.state = {
-      selectedValidatorActors: [],
-      validatorPercentMap: {},
+      selectedValidators: [],
       sort: 'vote',
       voteStep: 0,
       keyword: '',
@@ -32,9 +30,6 @@ class ProxyVotingComponent extends Component {
 
   componentDidUpdate (prevProps) {
     if (prevProps.actionsPending.delegate && !this.props.actionsPending.delegate) {
-      this.setState({
-        voteStep: 0
-      })
       this.props.refreshVoteInfo()
     }
   }
@@ -56,33 +51,36 @@ class ProxyVotingComponent extends Component {
     return result
   }
 
-  formatVote = (pct) => {
-    if (this.props.proxyVotingInfo.availableDelegateVotes * pct % 100 === 0) {
-      return this.props.proxyVotingInfo.availableDelegateVotes * pct / 100
+  formatVote = (votesInPercent) => {
+    if (this.props.proxyVotingInfo.availableDelegateVotes * votesInPercent % 100 === 0) {
+      return this.props.proxyVotingInfo.availableDelegateVotes * votesInPercent / 100
     } else {
-      return numeral(this.props.proxyVotingInfo.availableDelegateVotes * pct / 100).format('0.0a')
+      return numeral(this.props.proxyVotingInfo.availableDelegateVotes * votesInPercent / 100).format('0.0a')
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (!nextProps.actionsPending.delegate &&
+      nextProps.proxyVotingInfo !== null &&
+      nextProps.proxyVotingInfo.proxyVotingList !== null) {
+      // deep copy voted proxies.
+      const newArray = JSON.parse(JSON.stringify(nextProps.proxyVotingInfo.proxyVotingList))
+      this.setState({ selectedValidators: newArray, firstUpdated: true })
     }
   }
 
   usedPercent = () => {
-    var proxyList = this.props.proxyVotingInfo.proxyVotingList || []
-    var usedPercent = 0
-    if (this.state.voteStep === 0) {
-      proxyList.forEach((proxy) => {
-        usedPercent += proxy.votesInPercent
-      })
-    } else if (this.state.voteStep === 1) {
-      this.state.selectedValidatorActors.forEach((actor) => {
-        usedPercent += this.state.validatorPercentMap[actor]
-      })
-    }
+    let usedPercent = 0
+    this.state.selectedValidators.forEach((item) => {
+      usedPercent += item.votesInPercent
+    })
     return usedPercent
   }
 
   calcAvailableVotes = () => {
-    var votes = this.props.proxyVotingInfo.availableDelegateVotes || 0
-    var usedPercent = this.usedPercent()
-    var avaliableVotes = votes * (100 - usedPercent) / 100
+    const votes = this.props.proxyVotingInfo.availableDelegateVotes || 0
+    const usedPercent = this.usedPercent()
+    let avaliableVotes = votes * (100 - usedPercent) / 100
     if (avaliableVotes === parseInt(avaliableVotes)) {
       return avaliableVotes
     } else {
@@ -90,66 +88,66 @@ class ProxyVotingComponent extends Component {
     }
   }
 
-  togglePerson = (actor) => {
+  togglePerson = (actor, checked) => {
     if (this.props.actionsPending.delegate) return
-    if (this.state.selectedValidatorActors.indexOf(actor) >= 0) {
-      this.removePerson(actor)
+    if (checked) {
+      // add to selected
+      this.setState({ selectedValidators: [...this.state.selectedValidators, { proxy: actor, votesInPercent: 0, newAdded: true }] })
     } else {
-      this.setState({
-        selectedValidatorActors: update(this.state.selectedValidatorActors, { $push: [actor] }),
-        validatorPercentMap: update(this.state.validatorPercentMap, { [actor]: { $set: 0 } })
+      const target = this.state.selectedValidators.find((item) => {
+        return item.proxy === actor
       })
+      if (target.newAdded) {
+        this.setState({
+          selectedValidators: this.state.selectedValidators.filter((item) => {
+            return item.proxy !== actor
+          })
+        })
+      } else {
+        this.changePercent(actor, 0)
+      }
     }
   }
 
-  removePerson = (actor) => {
+  removePerson = (actor, status) => {
     if (this.props.actionsPending.delegate) return
-    this.setState({
-      selectedValidatorActors: update(this.state.selectedValidatorActors, { $splice: [[this.state.selectedValidatorActors.indexOf(actor), 1]] })
-    })
+    if (status) {
+      this.setState({
+        selectedValidators: this.state.selectedValidators.filter((item) => {
+          return item.proxy !== actor
+        })
+      })
+    } else {
+      this.changePercent(actor, 0)
+    }
   }
 
   changePercent = (actor, e) => {
     this.setState({
-      validatorPercentMap: update(this.state.validatorPercentMap, { [actor]: { $set: e.target.value } })
-    })
-  }
-
-  edit = () => {
-    let selectedValidatorActors = []
-    let validatorPercentMap = {}
-    for (let item of this.props.proxyVotingInfo.proxyVotingList) {
-      selectedValidatorActors.push(item.proxy)
-      validatorPercentMap[item.proxy] = item.votesInPercent
-    }
-    this.setState({
-      voteStep: 1,
-      selectedValidatorActors,
-      validatorPercentMap
+      selectedValidators: this.state.selectedValidators.map((item) => {
+        if (item.proxy === actor) return { ...item, votesInPercent: e }
+        else return item
+      })
     })
   }
 
   getAvailablePercent = (oldValue = 0) => {
     let result = []
-    for (let pct = 0; pct <= (100 - this.usedPercent() + oldValue); pct += 10) {
-      result.push(pct)
+    for (let votesInPercent = 0; votesInPercent <= (100 - this.usedPercent() + oldValue); votesInPercent += 10) {
+      result.push(votesInPercent)
     }
     return result
   }
 
   vote = () => {
     let proxyList = []
-    let pctList = []
-    for (let actor of this.state.selectedValidatorActors) {
-      let actorVoteInfo = this.actorToVoteInfo(actor)
-      let submitPct = this.state.validatorPercentMap[actor]
-      if (!actorVoteInfo || (actorVoteInfo && submitPct !== actorVoteInfo.pct)) {
-        let validator = this.actorToValidator(actor)
-        proxyList.push(validator.publicKey)
-        pctList.push(submitPct)
-      }
-    }
-    this.props.delegate(this.props.project.projectId, proxyList, pctList)
+    let votesInPercentList = []
+    this.state.selectedValidators.forEach((item) => {
+      let validator = this.actorToValidator(item.proxy)
+      proxyList.push(validator.publicKey)
+      votesInPercentList.push(item.votesInPercent)
+    })
+    this.props.delegate(this.props.project.projectId, proxyList, votesInPercentList)
   }
 
   search = () => {
@@ -193,7 +191,7 @@ class ProxyVotingComponent extends Component {
 
   getVoteDom = () => {
     const { classes, proxyVotingInfo } = this.props
-    const { selectedValidatorActors, voteStep, validatorPercentMap } = this.state
+    const { selectedValidators } = this.state
 
     if (!proxyVotingInfo) {
       return null
@@ -202,72 +200,48 @@ class ProxyVotingComponent extends Component {
         <Grid item xs={12} md={4}>
           <div className={classes.voteWrapper}>
             <div className={classes.voteTitle}>My votes ({this.calcAvailableVotes()}/{proxyVotingInfo.availableDelegateVotes} available)</div>
-            {voteStep === 0 && !proxyVotingInfo.proxyVotingList &&
-              <div>
-                <div className={classes.voteText}>Start voting for your validators now!</div>
-                <img src='/vote-1.png' alt='' className={classes.voteImage} />
-                {proxyVotingInfo.availableDelegateVotes > 0 &&
-                  <Button onClick={() => this.setState({ voteStep: 1 })} className={classes.btnStartVoting}>
-                    Start Voting
-                  </Button>
-                }
-              </div>
-            }
-            {voteStep === 0 && proxyVotingInfo.proxyVotingList &&
-              <div>
-                {proxyVotingInfo.proxyVotingList.map((item, i) => {
-                  let targetValidator = this.actorToValidator(item.proxy)
+            <div>
+              <div className={classes.voteText}>{selectedValidators.length === 0 ? 'Select your validator(s) from the left' : 'Edit your votes'}</div>
+              {selectedValidators.length === 0
+                ? <img src='/vote-2.png' alt='' className={classes.voteImage} />
+                : selectedValidators.map((actor, i) => {
+                  if (actor.newAdded !== true && actor.votesInPercent === 0) {
+                    return null
+                  }
+                  let validator = this.actorToValidator(actor.proxy)
                   return (
                     <div className={classes.personWrapper} key={i}>
-                      <img className={classes.personAvatar} src={targetValidator.photoUrl} alt='' />
-                      <div className={classes.personName}>{targetValidator.username}</div>
-                      <div className={classes.personPct}>{item.votesInPercent}%</div>
-                      <div className={classes.personVotes}>({this.formatVote(item.votesInPercent)} Votes)</div>
+                      <div className={classes.personName}>{validator.username}</div>
+                      <Select
+                        className={classes.personSelectWrapper}
+                        classes={{ root: classes.personSelectRoot, select: classes.personSelect }}
+                        value={actor.votesInPercent}
+                        onChange={(e) => {
+                          this.changePercent(actor.proxy, e.target.value)
+                        }}
+                      >
+                        {this.getAvailablePercent(actor.votesInPercent).map((val, i) => <MenuItem key={val} value={val}>{val}%</MenuItem>)}
+                      </Select>
+                      <div className={classes.personVotes}>{this.formatVote(actor.votesInPercent)} Votes</div>
+                      <i onClick={() => { this.removePerson(actor.proxy, actor.newAdded) }} className={classNames('fas', 'fa-times-circle', classes.personClose)} />
                     </div>
                   )
-                })}
-                <Button onClick={this.edit} className={classes.btnEdit}>
-                  Edit my votes
-                </Button>
-              </div>
-            }
-            {voteStep === 1 &&
-              <div>
-                <div className={classes.voteText}>{selectedValidatorActors.length === 0 ? 'Select your validator(s) from the left' : 'Edit your votes'}</div>
-                {selectedValidatorActors.length === 0 &&
-                  <img src='/vote-2.png' alt='' className={classes.voteImage} />
+                })
+              }
+              <Button onClick={() => this.setState({ voteStep: 0 })} className={classes.btnCancel}>
+                Cancel
+              </Button>
+              <Button
+                onClick={this.vote}
+                className={classNames({
+                  [classes.btnVote]: selectedValidators.length !== 0,
+                  [classes.btnVoteDisabled]: selectedValidators.length === 0
+                })
                 }
-                {selectedValidatorActors.length > 0 &&
-                  selectedValidatorActors.map((actor, i) => {
-                    let validator = this.actorToValidator(actor)
-
-                    return (
-                      <div className={classes.personWrapper} key={i}>
-                        <div className={classes.personName}>{validator.username}</div>
-                        <Select
-                          className={classes.personSelectWrapper}
-                          classes={{ root: classes.personSelectRoot, select: classes.personSelect }}
-                          value={validatorPercentMap[actor]}
-                          onChange={(e) => {
-                            this.changePercent(actor, e)
-                          }}
-                        >
-                          {this.getAvailablePercent(validatorPercentMap[actor]).map((val, i) => <MenuItem key={val} value={val}>{val}%</MenuItem>)}
-                        </Select>
-                        <div className={classes.personVotes}>{this.formatVote(validatorPercentMap[actor])} Votes</div>
-                        <i onClick={() => { this.removePerson(actor) }} className={classNames('fas', 'fa-times-circle', classes.personClose)} />
-                      </div>
-                    )
-                  })
-                }
-                <Button onClick={() => this.setState({ voteStep: 0 })} className={classes.btnCancel}>
-                  Cancel
-                </Button>
-                <Button onClick={this.vote} className={classNames({ [classes.btnVote]: selectedValidatorActors.length !== 0, [classes.btnVoteDisabled]: selectedValidatorActors.length === 0 })}>
-                  Vote
-                </Button>
-              </div>
-            }
+              >
+                Submit
+              </Button>
+            </div>
           </div>
         </Grid>
       )
@@ -276,7 +250,7 @@ class ProxyVotingComponent extends Component {
 
   render () {
     const { classes, proxyList, actionsPending, error } = this.props
-    const { selectedValidatorActors, sort, voteStep, keyword, showSearch } = this.state
+    const { selectedValidators, sort, keyword, showSearch } = this.state
 
     if (error) {
       return (<Error error={error} />)
@@ -372,16 +346,17 @@ class ProxyVotingComponent extends Component {
                             <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
                             <div>Votes</div>
                           </div>
-                          {voteStep === 1 &&
                           <div>
                             <Checkbox
                               classes={{ root: classes.checkbox }}
-                              checked={selectedValidatorActors.indexOf(validator.actor) >= 0}
-                              onChange={() => this.togglePerson(validator.actor)}
+                              checked={!!(selectedValidators && selectedValidators.find((item) => {
+                                return item.proxy === validator.actor && (item.votesInPercent !== 0 || item.newAdded === true)
+                              }))
+                              }
+                              onChange={(event, checked) => this.togglePerson(validator.actor, checked)}
                               color='primary'
                             />
                           </div>
-                          }
                         </Grid>
                       </Grid>
                     </Grid>
@@ -395,7 +370,7 @@ class ProxyVotingComponent extends Component {
             </div>
           </Grid>
         </Grid>
-        { actionsPending.delegate && <TransactionProgress open /> }
+        {actionsPending.delegate && <TransactionProgress open />}
       </MuiThemeProvider>
     )
   }
@@ -605,7 +580,7 @@ const theme = createMuiTheme({
       background: 'none'
     }
   },
-  personPct: {
+  personvotesInPercent: {
     marginLeft: '10px'
   },
   personVotes: {
