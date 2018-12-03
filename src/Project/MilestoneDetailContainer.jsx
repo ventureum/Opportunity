@@ -6,14 +6,23 @@ import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class MilestoneDetailContainer extends Component {
   render () {
-    let { handleClose, profile, milestone, rateObj, ...others } = this.props
+    let {
+      handleClose,
+      profile,
+      milestone,
+      rateObj,
+      actionsPending,
+      error
+    } = this.props
+
     return (
       <MilestoneDetail
         handleClose={handleClose}
         profile={profile}
         milestone={milestone}
         rateObj={rateObj}
-        {...others}
+        actionsPending={actionsPending}
+        error={error}
       />
     )
   }

@@ -18,6 +18,8 @@ import update from 'immutability-helper'
 import classNames from 'classnames'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
+import Error from '../Error/ErrorComponent'
+import TransactionProgress from '../Notification/TransactionProgress'
 
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -33,9 +35,9 @@ class CreateMilestoneComponent extends Component {
         discardOpen: false,
         title: '',
         description: '',
-        startDate: null,
-        endDate: null,
-        error: {},
+        expectedStartTime: null,
+        expectedEndTime: null,
+        validationError: {},
         objList: [
           {
             title: '',
@@ -47,43 +49,65 @@ class CreateMilestoneComponent extends Component {
       let ms = props.milestone
       let objList = []
       if (ms.objectives) {
-        ms.objectives.map(obj => {
+        ms.objectives.forEach(obj => {
           objList.push({
+            objectiveId: obj.objectiveId,
+            modified: false,
+            deleted: false,
             title: obj.content.title,
             description: obj.content.description
           })
         })
       }
+
       this.state = {
         anchorEl: null,
         index: null,
         deleteOpen: false,
         discardOpen: false,
+        modified: false,
         title: ms.content.title,
         description: ms.content.description,
-        startDate: moment.unix(ms.content.expectedStartTime).toDate(),
-        endDate: moment.unix(ms.content.expectedEndTime).toDate(),
-        error: {},
+        expectedStartTime: moment.unix(ms.content.expectedStartTime).toDate(),
+        expectedEndTime: moment.unix(ms.content.expectedEndTime).toDate(),
+        validationError: {},
         objList: objList
       }
     }
   }
 
+  componentDidUpdate (prevProps) {
+    if (prevProps.actionsPending.addMilestone && !this.props.actionsPending.addMilestone) {
+      this.props.handleClose()
+    } else if (prevProps.actionsPending.modifyMilestone && !this.props.actionsPending.modifyMilestone) {
+      this.props.handleClose()
+    }
+  }
+
   handleChange = (e, name, i, subname) => {
     if (name === 'objList') {
+      if (this.state.objList[i].objectiveId) {
+        this.setState({
+          objList: update(this.state.objList, { [i]: { [subname]: { $set: e.target.value }, modified: { $set: true } } }),
+          validationError: update(this.state.validationError, { [`objList-${i}-${subname}`]: { $set: null } })
+        })
+      } else {
+        this.setState({
+          objList: update(this.state.objList, { [i]: { [subname]: { $set: e.target.value } } }),
+          validationError: update(this.state.validationError, { [`objList-${i}-${subname}`]: { $set: null } })
+        })
+      }
+    } else if (name === 'expectedStartTime' || name === 'expectedEndTime') {
       this.setState({
-        objList: update(this.state.objList, { [i]: { [subname]: { $set: e.target.value } } }),
-        error: update(this.state.error, { [`objList-${i}-${subname}`]: { $set: null } })
-      })
-    } else if (name === 'startDate' || name === 'endDate') {
-      this.setState({
+        modified: true,
         [name]: e,
-        error: update(this.state.error, { [name]: { $set: null } })
+        validationError: update(this.state.validationError, { [name]: { $set: null } })
       })
     } else {
       this.setState({
+        modified: true,
         [name]: e.target.value,
-        error: update(this.state.error, { [name]: { $set: null } })
+        validationError: update(this.state.validationError, { [name]: { $set: null } })
       })
     }
   }
@@ -98,10 +122,17 @@ class CreateMilestoneComponent extends Component {
   }
 
   deleteObj = () => {
-    this.setState({
-      deleteOpen: false,
-      objList: update(this.state.objList, { $splice: [[this.state.index, 1]] })
-    })
+    if (this.state.objList[this.state.index].objectiveId) {
+      this.setState({
+        deleteOpen: false,
+        objList: update(this.state.objList, { [this.state.index]: { deleted: { $set: true } } })
+      })
+    } else {
+      this.setState({
+        deleteOpen: false,
+        objList: update(this.state.objList, { $splice: [[this.state.index, 1]] })
+      })
+    }
   }
 
   handleMenuOpen = (e, i) => {
@@ -139,40 +170,107 @@ class CreateMilestoneComponent extends Component {
   }
 
   validate = () => {
-    const { title, startDate, endDate, objList } = this.state
-    let error = {}
+    const { title, expectedStartTime, expectedEndTime, objList } = this.state
+    let validationError = {}
     if (!title) {
-      error.title = 'Please enter title'
+      validationError.title = 'Please enter title'
     }
-    if (!startDate) {
-      error.startDate = 'Please choose start date'
+    if (!expectedStartTime) {
+      validationError.expectedStartTime = 'Please choose start date'
     }
-    if (!endDate) {
-      error.endDate = 'Please choose end date'
+    if (!expectedEndTime) {
+      validationError.expectedEndTime = 'Please choose end date'
     }
-    objList.map((obj, i) => {
+    objList.forEach((obj, i) => {
       if (!obj.title) {
-        error[`objList-${i}-title`] = 'Please enter title'
+        validationError[`objList-${i}-title`] = 'Please enter title'
       }
     })
-    if (Object.keys(error).length === 0) {
+    if (Object.keys(validationError).length === 0) {
       return true
     } else {
       this.setState({
-        error
+        validationError
       })
       return false
     }
   }
 
   createMilestone = () => {
+    let {
+      title,
+      description,
+      expectedStartTime,
+      expectedEndTime,
+      objList
+    } = this.state
+    expectedStartTime = moment(expectedStartTime).unix()
+    expectedEndTime = moment(expectedEndTime).unix()
+    let {
+      milestone,
+      addMilestone,
+      modifyMilestone,
+      handleClose,
+      project
+    } = this.props
     if (this.validate()) {
-      // this.props.createMilestone()
+      let commands = []
+      let ids = []
+      let contents = []
+      if (!milestone) {
+        for (let i = 0; i < objList.length; i++) {
+          commands.push(0)
+          ids.push(i + 1)
+          contents.push(JSON.stringify(objList[i]))
+        }
+        addMilestone(project.projectId, {
+          title,
+          description,
+          expectedStartTime,
+          expectedEndTime
+        }, commands, ids, contents)
+      } else {
+        let lastObjId = 0
+        for (let i = 0; i < objList.length; i++) {
+          let obj = objList[i]
+          if (obj.objectiveId) {
+            lastObjId = obj.objectiveId
+            if (obj.deleted) {
+              commands.push(2)
+              ids.push(obj.objectiveId)
+              contents.push('')
+            } else if (obj.modified) {
+              commands.push(1)
+              ids.push(obj.objectiveId)
+              contents.push(JSON.stringify({
+                title: obj.title,
+                description: obj.description
+              }))
+            }
+          } else {
+            commands.push(0)
+            ids.push(lastObjId + 1)
+            lastObjId++
+            contents.push(JSON.stringify(obj))
+          }
+        }
+        console.log(commands, ids, contents)
+        if (commands.length === 0 && !this.state.modified) {
+          handleClose()
+          return
+        }
+        modifyMilestone(project.projectId, milestone.milestoneId, {
+          title,
+          description,
+          expectedStartTime,
+          expectedEndTime
+        }, commands, ids, contents)
+      }
     }
   }
 
   render () {
-    const { classes, handleClose } = this.props
+    const { classes, handleClose, milestone, actionsPending, error } = this.props
     const {
       anchorEl,
       index,
@@ -180,12 +278,21 @@ class CreateMilestoneComponent extends Component {
       discardOpen,
       title,
       description,
-      startDate,
-      endDate,
+      expectedStartTime,
+      expectedEndTime,
       objList,
-      error
+      validationError
     } = this.state
     const open = Boolean(anchorEl)
+    let objCount = 0
+
+    if (error) {
+      return (
+        <div>
+          <Error error={error} />
+        </div>
+      )
+    }
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -193,7 +300,7 @@ class CreateMilestoneComponent extends Component {
           <Grid item xs={10} lg={8} xl={6}>
             <Grid className={classes.titleWrapper} container direction='row' justify='space-between' spacing={8}>
               <Grid item xs={12} sm={8}>
-                Create Milestone
+                {milestone ? 'Update Milestone' : 'Create Milestone'}
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Button onClick={this.handleDiscardOpen} className={classNames(classes.btnCancel, classes.fullWidth)}>
@@ -202,7 +309,7 @@ class CreateMilestoneComponent extends Component {
               </Grid>
               <Grid item xs={12} sm={2}>
                 <Button onClick={this.createMilestone} className={classNames(classes.btnCreate, classes.fullWidth)}>
-                  Create
+                  {milestone ? 'Update' : 'Create'}
                 </Button>
               </Grid>
             </Grid>
@@ -213,8 +320,8 @@ class CreateMilestoneComponent extends Component {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
-                    error={!!error.title}
-                    helperText={error.title}
+                    error={!!validationError.title}
+                    helperText={validationError.title}
                     label='Title'
                     className={classes.textField}
                     value={title}
@@ -228,8 +335,8 @@ class CreateMilestoneComponent extends Component {
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TextField
-                    error={!!error.description}
-                    helperText={error.description}
+                    error={!!validationError.description}
+                    helperText={validationError.description}
                     label='Description'
                     className={classes.textField}
                     value={description}
@@ -248,90 +355,94 @@ class CreateMilestoneComponent extends Component {
                   <div className={classes.dateWrapper}>
                     <DatePicker
                       placeholderText='Start Date'
-                      className={classNames(classes.dateField, { [classes.dateFieldError]: error.startDate })}
-                      selected={startDate}
+                      className={classNames(classes.dateField, { [classes.dateFieldvalidationError]: validationError.expectedStartTime })}
+                      selected={expectedStartTime}
                       showTimeSelect
                       dateFormat='Pp'
-                      onChange={(date) => this.handleChange(date, 'startDate')}
+                      onChange={(date) => this.handleChange(date, 'expectedStartTime')}
                     />
-                    {error.startDate && <FormHelperText error>{error.startDate}</FormHelperText>}
+                    {validationError.expectedStartTime && <FormHelperText error>{validationError.expectedStartTime}</FormHelperText>}
                   </div>
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <div className={classes.dateWrapper}>
                     <DatePicker
                       placeholderText='End Date'
-                      className={classNames(classes.dateField, { [classes.dateFieldError]: error.endDate })}
-                      selected={endDate}
+                      className={classNames(classes.dateField, { [classes.dateFieldvalidationError]: validationError.expectedEndTime })}
+                      selected={expectedEndTime}
                       showTimeSelect
                       dateFormat='Pp'
-                      onChange={(date) => this.handleChange(date, 'endDate')}
+                      onChange={(date) => this.handleChange(date, 'expectedEndTime')}
                     />
-                    {error.endDate && <FormHelperText error>{error.endDate}</FormHelperText>}
+                    {validationError.expectedEndTime && <FormHelperText error>{validationError.expectedEndTime}</FormHelperText>}
                   </div>
                 </Grid>
                 <Grid className={classes.text} item xs={12} md={6}>
                   The start date and end date are estimated dates for reference. They will be auto-adjusted based on when the milestone is activated and ended.
                 </Grid>
                 {objList.map((obj, i) => {
-                  return (
-                    <Grid key={i} item xs={12}>
-                      <Grid className={classes.objWrapper} container direction='row' spacing={16}>
-                        <Grid item xs={12}>
-                          <Grid container direction='row'>
-                            <Grid className={classes.objTitle} item xs={12} md={6}>
-                              Objective {i + 1}
-                              <div className={classes.objMenu}>
-                                <IconButton
-                                  onClick={(e) => this.handleMenuOpen(e, i)}
-                                >
-                                  <MoreHorizIcon />
-                                </IconButton>
-                                <Menu
-                                  anchorEl={anchorEl}
-                                  open={open && index === i}
-                                  onClose={this.handleMenuClose}
-                                >
-                                  <MenuItem className={classes.option} onClick={() => this.handleMenuClose('Delete')}>
-                                    Delete
-                                  </MenuItem>
-                                </Menu>
-                              </div>
+                  if (!obj.deleted) {
+                    objCount++
+                    return (
+                      <Grid key={objCount} item xs={12}>
+                        <Grid className={classes.objWrapper} container direction='row' spacing={16}>
+                          <Grid item xs={12}>
+                            <Grid container direction='row'>
+                              <Grid className={classes.objTitle} item xs={12} md={6}>
+                                Objective {objCount}
+                                <div className={classes.objMenu}>
+                                  <IconButton
+                                    onClick={(e) => this.handleMenuOpen(e, i)}
+                                  >
+                                    <MoreHorizIcon />
+                                  </IconButton>
+                                  <Menu
+                                    anchorEl={anchorEl}
+                                    open={open && index === i}
+                                    onClose={this.handleMenuClose}
+                                  >
+                                    <MenuItem className={classes.option} onClick={() => this.handleMenuClose('Delete')}>
+                                      Delete
+                                    </MenuItem>
+                                  </Menu>
+                                </div>
+                              </Grid>
                             </Grid>
                           </Grid>
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                          <TextField
-                            error={!!error[`objList-${i}-title`]}
-                            helperText={error[`objList-${i}-title`]}
-                            label='Title'
-                            className={classes.textField}
-                            value={obj.title}
-                            onChange={(e) => this.handleChange(e, 'objList', i, 'title')}
-                            margin='normal'
-                            variant='outlined'
-                          />
-                        </Grid>
-                        <Grid className={classes.text} item xs={12} md={6}>
-                          Objective should be single focused and specific
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                          <TextField
-                            error={!!error[`objList-${i}-description`]}
-                            helperText={error[`objList-${i}-description`]}
-                            label='Description'
-                            className={classes.textField}
-                            value={obj.description}
-                            multiline
-                            rowsMax='4'
-                            onChange={(e) => this.handleChange(e, 'objList', i, 'description')}
-                            margin='normal'
-                            variant='outlined'
-                          />
+                          <Grid item xs={12} md={6}>
+                            <TextField
+                              error={!!validationError[`objList-${i}-title`]}
+                              helperText={validationError[`objList-${i}-title`]}
+                              label='Title'
+                              className={classes.textField}
+                              value={obj.title}
+                              onChange={(e) => this.handleChange(e, 'objList', i, 'title')}
+                              margin='normal'
+                              variant='outlined'
+                            />
+                          </Grid>
+                          <Grid className={classes.text} item xs={12} md={6}>
+                            Objective should be single focused and specific
+                          </Grid>
+                          <Grid item xs={12} md={6}>
+                            <TextField
+                              error={!!validationError[`objList-${i}-description`]}
+                              helperText={validationError[`objList-${i}-description`]}
+                              label='Description'
+                              className={classes.textField}
+                              value={obj.description}
+                              multiline
+                              rowsMax='4'
+                              onChange={(e) => this.handleChange(e, 'objList', i, 'description')}
+                              margin='normal'
+                              variant='outlined'
+                            />
+                          </Grid>
                         </Grid>
                       </Grid>
-                    </Grid>
-                  )
+                    )
+                  }
+                  return null
                 })}
                 <Grid item xs={12}>
                   <div className={classes.btnAddObj} onClick={this.addObj}>
@@ -380,6 +491,9 @@ class CreateMilestoneComponent extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+        {(actionsPending.modifyMilestone || actionsPending.addMilestone) &&
+          <TransactionProgress open />
+        }
       </MuiThemeProvider>
     )
   }
@@ -430,7 +544,7 @@ const theme = createMuiTheme({
     border: '1px solid #C4C4C4',
     boxSizing: 'border-box'
   },
-  dateFieldError: {
+  dateFieldvalidationError: {
     color: '#F44336',
     borderColor: '#F44336',
     '&::placeholder': {

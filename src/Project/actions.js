@@ -69,4 +69,46 @@ const getProjectPageData = (actor) => {
   }
 }
 
-export { getProjects, getProject, getProxyList, getVoteInfo, delegate, rateObj, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData }
+const getProjectByAdmin = (actor) => {
+  return {
+    type: 'GET_PROJECT_BY_ADMIN',
+    payload: projectApi.getProjectByAdmin(actor)
+  }
+}
+
+const activateMilestone = (projectId, milestoneId) => {
+  return {
+    type: 'ACTIVATE_MILESTONE',
+    payload: projectApi.activateMilestone(projectId, milestoneId)
+  }
+}
+
+const finalizeMilestone = (projectId, milestoneId) => {
+  return {
+    type: 'FINALIZE_MILESTONE',
+    payload: projectApi.finalizeMilestone(projectId, milestoneId)
+  }
+}
+
+const removeMilestone = (projectId, milestoneId) => {
+  return {
+    type: 'REMOVE_MILESTONE',
+    payload: projectApi.removeMilestone(projectId, milestoneId)
+  }
+}
+
+const modifyMilestone = (projectId, milestoneId, content, commands, ids, contents) => {
+  return {
+    type: 'MODIFY_MILESTONE',
+    payload: projectApi.modifyMilestone(projectId, milestoneId, content, commands, ids, contents)
+  }
+}
+
+const addMilestone = (projectId, content, commands, ids, contents) => {
+  return {
+    type: 'ADD_MILESTONE',
+    payload: projectApi.addMilestone(projectId, content, commands, ids, contents)
+  }
+}
+
+export { getProjects, getProject, getProxyList, getVoteInfo, delegate, rateObj, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData, getProjectByAdmin, activateMilestone, finalizeMilestone, removeMilestone, modifyMilestone, addMilestone }

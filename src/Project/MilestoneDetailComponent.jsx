@@ -136,7 +136,7 @@ class MilestoneDetailComponent extends Component {
           </Grid>
           <Grid item>
             <Grid container direction='column' className={classes.objWrapper}>
-              {milestone.objectives.map((obj, i) => {
+              {milestone.objectives && milestone.objectives.map((obj, i) => {
                 return (
                   <Grid item xs={12} className={classes.obj} key={i}>
                     <div className={classes.objId}>
@@ -201,12 +201,14 @@ class MilestoneDetailComponent extends Component {
           <div onClick={handleClose} className={classes.close}>
             <i className='fas fa-times' />
           </div>
-          <MilestoneObjVote
-            open={this.state.objVoteModalOpen}
-            onClose={this.handleObjVoteModalClose}
-            milestone={milestone}
-            rateObj={rateObj}
-          />
+          {milestone.objectives &&
+            <MilestoneObjVote
+              open={this.state.objVoteModalOpen}
+              onClose={this.handleObjVoteModalClose}
+              milestone={milestone}
+              rateObj={rateObj}
+            />
+          }
           { actionsPending.rateObj && <TransactionProgress open /> }
         </Grid>
       </MuiThemeProvider>

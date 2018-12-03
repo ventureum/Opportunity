@@ -17,10 +17,9 @@ import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Modal from '@material-ui/core/Modal'
-// import Loading from '../Notification/Loading'
+import Loading from '../Notification/Loading'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
-import { processError } from '../Utils'
 import NavBar from '../User/NavBarContainer'
 import MilestoneDetail from '../Project/MilestoneDetailContainer'
 import CreateMilestone from '../Project/CreateMilestoneComponent'
@@ -35,6 +34,7 @@ class ProjectManagementComponent extends Component {
       index: null,
       milestoneDetailOpen: false,
       activateOpen: false,
+      finalizeOpen: false,
       deleteOpen: false,
       createOpen: false
     }
@@ -55,6 +55,10 @@ class ProjectManagementComponent extends Component {
     } else if (name === 'Activate') {
       this.setState({
         activateOpen: true
+      })
+    } else if (name === 'Finalize') {
+      this.setState({
+        finalizeOpen: true
       })
     } else if (name === 'Delete') {
       this.setState({
@@ -81,6 +85,7 @@ class ProjectManagementComponent extends Component {
     let nameMap = {
       detail: 'milestoneDetailOpen',
       activate: 'activateOpen',
+      finalize: 'finalizeOpen',
       delete: 'deleteOpen',
       create: 'createOpen'
     }
@@ -104,7 +109,7 @@ class ProjectManagementComponent extends Component {
     if (ms.state === 'PENDING') {
       return ['View Detail', 'Edit', 'Activate', 'Delete']
     } else if (ms.state === 'IN_PROGRESS') {
-      return ['View Detail', 'Edit', 'Finalized', 'Delete']
+      return ['View Detail', 'Finalize']
     } else if (ms.state === 'COMPLETE') {
       return ['View Detail']
     }
@@ -120,33 +125,55 @@ class ProjectManagementComponent extends Component {
   }
 
   render () {
-    const { classes, requestStatus, project } = this.props
-    const { anchorEl, index, milestoneDetailOpen, activateOpen, deleteOpen, createOpen } = this.state
+    const {
+      classes,
+      project,
+      actionsPending,
+      error,
+      addMilestone,
+      modifyMilestone,
+      activateMilestone,
+      finalizeMilestone,
+      removeMilestone
+    } = this.props
+    const { anchorEl, index, milestoneDetailOpen, activateOpen, finalizeOpen, deleteOpen, createOpen } = this.state
     const open = Boolean(anchorEl)
 
-    if (processError(requestStatus)) {
+    if (error) {
       return (
         <div>
-          <Error error={processError(requestStatus)} />
+          <Error error={error} />
         </div>
       )
     }
-    // TODO: connect API and check requestStatus
-    // if (!requestStatus.getAdminProject) {
-    //   return (
-    //     <div>
-    //       <Loading />
-    //     </div>
-    //   )
-    // }
+
+    if (actionsPending.getProjectByAdmin) {
+      return (
+        <div>
+          <Loading />
+        </div>
+      )
+    }
+
+    if (!project) {
+      return (
+        <div>
+          <NavBar />
+        </div>
+      )
+    }
 
     if (createOpen) {
       return (
         <div>
           <NavBar />
           <CreateMilestone
+            actionsPending={actionsPending}
+            error={error}
             handleClose={() => this.handleClose('create')}
-            createMilestone={() => {}}
+            addMilestone={addMilestone}
+            modifyMilestone={modifyMilestone}
+            project={project}
             milestone={index !== null && project.milestonesInfo.milestones[index]}
           />
         </div>
@@ -184,8 +211,8 @@ class ProjectManagementComponent extends Component {
                     return (
                       <TableRow key={ms.milestoneId}>
                         <TableCell className={classes.tableText}>{ms.content.title}</TableCell>
-                        <TableCell className={classes.tableText}>{moment.unix(ms.startTime).format('MM/DD/YYYY')}</TableCell>
-                        <TableCell className={classes.tableText}>{moment.unix(ms.endTime).format('MM/DD/YYYY')}</TableCell>
+                        <TableCell className={classes.tableText}>{ms.startTime ? moment.unix(ms.startTime).format('MM/DD/YYYY') : 'N/A'}</TableCell>
+                        <TableCell className={classes.tableText}>{ms.endTime ? moment.unix(ms.endTime).format('MM/DD/YYYY') : 'N/A'}</TableCell>
                         <TableCell className={classes.tableText}>{this.getMilestoneStatus(ms.state)}</TableCell>
                         <TableCell className={classes.tableText}>
                           <IconButton
@@ -257,8 +284,27 @@ class ProjectManagementComponent extends Component {
             <Button className={classes.btnCancel} onClick={() => this.handleClose('activate')}>
               Cancel
             </Button>
-            <Button className={classes.btnActive} onClick={() => {}}>
+            <Button className={classes.btnActive} onClick={() => { this.handleClose('activate'); activateMilestone(project.projectId, project.milestonesInfo.milestones[index].milestoneId) }}>
               Active
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={finalizeOpen}
+          onClose={() => this.handleClose('finalize')}
+        >
+          <DialogTitle>{'Finalize Milestone'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions className={classes.dialogAction}>
+            <Button className={classes.btnCancel} onClick={() => this.handleClose('finalize')}>
+              Cancel
+            </Button>
+            <Button className={classes.btnDelete} onClick={() => { this.handleClose('finalize'); finalizeMilestone(project.projectId, project.milestonesInfo.milestones[index].milestoneId) }}>
+              Finalize
             </Button>
           </DialogActions>
         </Dialog>
@@ -276,12 +322,14 @@ class ProjectManagementComponent extends Component {
             <Button className={classes.btnCancel} onClick={() => this.handleClose('delete')}>
               Cancel
             </Button>
-            <Button className={classes.btnDelete} onClick={() => {}}>
+            <Button className={classes.btnDelete} onClick={() => { this.handleClose('delete'); removeMilestone(project.projectId, project.milestonesInfo.milestones[index].milestoneId) }}>
               Delete
             </Button>
           </DialogActions>
         </Dialog>
-        { false && <TransactionProgress open /> }
+        {(actionsPending.activateMilestone || actionsPending.finalizeMilestone || actionsPending.removeMilestone) &&
+          <TransactionProgress open />
+        }
       </MuiThemeProvider>
     )
   }
