@@ -34,6 +34,7 @@ class MyProjectsComponent extends Component {
   }
 
   handleClose = (name) => {
+    this.props.getData()
     this.setState({
       [name + 'Open']: false
     })
@@ -139,21 +140,6 @@ class MyProjectsComponent extends Component {
                                  </div>
                                )
                              })
-                            }
-                            {!proxyVotingInfoList[i].proxyVotingList && [
-                              <div key={0} className={classes.iconPlus}>
-                                <i className='fas fa-plus' />
-                              </div>,
-                              <div key={1} className={classes.iconPlus}>
-                                <i className='fas fa-plus' />
-                              </div>,
-                              <div key={2} className={classes.iconPlus}>
-                                <i className='fas fa-plus' />
-                              </div>,
-                              <div key={3} className={classes.iconPlus}>
-                                <i className='fas fa-plus' />
-                              </div>
-                            ]
                             }
                           </div>
                           {proxyVotingInfoList[i].proxyVotingList &&
