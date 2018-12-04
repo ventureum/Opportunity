@@ -7,8 +7,8 @@ import Milestone from './contracts/Milestone.json'
 import { store } from './configureStore'
 
 function getClient (privateKey, publicKey) {
-  const writer = createJSONRPCClient({ protocols: [{ url: 'http://127.0.0.1:46658/rpc' }] })
-  const reader = createJSONRPCClient({ protocols: [{ url: 'http://127.0.0.1:46658/query' }] })
+  const writer = createJSONRPCClient({ protocols: [{ url: `http://${process.env.REACT_APP_LOOM_ENDPOINT}:46658/rpc` }] })
+  const reader = createJSONRPCClient({ protocols: [{ url: `http://${process.env.REACT_APP_LOOM_ENDPOINT}:46658/query` }] })
   const client = new Client(
     'default',
     writer,

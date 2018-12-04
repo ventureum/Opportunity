@@ -143,3 +143,5 @@ sftp-config.json
 .vscode/
 
 src/contracts/
+
+.env

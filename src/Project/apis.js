@@ -4,7 +4,7 @@ import c from '../contract'
 import * as userApi from '../User/apis'
 import { encodeObjData } from '../Utils'
 
-const baseUrl = 'https://mfmybdhoea.execute-api.ca-central-1.amazonaws.com/exp'
+const baseUrl = `${process.env.REACT_APP_TCR_ENDPOINT}/${process.env.REACT_APP_TCR_STAGE}`
 
 var apiTcr = axios.create({
   baseURL: baseUrl,

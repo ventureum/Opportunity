@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-let baseUrl = 'https://7g1vjuevub.execute-api.ca-central-1.amazonaws.com/exp'
-let authUrl = 'https://8r20kpyoif.execute-api.us-west-1.amazonaws.com/alpha'
+let baseUrl = `${process.env.REACT_APP_FEED_ENDPOINT}/${process.env.REACT_APP_FEED_STAGE}`
+let authUrl = `${process.env.REACT_APP_AUTH_ENDPOINT}/${process.env.REACT_APP_AUTH_STAGE}`
 
 const apiFeed = axios.create({
   baseURL: baseUrl,
