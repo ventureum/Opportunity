@@ -12,6 +12,7 @@
     "classnames": "^2.2.6",
     "commafy": "0.0.5",
     "delay": "^4.1.0",
+    "dotenv-webpack": "^1.5.7",
     "immutability-helper": "^2.8.1",
     "js-sha3": "^0.8.0",
     "jsonwebtoken": "^8.4.0",
