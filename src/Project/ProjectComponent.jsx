@@ -164,9 +164,11 @@ class ProjectComponent extends Component {
     let { projectData } = this.props
     return (
       <Grid item>
-        <VerticalTimeline animate={false}>
-          { projectData.milestonesInfo.milestones.map((m) => this.renderMilestone(m))}
-        </VerticalTimeline>
+        { projectData.milestonesInfo.milestones &&
+          <VerticalTimeline animate={false}>
+            {projectData.milestonesInfo.milestones.map((m) => this.renderMilestone(m))}
+          </VerticalTimeline>
+        }
       </Grid>
     )
   }
