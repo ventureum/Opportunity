@@ -264,7 +264,7 @@ class ProjectComponent extends Component {
               <Grid item>
                 <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
                   <Grid item>
-                    <img className={classes.topSectionProjectLogo} src='https://icobench.com/images/icos/icons/datablockchain.jpg' />
+                    <img className={classes.topSectionProjectLogo} src={projectData.content.logo} />
                   </Grid>
                   <Grid item lg={5}>
                     <Grid container direction='column' justify='center' alignItems='flex-start'>
