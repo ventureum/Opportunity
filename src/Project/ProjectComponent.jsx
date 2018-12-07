@@ -235,7 +235,7 @@ class ProjectComponent extends Component {
 
   render () {
     let { open, tabValue, selectedMilestone } = this.state
-    let { classes, projectData, error } = this.props
+    let { classes, projectData, error, history, location } = this.props
 
     if (error) {
       return (<Error error={error} />)
@@ -259,7 +259,7 @@ class ProjectComponent extends Component {
           <Grid item>
             <Grid container direction='column' justify='center' alignItems='stretch'>
               <Grid item>
-                <NavBar />
+                <NavBar history={history} location={location} />
               </Grid>
               <Grid item>
                 <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>

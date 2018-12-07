@@ -37,7 +37,9 @@ class ProjectManagementContainer extends Component {
       finalizeMilestone,
       removeMilestone,
       modifyMilestone,
-      addMilestone
+      addMilestone,
+      history,
+      location
     } = this.props
 
     return (
@@ -53,6 +55,8 @@ class ProjectManagementContainer extends Component {
         removeMilestone={removeMilestone}
         modifyMilestone={modifyMilestone}
         addMilestone={addMilestone}
+        history={history}
+        location={location}
       />
     )
   }

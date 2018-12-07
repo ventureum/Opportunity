@@ -64,6 +64,8 @@ class MyProjectsComponent extends Component {
       projects,
       proxyVotingInfoList,
       actionsPending,
+      history,
+      location,
       error } = this.props
     const { selectedVoteInfo, selectedProject, proxyVotingOpen, walletListOpen } = this.state
 
@@ -79,7 +81,7 @@ class MyProjectsComponent extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <NavBar />
+        <NavBar history={history} location={location} />
         <Grid container direction='row' justify='center' className={classes.projectsWrapper}>
           <Grid item xs={10} className={classes.titleWrapper}>
             <div className={classes.title}>My Projects</div>

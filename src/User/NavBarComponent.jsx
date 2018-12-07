@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
@@ -9,10 +9,12 @@ import Avatar from '@material-ui/core/Avatar'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import logo from '../logo.svg'
 import Chip from '@material-ui/core/Chip'
+import ButtonBase from '@material-ui/core/ButtonBase'
 
 class NavBarComponent extends Component {
   state = {
-    open: false
+    open: false,
+    redirectTo: ''
   }
 
   handleOpen = () => {
@@ -28,10 +30,22 @@ class NavBarComponent extends Component {
     this.handleClose()
   }
 
+  handleRedirect = (to) => {
+    if (to !== this.props.location.pathname) {
+      this.setState({redirectTo: to})
+    } else {
+      this.handleClose()
+    }
+  }
+
   render () {
     const { classes, profile } = this.props
-    const { open } = this.state
+    const { open, redirectTo } = this.state
     const anchorEl = window.document.querySelector('header')
+
+    if (redirectTo) {
+      return (<Redirect to={redirectTo} />)
+    }
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -70,29 +84,23 @@ class NavBarComponent extends Component {
               </MenuItem>
               : null
             }
-            <MenuItem onClick={this.handleClose}>
-              <Link to='/my-projects' className={classes.link}>
-                <Typography variant='body2'>
+            <MenuItem onClick={() => this.handleRedirect('/my-projects')}>
+              <Typography variant='body2'>
                   My Projects
-                </Typography>
-              </Link>
+              </Typography>
             </MenuItem>
             {profile.actorType !== 'USER'
-              ? <MenuItem onClick={this.handleClose}>
-                <Link to='/project-management' className={classes.link}>
-                  <Typography variant='body2'>
+              ? <MenuItem onClick={() => this.handleRedirect('/project-management')}>
+                <Typography variant='body2'>
                   Project Management
-                  </Typography>
-                </Link>
+                </Typography>
               </MenuItem>
               : null
             }
-            <MenuItem onClick={this.handleClose}>
-              <Link to='/' className={classes.link}>
-                <Typography variant='body2'>
+            <MenuItem onClick={() => this.handleRedirect('/')}>
+              <Typography variant='body2'>
                   Account Settings&nbsp;
-                </Typography>
-              </Link>
+              </Typography>
             </MenuItem>
             <div className={classes.bottomLine} />
             <MenuItem className={classes.logout} onClick={this.logout}>

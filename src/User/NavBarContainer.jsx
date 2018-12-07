@@ -5,7 +5,8 @@ import { logout } from './actions'
 
 class NavBarContainer extends Component {
   render () {
-    return (<NavBar profile={this.props.profile} logout={this.props.logout} />)
+    const { history, location, profile, logout } = this.props
+    return (<NavBar history={history} location={location} profile={profile} logout={logout} />)
   }
 }
 

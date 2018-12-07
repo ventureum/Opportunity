@@ -75,7 +75,7 @@ class ProjectListComponent extends Component {
 
   render () {
     const { redirectPath, redirectArgs } = this.state
-    const { classes, projects } = this.props
+    const { classes, projects, history, location } = this.props
 
     if (redirectPath) {
       // redirect to another page
@@ -86,7 +86,7 @@ class ProjectListComponent extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
-          <NavBar />
+          <NavBar history={history} location={location} />
           <Grid container direction='column' justify='center' alignItems='center'>
             <Grid item>
               <Grid container direction='column' justify='center' alignItems='stretch'>

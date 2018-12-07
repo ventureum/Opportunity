@@ -9,8 +9,11 @@ class ProjectListContainer extends Component {
   }
 
   render () {
-    let { projects } = this.props
-    return (<ProjectList projects={projects} />)
+    let { projects, history, location } = this.props
+    return (<ProjectList
+      projects={projects}
+      history={history}
+      location={location} />)
   }
 }
 
