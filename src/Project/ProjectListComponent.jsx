@@ -80,7 +80,7 @@ class ProjectListComponent extends Component {
     if (redirectPath) {
       // redirect to another page
       console.log(redirectPath, redirectArgs)
-      return (<Redirect to={redirectPath} />)
+      return (<Redirect push to={redirectPath} />)
     }
 
     return (

@@ -44,7 +44,7 @@ class NavBarComponent extends Component {
     const anchorEl = window.document.querySelector('header')
 
     if (redirectTo) {
-      return (<Redirect to={redirectTo} />)
+      return (<Redirect push to={redirectTo} />)
     }
 
     return (
