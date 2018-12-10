@@ -145,7 +145,7 @@ class AddWalletComponent extends Component {
               value={message}
               margin='normal'
             />
-            <a onClick={this.copy} className={classNames(classes.btnLink, classes.firstBtnLink)}>Copy to Clipboard</a>
+            <a onClick={this.copy} href='#void' className={classNames(classes.btnLink, classes.firstBtnLink)}>Copy to Clipboard</a>
             <a href='https://www.myetherwallet.com/signmsg.html' target='_blank' className={classes.btnLink} rel='noopener noreferrer'>Open MyEtherWallet</a>
             <div className={classes.stepTitle}>
               Step 3. Paste Signed Message from MyEtherWallet

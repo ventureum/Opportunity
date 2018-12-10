@@ -49,7 +49,7 @@ class ProjectListComponent extends Component {
               <Grid container direction='row' alignItems='center'>
                 <Grid item xs={7} lg={7}>
                   <Grid className={classes.cardMilestonesInProgressContainer} container direction='row' justify='flex-start' alignItems='center'>
-                    <img src={logo} className={classes.cardMilestoneInProgressIcon} />
+                    <img src={logo} alt='' className={classes.cardMilestoneInProgressIcon} />
                     <Typography className={classes.cardMilestonesInProgressText} color='textSecondary'>
                       { p.milestonesInfo.currentMilestone > 0 ? 'In Progress' : '' }
                     </Typography>

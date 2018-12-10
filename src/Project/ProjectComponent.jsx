@@ -119,6 +119,8 @@ class ProjectComponent extends Component {
         rv.iconStyle.background = '#F7F7F7'
         rv.icon = null
         break
+      default:
+        throw new Error('Invalid milestone state')
     }
     return rv
   }
@@ -264,7 +266,7 @@ class ProjectComponent extends Component {
               <Grid item>
                 <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
                   <Grid item>
-                    <img className={classes.topSectionProjectLogo} src={projectData.content.logo} />
+                    <img className={classes.topSectionProjectLogo} src={projectData.content.logo} alt='' />
                   </Grid>
                   <Grid item lg={5}>
                     <Grid container direction='column' justify='center' alignItems='flex-start'>

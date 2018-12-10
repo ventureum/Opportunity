@@ -304,7 +304,6 @@ class ProxyVotingComponent extends Component {
                           type='text'
                           value={keyword}
                           onChange={this.handleChange}
-                          inputProps={{ className: classes.searchInput }}
                           InputProps={{
                             className: classes.searchInputWrapper,
                             endAdornment: (

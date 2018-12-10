@@ -174,7 +174,7 @@ class MilestoneDetailComponent extends Component {
                 return (
                   <Grid item xs={12} key={i} className={classes.file}>
                     <i className={classNames('fas', 'fa-file', classes.fileIcon)} />
-                    <a className={classes.fileName} href={file.link} target='_blank'>{file.name}</a>
+                    <a className={classes.fileName} href={file.link} target='_blank' rel='noopener noreferrer' >{file.name}</a>
                   </Grid>
                 )
               })}
@@ -190,7 +190,7 @@ class MilestoneDetailComponent extends Component {
                   <Grid item xs={12} key={i} className={classes.post}>
                     <img src={post.avatar} alt='' className={classes.postAvatar} />
                     <div className={classes.postContent}>
-                      <a href={post.link} target='_blank' className={classes.postTitle}>{post.title}</a>
+                      <a href={post.link} target='_blank' rel='noopener noreferrer' className={classes.postTitle}>{post.title}</a>
                       <div className={classes.postAuthor}>{post.author}</div>
                     </div>
                   </Grid>
@@ -202,12 +202,12 @@ class MilestoneDetailComponent extends Component {
             <i className='fas fa-times' />
           </div>
           {milestone.objectives &&
-            <MilestoneObjVote
-              open={this.state.objVoteModalOpen}
-              onClose={this.handleObjVoteModalClose}
-              milestone={milestone}
-              rateObj={rateObj}
-            />
+          <MilestoneObjVote
+            open={this.state.objVoteModalOpen}
+            onClose={this.handleObjVoteModalClose}
+            milestone={milestone}
+            rateObj={rateObj}
+          />
           }
           { actionsPending.rateObj && <TransactionProgress open /> }
         </Grid>

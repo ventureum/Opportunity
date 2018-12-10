@@ -1,0 +1,25 @@
+dist: trusty
+language: node_js
+node_js:
+  - 8
+fail_fast: true
+script:
+- npm install eslint -g
+- npm install babel-eslint -g
+- npm install standard -g
+- standard
+- wget -P ./src/contracts/ https://s3.amazonaws.com/contracts.ventureum.io/prod/v2_proto/Milestone.json
+- wget -P ./src/contracts/ https://s3.amazonaws.com/contracts.ventureum.io/prod/v2_proto/RepSys.json
+- mv .env.prod .env
+- npm run build
+deploy:
+  provider: s3
+  access_key_id: AKIAI6LACEC42GJRQEPA
+  secret_access_key:
+    secure: skmJmnd5bXPUn41xnwJ1evk2/mMNvOpT9OI2+0cwb/ot6YpHxQHw31UHnm7lq77KVquDR+Y5/K3fLd2C35Kuq81klq2+AgLN5BtfrCV61PhIbZsyfRRm9DcCoNehAbTopoNuXpUbSLMQ6p2l17dar1Ebk9acmpV2aIuyv0nBjlT/heqNwONLhsg7iefD6ZlXDswR2ATQzhe7TfpG4HfhJpXW3x5/Zu8drHZVGVUxgyZPe3pQPZ3kaWYIOuYvNWkLrkZXyJYSGRDOqCZquyPkwkoXoOZ3vDebMObu6F6wc94wcTPcuv/vE5jjBpjC3mcXAcE9uNRTsEGH+B8HRjEFLRFSmvZqIjDJ5lomSo/oMaQF+cgeCeclrXWXqtNC1m3eAVcrJdZB+s5Aacx0JpC7fu5cWO1T/2WlH8lXnzsCpxJ7gqQS4gxQ408HYNTp/aFScNyle01nTUOcn+bbd6Ddf3WG866hoq8JXAOQeLMIO2BnD8GM1zuwchKRz3JaR/VvtJkRMN4znHjudAGjrsMbZ7/Qp1XpoqL9lz1XZ5RIVI+lYWLTsM6cqQ+M8/3nGRzAcKScr32gNpowCUWb0W9J4FLvO4I1aufDy2trzLTHIW2dcH9hgtS25+DUbyR7UTJgu1aIJckzC8Q0/Rgx6CWFE4dWbu8wyGlst5SYKZxULUI=
+  bucket: www.milest.one
+  skip_cleanup: true
+  local_dir: build
+  region: ca-central-1
+true:
+  branch: master
