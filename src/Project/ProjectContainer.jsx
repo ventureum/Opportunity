@@ -20,13 +20,15 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { profile, projectData, proxyList, error } = this.props
+    let { profile, projectData, proxyList, error, history, location } = this.props
     return (
       <Project
         profile={profile}
         projectData={projectData}
         proxyList={proxyList}
         error={error}
+        history={history}
+        location={location}
       />
     )
   }

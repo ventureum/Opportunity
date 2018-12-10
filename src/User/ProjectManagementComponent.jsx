@@ -134,7 +134,9 @@ class ProjectManagementComponent extends Component {
       modifyMilestone,
       activateMilestone,
       finalizeMilestone,
-      removeMilestone
+      removeMilestone,
+      history,
+      location
     } = this.props
     const { anchorEl, index, milestoneDetailOpen, activateOpen, finalizeOpen, deleteOpen, createOpen } = this.state
     const open = Boolean(anchorEl)
@@ -158,7 +160,7 @@ class ProjectManagementComponent extends Component {
     if (!project) {
       return (
         <div>
-          <NavBar />
+          <NavBar history={history} location={location} />
         </div>
       )
     }
@@ -166,7 +168,7 @@ class ProjectManagementComponent extends Component {
     if (createOpen) {
       return (
         <div>
-          <NavBar />
+          <NavBar history={history} location={location} />
           <CreateMilestone
             actionsPending={actionsPending}
             error={error}
@@ -182,7 +184,7 @@ class ProjectManagementComponent extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <NavBar />
+        <NavBar history={history} location={location} />
         <Grid className={classes.projectManagement} container direction='row' justify='center' alignItems='center'>
           <Grid item xs={10} lg={8} xl={6}>
             <Grid className={classes.titleWrapper} container direction='row' justify='space-between' spacing={8}>

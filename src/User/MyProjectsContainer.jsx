@@ -31,7 +31,9 @@ class MyProjectsContainer extends Component {
       proxyVotingInfoList,
       profiles,
       profile,
-      actionsPending
+      actionsPending,
+      history,
+      location
     } = this.props
 
     return (<MyProjects
@@ -45,6 +47,8 @@ class MyProjectsContainer extends Component {
       removeWallet={this.removeWallet}
       actionsPending={actionsPending}
       getData={this.getData}
+      history={history}
+      location={location}
     />)
   }
 }

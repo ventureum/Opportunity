@@ -49,6 +49,8 @@ class Login extends Component {
   }
 
   onLogin = event => {
+    let { requestToken } = this.state
+    window.open(`https://telegram.me/Milestone_Auth_bot?start=${requestToken}`, '_blank')
     this.props.fetchAccessToken(this.state.requestToken)
   }
 
@@ -91,21 +93,16 @@ class Login extends Component {
 
   renderLoginBtn = () => {
     let { classes, actionsPending } = this.props
-    let { requestToken } = this.state
     return (
       <Grid item className={classes.loginButton} align='center'>
         { actionsPending.fetchAccessToken && <CircularProgress /> }
         { !actionsPending.fetchAccessToken &&
           <Button variant='contained'
             color='primary'
-            onClick={this.onLogin}>
-            <a
-              className={classes.loginBtnLink}
-              rel='noopener noreferrer'
-              href={`https://telegram.me/Milestone_Auth_bot?start=${requestToken}`}
-              target='_blank'>
-              Login with Telegram
-            </a>
+            onClick={this.onLogin}
+            className={classes.loginBtnLink}
+          >
+          Login with Telegram
           </Button>
         }
       </Grid>
