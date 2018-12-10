@@ -32,7 +32,7 @@ class ProjectDetailComponent extends Component {
         <Grid container direction='column' className={classes.projectInfo}>
           <Grid item className={classes.video}>
             {projectData.video &&
-            <iframe key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
+            <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
             }
             {!projectData.video &&
             <img className={classes.videoFrame} src={content.wideLogo} alt='' />
@@ -59,11 +59,11 @@ class ProjectDetailComponent extends Component {
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={classNames('fas', 'fa-globe-americas', classes.blockImg)} />
-                <a className={classes.link} href={content.website} target='_blank'>View website</a>
+                <a className={classes.link} href={content.website} target='_blank' rel='noopener noreferrer'>View website</a>
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={classNames('fas', 'fa-link', classes.blockImg)} />
-                <a className={classes.link} href={content.whitepaper} target='_blank'>View Whitepaper</a>
+                <a className={classes.link} href={content.whitepaper} target='_blank' rel='noopener noreferrer'>View Whitepaper</a>
               </Grid>
             </Grid>
           </Grid>
@@ -101,7 +101,7 @@ class ProjectDetailComponent extends Component {
               </Grid>
               {content.corporationInfo.team.members.length > 3 &&
               <Grid item className={classes.expand} onClick={this.toggleTeam}>
-               Show all {content.corporationInfo.team.members.length} team members
+                 Show all {content.corporationInfo.team.members.length} team members
               </Grid>
               }
             </Grid>

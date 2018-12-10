@@ -135,7 +135,7 @@ class Login extends Component {
         <Grid item>
           <Grid container direction='column' justify='center' alignItems='center'>
             <Grid item>
-              <img src={logo} />
+              <img src={logo} alt='' />
             </Grid>
             <Grid item className={classes.textSection} align='center'>
               <Typography className={classes.heading} variant='h3' gutterBottom align='center'>

@@ -55,7 +55,11 @@
     "eject": "react-scripts eject"
   },
   "standard": {
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "globals": [
+      "it",
+      "fetch"
+    ]
   },
   "browserslist": [
     ">0.2%",

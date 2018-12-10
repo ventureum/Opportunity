@@ -9,7 +9,6 @@ import Avatar from '@material-ui/core/Avatar'
 import ExitToApp from '@material-ui/icons/ExitToApp'
 import logo from '../logo.svg'
 import Chip from '@material-ui/core/Chip'
-import ButtonBase from '@material-ui/core/ButtonBase'
 
 class NavBarComponent extends Component {
   state = {
@@ -32,7 +31,7 @@ class NavBarComponent extends Component {
 
   handleRedirect = (to) => {
     if (to !== this.props.location.pathname) {
-      this.setState({redirectTo: to})
+      this.setState({ redirectTo: to })
     } else {
       this.handleClose()
     }
