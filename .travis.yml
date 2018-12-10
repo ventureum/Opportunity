@@ -1,4 +1,6 @@
 dist: trusty
+notifications:
+  slack: ventureum-team:DSE8wxmLTenq0Yz17BrYBWg9
 language: node_js
 node_js:
   - 8
