@@ -34,7 +34,7 @@ class ProjectListComponent extends Component {
   renderProjectCard = (p) => {
     const { classes } = this.props
     return (
-      <Grid item key={p.projectId}>
+      <Grid xl={3} item key={p.projectId}>
         <Card className={classes.card}>
           <CardActionArea onClick={() => this.onClickProject(p)}>
             <CardMedia
@@ -87,17 +87,10 @@ class ProjectListComponent extends Component {
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
           <NavBar history={history} location={location} />
-          <Grid container direction='column' justify='center' alignItems='center'>
-            <Grid item>
-              <Grid container direction='column' justify='center' alignItems='stretch'>
-                <Grid item>
-                  <div className={classes.projectListContainer} >
-                    <Grid container direction='row' justify='center' alignItems='center' spacing={16}>
-                      { projects.map(p => this.renderProjectCard(p))}
-                    </Grid>
-                  </div>
-                </Grid>
-              </Grid>
+          <Grid container direction='column' justify='center' className={classes.projectListContainer} alignItems='center'>
+            <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
+            <Grid container direction='row' alignItems='center' spacing={16}>
+              { projects.map(p => this.renderProjectCard(p))}
             </Grid>
           </Grid>
         </div>
@@ -112,11 +105,11 @@ const theme = createMuiTheme({
     suppressDeprecationWarnings: true
   },
   root: {
-    height: '100vh',
-    width: '100vw'
+    flex: 1
   },
   card: {
-    maxWidth: 400
+    maxWidth: 400,
+    minWidth: 380
   },
   media: {
     height: 200,
@@ -135,9 +128,9 @@ const theme = createMuiTheme({
     marginBottom: 12
   },
   projectListContainer: {
-    marginTop: '5%',
-    marginRight: '20%',
-    marginLeft: '20%'
+    marginTop: '2%',
+    paddingRight: '10%',
+    paddingLeft: '10%'
   },
   topBannerLogo: {
     width: '20px'
@@ -179,6 +172,11 @@ const theme = createMuiTheme({
     fontSize: '12px',
     color: '#FFFFFF',
     fontWeight: 'bold'
+  },
+  projectsHeader: {
+    marginBottom: 16,
+    color: '#333333',
+    alignSelf: 'flex-start'
   }
 })
 
