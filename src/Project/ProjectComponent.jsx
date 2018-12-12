@@ -189,15 +189,15 @@ class ProjectComponent extends Component {
   }
 
   renderValidators = () => {
-    const { proxyList, classes } = this.props
-    proxyList.sort((a, b) => {
+    const { projectProxyList, classes } = this.props
+    projectProxyList.sort((a, b) => {
       const votesA = a.proxyVoting.receivedDelegateVotes
       const votesB = b.proxyVoting.receivedDelegateVotes
       return votesB - votesA
     })
     return (
       <Grid container alignItems='center' direction='column' className={classes.validatorSection}>
-        {proxyList.map((validator, i) => (
+        {projectProxyList.map((validator, i) => (
           <Grid key={i} container direction='row' className={classes.validator}>
             <Grid item xs={12} sm={8} className={classes.validatorInfo}>
               <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />

@@ -14,10 +14,17 @@ const getProjects = (limit = 20) => {
   }
 }
 
-const getProxyList = (projectId, limit = 20) => {
+const getProxyListForProject = (projectId, limit = 20) => {
   return {
-    type: 'GET_PROXY_LIST',
-    payload: projectApi.getProxyList(projectId, limit)
+    type: 'GET_PROXY_LIST_FOR_PROJECT',
+    payload: projectApi.getProxyListForProject(projectId, limit)
+  }
+}
+
+const getProxyInfoList = () => {
+  return {
+    type: 'GET_PROXY_INFO_LIST',
+    payload: projectApi.getProxyInfoList()
   }
 }
 
@@ -111,4 +118,21 @@ const addMilestone = (projectId, content, commands, ids, contents) => {
   }
 }
 
-export { getProjects, getProject, getProxyList, getVoteInfo, delegate, rateObj, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData, getProjectByAdmin, activateMilestone, finalizeMilestone, removeMilestone, modifyMilestone, addMilestone }
+export {
+  getProjects,
+  getProject,
+  getProxyListForProject,
+  getVoteInfo,
+  delegate,
+  rateObj,
+  getBatchFinalizedValidators,
+  getBatchProxyVotingInfo,
+  getProjectPageData,
+  getProjectByAdmin,
+  activateMilestone,
+  finalizeMilestone,
+  removeMilestone,
+  modifyMilestone,
+  addMilestone,
+  getProxyInfoList
+}

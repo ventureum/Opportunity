@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Project from './ProjectComponent'
-import { getProject, rateObj, getProxyList } from './actions'
+import { getProject, rateObj, getProxyListForProject } from './actions'
 
 class ProjectContainer extends Component {
   async componentDidMount () {
@@ -10,7 +10,7 @@ class ProjectContainer extends Component {
       let projectId = match.params.projectId
       try {
         this.props.getProject(projectId)
-        this.props.getProxyList(projectId)
+        this.props.getProxyListForProject(projectId)
       } catch (e) {
         this.setState({
           error: e
@@ -20,12 +20,12 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { profile, projectData, proxyList, error, history, location } = this.props
+    let { profile, projectData, projectProxyList, error, history, location } = this.props
     return (
       <Project
         profile={profile}
         projectData={projectData}
-        proxyList={proxyList}
+        projectProxyList={projectProxyList}
         error={error}
         history={history}
         location={location}
@@ -38,7 +38,7 @@ const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
     projectData: state.projectReducer.projectData,
-    proxyList: state.projectReducer.proxyList,
+    projectProxyList: state.projectReducer.projectProxyList,
     error: state.projectReducer.error
   }
 }
@@ -47,7 +47,7 @@ const mapDispatchToProps = dispatch => {
   return {
     getProject: (projectId) => dispatch(getProject(projectId)),
     rateObj: (projectId, milestoneId, ratings, comment) => dispatch(rateObj(projectId, milestoneId, ratings, comment)),
-    getProxyList: (projectId, limit) => dispatch(getProxyList(projectId, limit))
+    getProxyListForProject: (projectId, limit) => dispatch(getProxyListForProject(projectId, limit))
   }
 }
 

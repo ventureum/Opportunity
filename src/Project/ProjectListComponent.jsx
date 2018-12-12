@@ -128,7 +128,7 @@ const theme = createMuiTheme({
     marginBottom: 12
   },
   projectListContainer: {
-    marginTop: '2%',
+    marginTop: '60px',
     paddingRight: '10%',
     paddingLeft: '10%'
   },

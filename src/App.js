@@ -13,6 +13,7 @@ import Project from './Project/ProjectContainer'
 import ProjectList from './Project/ProjectListContainer'
 import MyProjects from './User/MyProjectsContainer'
 import ProjectManagement from './User/ProjectManagementContainer'
+import Validator from './User/ValidatorContainer'
 
 const userIsAuthenticated = connectedRouterRedirect({
   // The url to redirect user to if they fail
@@ -48,6 +49,7 @@ class App extends Component {
           <Route path='/project/:projectId' component={userIsAuthenticated(Project)} />
           <Route path='/my-projects' component={userIsAuthenticated(MyProjects)} />
           <Route path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
+          <Route path='/validators' component={userIsAuthenticated(Validator)} />
         </Switch>
       </Router>
     )
