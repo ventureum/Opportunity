@@ -9,8 +9,8 @@ import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
-import logo from '../logo.svg'
 import NavBar from '../User/NavBarContainer'
+import { BarChart, Bar } from 'recharts'
 var numeral = require('numeral')
 
 class ProjectListComponent extends Component {
@@ -24,49 +24,69 @@ class ProjectListComponent extends Component {
   }
 
   onClickProject = (p) => {
-    console.log(p)
     this.setState({
       redirectPath: `/project/${p.projectId}`,
       redirectArgs: p
     })
   }
 
+  getChartData = (milestonesInfo) => {
+    let data = []
+    if (milestonesInfo && milestonesInfo.milestones) {
+      milestonesInfo.milestones.forEach(milestone => {
+        data.push({ avgRating: milestone.avgRating })
+      })
+    }
+    return data
+  }
+
   renderProjectCard = (p) => {
     const { classes } = this.props
+    const milstonesData = this.getChartData(p.milestonesInfo)
     return (
       <Grid xl={3} item key={p.projectId}>
-        <Card className={classes.card}>
+        <Card className={classes.card} >
           <CardActionArea onClick={() => this.onClickProject(p)}>
             <CardMedia
               className={classes.media}
               image={p.content.wideLogo}
               title={p.content.projectName}
             />
-            <CardContent>
-              <Typography className={classes.title} color='textSecondary'>
-                { p.content.shortDescription }
-              </Typography>
-              <Grid container direction='row' alignItems='center'>
-                <Grid item xs={7} lg={7}>
-                  <Grid className={classes.cardMilestonesInProgressContainer} container direction='row' justify='flex-start' alignItems='center'>
-                    <img src={logo} alt='' className={classes.cardMilestoneInProgressIcon} />
-                    <Typography className={classes.cardMilestonesInProgressText} color='textSecondary'>
-                      { p.milestonesInfo.currentMilestone > 0 ? 'In Progress' : '' }
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Grid item xs={4} lg={4}>
-                  <Typography className={classes.cardMilestonesComplete} >
-                    { p.milestonesInfo.milestonesCompleted } MS COMPLETED
-                  </Typography>
-                </Grid>
-                <Grid item xs={1} lg={1}>
-                  <Typography className={classes.cardMilestonesRating} >
-                    { numeral(p.avgRating / 10.0).format('0.0') }
-                  </Typography>
-                </Grid>
+            <CardContent classes={{ root: classes.projectContent }}>
+              <Grid container direction='column' >
+                <Typography className={classes.projectName} color='textSecondary'>
+                  {p.content.projectName}
+                </Typography>
+                <Typography noWrap className={classes.projectShortDescText}>
+                  {p.content.shortDescription}
+                </Typography>
+                <Typography classes={{ root: classes.projectDescTextRoot }} className={classes.projectDescText}>
+                  {p.content.description}
+                </Typography>
               </Grid>
             </CardContent>
+            <Grid container justify='space-between' alignItems='flex-end' className={classes.projectCardFooter}>
+              <Grid item>
+                <Typography className={classes.milestoneRatingText}>Milstone Rating</Typography>
+                <Typography className={classes.milestoneCompletedText}>{p.milestonesInfo.numMilestonesCompleted} completed milstones</Typography>
+              </Grid>
+              <div className={classes.graphSection}>
+                {milstonesData.length < 2
+                  ? <BarChart width={40} height={40} data={milstonesData}>
+                    <Bar dataKey='avgRating' fill='#01A78D' barSize={6} />
+                  </BarChart>
+                  : null
+                }
+                {p.avgRating
+                  ? <Typography className={classes.cardMilestonesRating} >
+                    {numeral(p.avgRating / 10.0).format('0.0')}
+                  </Typography>
+                  : <Typography className={classes.cardMilestonesRatingNA} >
+                    N/A
+                  </Typography>
+                }
+              </div>
+            </Grid>
           </CardActionArea>
         </Card>
       </Grid>
@@ -90,7 +110,7 @@ class ProjectListComponent extends Component {
           <Grid container direction='column' justify='center' className={classes.projectListContainer} alignItems='center'>
             <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
             <Grid container direction='row' alignItems='center' spacing={16}>
-              { projects.map(p => this.renderProjectCard(p))}
+              {projects.map(p => this.renderProjectCard(p))}
             </Grid>
           </Grid>
         </div>
@@ -108,39 +128,72 @@ const theme = createMuiTheme({
     flex: 1
   },
   card: {
-    maxWidth: 400,
-    minWidth: 380
+    width: 360,
+    height: 400
   },
   media: {
-    height: 200,
-    width: 400
+    height: 180,
+    width: 360
   },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)'
+  projectContent: {
+    padding: '20px 20px 0px 20px'
   },
-  title: {
-    marginBottom: 16,
-    fontSize: 14
+  projectName: {
+    fontSize: 24,
+    fontWeight: 500,
+    color: '#333333',
+    lineHeight: '30px'
   },
-  pos: {
-    marginBottom: 12
+  projectShortDescText: {
+    color: '#333333',
+    fontFamily: 'Helvetica Neue',
+    fontSize: '18px',
+    lineHeight: '27px'
+  },
+  projectDescText: {
+    fontSize: '14px',
+    letterSpacing: '0.18px',
+    lineHeight: '16px',
+    fontFamily: 'Helvetica Neue',
+    color: '#666666',
+    height: '48px'
+  },
+  projectDescTextRoot: {
+    lineClamp: 3,
+    overflow: 'hidden',
+    display: '-webkit-box',
+    boxOrient: 'vertical',
+    textOverflow: 'ellipsis'
+  },
+  projectCardFooter: {
+    marginTop: '27px',
+    borderTopWidth: '1px',
+    borderTopColor: '#E9E9E9',
+    borderTopStyle: 'solid',
+    padding: '10px 20px 10px 20px',
+    marginBottom: '2px'
+  },
+  milestoneRatingText: {
+    color: '#333333',
+    fontFamily: 'Helvetica Neue',
+    fontSize: '18px',
+    lineHeight: '27px',
+    letterSpacing: '0.29px'
+  },
+  milestoneCompletedText: {
+    fontFamily: 'Helvetica Neue',
+    color: '#666666',
+    letterSpacing: '0.2px',
+    lineHeight: '18px',
+    fontSize: '12px'
   },
   projectListContainer: {
     marginTop: '60px',
     paddingRight: '10%',
     paddingLeft: '10%'
   },
-  topBannerLogo: {
-    width: '20px'
-  },
   topBanner: {
     backgroundColor: '#FFFFFF'
-  },
-  topBannerLogoText: {
-    fontSize: '15px',
-    padding: '5px 5px 5px 5px'
   },
   cardMilestoneInProgressIcon: {
     width: '20px',
@@ -166,17 +219,34 @@ const theme = createMuiTheme({
   cardMilestonesRating: {
     width: '30px',
     borderRadius: '4px',
-    backgroundColor: '#a3bf43',
+    backgroundColor: '#01A78D',
     textAlign: 'center',
     padding: '5px 0',
     fontSize: '12px',
     color: '#FFFFFF',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginBottom: '4px'
+  },
+  cardMilestonesRatingNA: {
+    width: '30px',
+    borderRadius: '4px',
+    backgroundColor: '#666666',
+    textAlign: 'center',
+    padding: '5px 0',
+    fontSize: '12px',
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    marginBottom: '4px'
   },
   projectsHeader: {
     marginBottom: 16,
     color: '#333333',
     alignSelf: 'flex-start'
+  },
+  graphSection: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-end'
   }
 })
 
