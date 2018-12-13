@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import ProxyVoting from './ProxyVotingComponent'
-import { getProxyList, getVoteInfo, delegate } from './actions'
+import { getProxyListForProject, getVoteInfo, delegate } from './actions'
 import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class ProxyVotingContainer extends Component {
   componentDidMount () {
-    let { getProxyList, getVoteInfo, project, profile } = this.props
-    getProxyList(project.projectId, Number.MAX_SAFE_INTEGER)
+    let { getProxyListForProject, getVoteInfo, project, profile } = this.props
+    getProxyListForProject(project.projectId, Number.MAX_SAFE_INTEGER)
     getVoteInfo(profile.actor, project.projectId, Number.MAX_SAFE_INTEGER)
   }
 
@@ -17,10 +17,10 @@ class ProxyVotingContainer extends Component {
   }
 
   render () {
-    let { handleClose, proxyList, proxyVotingInfo, delegate, profile, project, ...others } = this.props
+    let { handleClose, projectProxyList, proxyVotingInfo, delegate, profile, project, ...others } = this.props
     return (<ProxyVoting
       handleClose={handleClose}
-      proxyList={proxyList}
+      projectProxyList={projectProxyList}
       proxyVotingInfo={proxyVotingInfo}
       delegate={delegate}
       project={project}
@@ -32,18 +32,18 @@ class ProxyVotingContainer extends Component {
 }
 
 const getVoteInfoLoadingSelector = createLoadingSelector(['GET_VOTE_INFO'])
-const getProxyListLoadingSelector = createLoadingSelector(['GET_PROXY_LIST'])
+const getProxyListForProjectLoadingSelector = createLoadingSelector(['GET_PROXY_LIST_FOR_PROJECT'])
 const delegateLoadingSelector = createLoadingSelector(['DELEGATE'])
-const errorSelector = createErrorSelector(['GET_VOTE_INFO', 'GET_PROXY_LIST', 'DELEGATE'])
+const errorSelector = createErrorSelector(['GET_VOTE_INFO', 'GET_PROXY_LIST_FOR_PROJECT', 'DELEGATE'])
 
 const mapStateToProps = state => {
   return {
     proxyVotingInfo: state.projectReducer.proxyVotingInfo,
     profile: state.userReducer.profile,
-    proxyList: state.projectReducer.proxyList,
+    projectProxyList: state.projectReducer.projectProxyList,
     actionsPending: {
       getVoteInfo: getVoteInfoLoadingSelector(state),
-      getProxyList: getProxyListLoadingSelector(state),
+      getProxyListForProject: getProxyListForProjectLoadingSelector(state),
       delegate: delegateLoadingSelector(state)
     },
     error: errorSelector(state)
@@ -53,7 +53,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getVoteInfo: (actor, projectId, limit) => dispatch(getVoteInfo(actor, projectId, limit)),
-    getProxyList: (projectId, limit) => dispatch(getProxyList(projectId, limit)),
+    getProxyListForProject: (projectId, limit) => dispatch(getProxyListForProject(projectId, limit)),
     delegate: (projectId, actor, pct) => dispatch(delegate(projectId, actor, pct))
   }
 }

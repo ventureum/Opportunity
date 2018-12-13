@@ -79,7 +79,37 @@ async function rateObj (privateKey, projectId, milestoneId, ratings, comment) {
   await c.rateObj(projectId, milestoneId, ratingData, comment)
 }
 
-async function getProxyList (projectId, limit) {
+async function getProxyList (limit = 50, cursor = '') {
+  const rv = await apiTcr.post('/get-proxy-list', { limit, cursor })
+  if (rv.data.ok) {
+    return rv.data.responseData
+  } else {
+    throw rv.data.message
+  }
+}
+
+async function getProxyInfoList () {
+  let proxyInfoList = []
+  try {
+    const globalProxies = await getProxyList()
+    proxyInfoList = await userApi.getBatchProfiles(globalProxies.proxies)
+    proxyInfoList = proxyInfoList.map(proxy => {
+      let pc = {}
+      try {
+        pc = JSON.parse(proxy.profileContent)
+      } catch (e) {
+      }
+      return {
+        ...proxy,
+        profileContent: pc
+      }
+    })
+    return proxyInfoList
+  } catch (e) {
+    throw e
+  }
+}
+async function getProxyListForProject (projectId, limit) {
   let rv = await apiTcr.post('/get-proxy-list', { limit })
   if (rv.data.responseData.proxies) {
     let proxyList = await userApi.getBatchProfiles(rv.data.responseData.proxies)
@@ -199,4 +229,23 @@ async function addMilestone (projectId, content, commands, ids, contents) {
   await delay(2500)
 }
 
-export { getProject, getProjects, rateObj, getProxyList, getVoteInfo, delegate, getBatchFinalizedValidators, getBatchProxyVotingInfo, getProjectPageData, apiTcr, getProjectByAdmin, activateMilestone, finalizeMilestone, removeMilestone, modifyMilestone, addMilestone }
+export {
+  getProject,
+  getProjects,
+  rateObj,
+  getProxyList,
+  getProxyListForProject,
+  getVoteInfo,
+  delegate,
+  getBatchFinalizedValidators,
+  getBatchProxyVotingInfo,
+  getProjectPageData,
+  apiTcr,
+  getProjectByAdmin,
+  activateMilestone,
+  finalizeMilestone,
+  removeMilestone,
+  modifyMilestone,
+  addMilestone,
+  getProxyInfoList
+}

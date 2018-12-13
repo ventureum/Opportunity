@@ -164,7 +164,7 @@ class ProxyVotingComponent extends Component {
   }
 
   actorToValidator = (actor) => {
-    for (let validator of this.props.proxyList) {
+    for (let validator of this.props.projectProxyList) {
       if (validator.actor === actor) {
         return validator
       }
@@ -249,14 +249,14 @@ class ProxyVotingComponent extends Component {
   }
 
   render () {
-    const { classes, proxyList, actionsPending, error } = this.props
+    const { classes, projectProxyList, actionsPending, error } = this.props
     const { selectedValidators, sort, keyword, showSearch } = this.state
 
     if (error) {
       return (<Error error={error} />)
     }
 
-    if (actionsPending.getProxyList || actionsPending.getVoteInfo) {
+    if (actionsPending.getProxyListForProject || actionsPending.getVoteInfo) {
       return (
         <div>
           <Loading />
@@ -264,7 +264,7 @@ class ProxyVotingComponent extends Component {
       )
     }
 
-    let displayValidators = proxyList
+    let displayValidators = projectProxyList
     if (showSearch) {
       let lcKeyword = keyword.toLowerCase()
       displayValidators = displayValidators.filter((validator) => {

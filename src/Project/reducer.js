@@ -1,6 +1,7 @@
 const initState = {
   projects: [],
-  proxyList: [],
+  proxyInfoList: [],
+  projectProxyList: [],
   finalizedValidator: [],
   proxyVotingInfoList: [],
   proxyVotingInfo: null,
@@ -29,10 +30,10 @@ const projectReducer = (state = initState, action) => {
         ...state,
         proxyVotingInfoList: action.payload
       }
-    case 'GET_PROXY_LIST_FULFILLED':
+    case 'GET_PROXY_LIST_FOR_PROJECT_FULFILLED':
       return {
         ...state,
-        proxyList: action.payload
+        projectProxyList: action.payload
       }
     case 'GET_VOTE_INFO_FULFILLED':
       for (let i = 0; i < state.proxyVotingInfoList.length; i++) {
@@ -75,6 +76,12 @@ const projectReducer = (state = initState, action) => {
       return {
         ...state,
         projectByAdmin: action.payload
+      }
+    }
+    case 'GET_PROXY_INFO_LIST_FULFILLED': {
+      return {
+        ...state,
+        proxyInfoList: action.payload
       }
     }
     default: // need this for default case
