@@ -4,18 +4,12 @@ import Project from './ProjectComponent'
 import { getProject, rateObj, getProxyListForProject } from './actions'
 
 class ProjectContainer extends Component {
-  async componentDidMount () {
+  componentDidMount () {
     let { match } = this.props
     if (match) {
       let projectId = match.params.projectId
-      try {
-        this.props.getProject(projectId)
-        this.props.getProxyListForProject(projectId)
-      } catch (e) {
-        this.setState({
-          error: e
-        })
-      }
+      this.props.getProject(projectId)
+      this.props.getProxyListForProject(projectId)
     }
   }
 

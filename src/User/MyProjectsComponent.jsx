@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { MuiThemeProvider, withStyles, createMuiTheme } from '@material-ui/core/styles'
+import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import WalletList from './WalletListComponent'
 import Modal from '@material-ui/core/Modal'
 import Grid from '@material-ui/core/Grid'
-import ProxyVoting from '../Project/ProxyVotingContainer'
 import NavBar from './NavBarContainer'
 import Loading from '../Notification/Loading'
 import Error from '../Error/ErrorComponent'
@@ -67,7 +67,7 @@ class MyProjectsComponent extends Component {
       history,
       location,
       error } = this.props
-    const { selectedVoteInfo, selectedProject, proxyVotingOpen, walletListOpen } = this.state
+    const { walletListOpen } = this.state
 
     if (error) {
       return (<Error error={error} />)
@@ -145,12 +145,12 @@ class MyProjectsComponent extends Component {
                             }
                           </div>
                           {proxyVotingInfoList[i].proxyVotingList &&
-                          <div onClick={() => this.handleOpenVote(i)} className={classes.btnUpdate}>
+                          <Button component={Link} to={`/ProxyVoting/${project.projectId}`} className={classes.btnUpdate}>
                              Update Voting
-                          </div>
+                          </Button>
                           }
                           {!proxyVotingInfoList[i].proxyVotingList &&
-                          <Button onClick={() => this.handleOpenVote(i)} className={classes.btnVote}>
+                          <Button component={Link} to={`/ProxyVoting/${project.projectId}`} className={classes.btnVote}>
                              Vote
                           </Button>
                           }
@@ -162,15 +162,6 @@ class MyProjectsComponent extends Component {
             </Grid>
           </Grid>
         </Grid>
-        <Modal
-          disableRestoreFocus
-          disableEnforceFocus
-          disableAutoFocus
-          open={proxyVotingOpen}
-          onClose={() => this.handleClose('proxyVoting')}
-        >
-          <ProxyVoting handleClose={() => this.handleClose('proxyVoting')} voteInfo={selectedVoteInfo} project={selectedProject} />
-        </Modal>
       </MuiThemeProvider>
     )
   }

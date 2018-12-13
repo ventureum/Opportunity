@@ -15,6 +15,7 @@ import MyProjects from './User/MyProjectsContainer'
 import ProjectManagement from './User/ProjectManagementContainer'
 import Validator from './User/ValidatorContainer'
 import Footer from './Static/Footer'
+import ProxyVoting from './Project/ProxyVotingContainer'
 
 const userIsAuthenticated = connectedRouterRedirect({
   // The url to redirect user to if they fail
@@ -68,6 +69,7 @@ class App extends Component {
           <DefaultLayout path='/my-projects' component={userIsAuthenticated(MyProjects)} />
           <DefaultLayout path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
           <DefaultLayout path='/validators' component={Validator} />
+          <DefaultLayout path='/ProxyVoting/:projectId' component={userIsAuthenticated(ProxyVoting)} />
         </Switch>
       </Router>
     )
