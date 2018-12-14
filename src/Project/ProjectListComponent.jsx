@@ -10,7 +10,7 @@ import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import NavBar from '../User/NavBarContainer'
-import { BarChart, Bar } from 'recharts'
+import { BarChart, Bar, YAxis } from 'recharts'
 var numeral = require('numeral')
 
 class ProjectListComponent extends Component {
@@ -33,9 +33,12 @@ class ProjectListComponent extends Component {
   getChartData = (milestonesInfo) => {
     let data = []
     if (milestonesInfo && milestonesInfo.milestones) {
-      milestonesInfo.milestones.forEach(milestone => {
-        data.push({ avgRating: milestone.avgRating })
-      })
+      const length = milestonesInfo.milestones.length
+      let index = length <= 5 ? 0 : length - 5
+      while (index < length) {
+        data.push({ avgRating: milestonesInfo.milestones[index.avgRating] })
+        index++
+      }
     }
     return data
   }
@@ -44,7 +47,7 @@ class ProjectListComponent extends Component {
     const { classes } = this.props
     const milstonesData = this.getChartData(p.milestonesInfo)
     return (
-      <Grid xl={3} item key={p.projectId}>
+      <Grid item key={p.projectId}>
         <Card className={classes.card} >
           <CardActionArea onClick={() => this.onClickProject(p)}>
             <CardMedia
@@ -71,9 +74,10 @@ class ProjectListComponent extends Component {
                 <Typography className={classes.milestoneCompletedText}>{p.milestonesInfo.numMilestonesCompleted} completed milstones</Typography>
               </Grid>
               <div className={classes.graphSection}>
-                {milstonesData.length < 2
-                  ? <BarChart width={40} height={40} data={milstonesData}>
-                    <Bar dataKey='avgRating' fill='#01A78D' barSize={6} />
+                {milstonesData.length > 2
+                  ? <BarChart width={46} height={40} data={milstonesData} barSize={8}>
+                    <Bar dataKey='avgRating' fill='#01A78D' minPointSize={2} />
+                    <YAxis hide type='number' domain={[0, 5]} />
                   </BarChart>
                   : null
                 }
@@ -107,10 +111,12 @@ class ProjectListComponent extends Component {
       <MuiThemeProvider theme={theme}>
         <div className={classes.root}>
           <NavBar history={history} location={location} />
-          <Grid container direction='column' justify='center' className={classes.projectListContainer} alignItems='center'>
-            <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
-            <Grid container direction='row' alignItems='center' spacing={16}>
-              {projects.map(p => this.renderProjectCard(p))}
+          <Grid container direction='column' alignItems='center'>
+            <Grid container direction='column' className={classes.projectListContainer} alignItems='center'>
+              <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
+              <Grid container direction='row' alignItems='center' spacing={16}>
+                {projects.map(p => this.renderProjectCard(p))}
+              </Grid>
             </Grid>
           </Grid>
         </div>
@@ -189,8 +195,18 @@ const theme = createMuiTheme({
   },
   projectListContainer: {
     marginTop: '60px',
-    paddingRight: '10%',
-    paddingLeft: '10%'
+    '@media (min-width: 380px) and (max-width : 751px)': {
+      maxWidth: '380px'
+    },
+    '@media (min-width: 752px) and (max-width : 1129px)': {
+      maxWidth: '752px'
+    },
+    '@media (min-width: 1130px) and (max-width : 1489px)': {
+      maxWidth: '1130px'
+    },
+    '@media (min-width: 1490px) ': {
+      maxWidth: '1490px'
+    }
   },
   topBanner: {
     backgroundColor: '#FFFFFF'
