@@ -90,6 +90,11 @@ class NavBarComponent extends Component {
                     Validators
                   </Typography>
                 </Link>
+                <a className={classes.tabItem} target='_blank' rel='noopener noreferrer' href='http://explorer.milest.one/'>
+                  <Typography className={classes.tabItemTextDefault}>
+                    Block Explorer
+                  </Typography>
+                </a>
               </List>
             </Grid>
             <Grid item>
