@@ -86,6 +86,9 @@ async function getBatchProfiles (actors) {
   let rv = await apiFeed.post('/get-batch-profiles', {
     actors
   })
+  if (rv.data.profiles === null) {
+    rv.data.profiles = []
+  }
   return rv.data.profiles
 }
 

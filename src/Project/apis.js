@@ -216,6 +216,29 @@ async function getProjectByAdmin (actor) {
   }
 }
 
+async function getValidatorRecentActivities (actor, limit = 20, cursor = '') {
+  const rv = await apiTcr.post('/get-validator-recent-activities', {
+    actor: actor,
+    limit: limit,
+    cursor: cursor
+  })
+  let ratingVoteActivities = []
+  if (rv.data.responseData.ratingVoteActivities !== null) {
+    ratingVoteActivities = rv.data.responseData.ratingVoteActivities
+  }
+  const projectInfoList = await Promise.all(ratingVoteActivities.map((activity) => {
+    return getProject(activity.projectId)
+  }))
+  ratingVoteActivities = ratingVoteActivities.map((activity, i) => {
+    return {
+      ...activity,
+      projectContent: projectInfoList[i].content,
+      milestoneContent: projectInfoList[i].milestonesInfo.milestones[activity.milestoneId - 1].content
+    }
+  })
+  return ratingVoteActivities
+}
+
 async function activateMilestone (projectId, milestoneId, startTime) {
   await c.activateMilestone(projectId, milestoneId, startTime)
   await delay(2000)
@@ -259,5 +282,6 @@ export {
   removeMilestone,
   modifyMilestone,
   addMilestone,
-  getProxyInfoList
+  getProxyInfoList,
+  getValidatorRecentActivities
 }

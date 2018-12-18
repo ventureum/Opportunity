@@ -118,6 +118,19 @@ const addMilestone = (projectId, content, commands, ids, contents) => {
   }
 }
 
+const getValidatorRecentActivities = (actor, limit, cursor) => {
+  return {
+    type: 'GET_VALIDATOR_RECENT_ACTIVITIES',
+    payload: projectApi.getValidatorRecentActivities(actor, limit, cursor)
+  }
+}
+
+const clearValidatorRecentActivities = () => {
+  return {
+    type: 'CLEAR_VALIDATOR_RECENT_ACTIVITIES'
+  }
+}
+
 export {
   getProjects,
   getProject,
@@ -134,5 +147,7 @@ export {
   removeMilestone,
   modifyMilestone,
   addMilestone,
-  getProxyInfoList
+  getProxyInfoList,
+  getValidatorRecentActivities,
+  clearValidatorRecentActivities
 }
