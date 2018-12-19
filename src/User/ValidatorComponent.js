@@ -23,7 +23,7 @@ class ValidatorComponent extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <NavBar history={history} location={location} />
-        <Grid>
+        <Grid className={classes.root}>
           <Grid container alignItems='center' direction='column' className={classes.validatorSection}>
             <Typography className={classes.validatorHeader} variant='h4'>Validators</Typography>
             <Grid container direction='row' alignItems='center' justify='flex-start' spacing={16}>
@@ -52,6 +52,9 @@ class ValidatorComponent extends Component {
 }
 
 const theme = createMuiTheme({
+  root: {
+    flex: 1
+  },
   validator: {
     borderRadius: '6px',
     backgroundColor: '#FFFFFF',

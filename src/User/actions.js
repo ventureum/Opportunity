@@ -30,7 +30,7 @@ async function postTelegramLogin (loginData) {
     rv.userInfo.newUser = false
     rv.userInfo.isAuthenticated = true
   } catch (err) {
-    if (err.message && err.message.errorCode === 'NoActorExisting') {
+    if (err.message && err.message.errorCode === 'NoPrincipalIdExisting') {
       rv.userInfo.newUser = true
       return rv
     } else {
