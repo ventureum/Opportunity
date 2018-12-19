@@ -45,11 +45,11 @@ class App extends Component {
       <Router>
         <Switch>
           <Route path='/login' component={userIsNotAuthenticated(Login)} />
-          <Route exact path='/' component={userIsAuthenticated(ProjectList)} />
-          <Route path='/project/:projectId' component={userIsAuthenticated(Project)} />
+          <Route exact path='/' component={ProjectList} />
+          <Route path='/project/:projectId' component={Project} />
           <Route path='/my-projects' component={userIsAuthenticated(MyProjects)} />
           <Route path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
-          <Route path='/validators' component={userIsAuthenticated(Validator)} />
+          <Route path='/validators' component={Validator} />
         </Switch>
       </Router>
     )

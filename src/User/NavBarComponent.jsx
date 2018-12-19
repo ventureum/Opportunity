@@ -34,6 +34,10 @@ class NavBarComponent extends Component {
     this.handleClose()
   }
 
+  login = () => {
+    this.props.history.push('/login')
+  }
+
   handleRedirect = (to) => {
     if (to !== this.props.location.pathname) {
       this.setState({ redirectTo: to })
@@ -43,13 +47,23 @@ class NavBarComponent extends Component {
   }
 
   render () {
-    const { classes, profile, location } = this.props
+    const { classes, location } = this.props
+    var { profile } = this.props
     const { open, redirectTo } = this.state
     const anchorEl = window.document.querySelector('header')
 
     if (redirectTo) {
       return (<Redirect push to={redirectTo} />)
     }
+
+    if (!profile) {
+      // create a mock profile for anonymous user
+      profile = {
+        username: 'Anonymous',
+        actorType: 'ANONYMOUS'
+      }
+    }
+
     return (
       <MuiThemeProvider theme={theme}>
         <AppBar position='static' color='default'>
@@ -76,6 +90,11 @@ class NavBarComponent extends Component {
                     Validators
                   </Typography>
                 </Link>
+                <a className={classes.tabItem} target='_blank' rel='noopener noreferrer' href='http://explorer.milest.one/'>
+                  <Typography className={classes.tabItemTextDefault}>
+                    Block Explorer
+                  </Typography>
+                </a>
               </List>
             </Grid>
             <Grid item>
@@ -98,38 +117,50 @@ class NavBarComponent extends Component {
                 classes={{ paper: classes.menu }}
                 MenuListProps={{ disablePadding: true }}
               >
-                {profile.actorType !== 'USER'
-                  ? <MenuItem>
-                    {profile.actorType === 'KOL' && <Chip label='Validator' className={classes.userTypeValidatorChip} />}
-                    {profile.actorType === 'PF' && <Chip label='Project Founder' className={classes.userTypeProjectFounderChip} />}
-                  </MenuItem>
-                  : null
+                {(profile.actorType === 'PF' || profile.actorType === 'KOL') &&
+                <MenuItem>
+                  {profile.actorType === 'KOL' && <Chip label='Validator' className={classes.userTypeValidatorChip} />}
+                  {profile.actorType === 'PF' && <Chip label='Project Founder' className={classes.userTypeProjectFounderChip} />}
+                </MenuItem>
                 }
+                {(profile.actorType === 'USER' || profile.actorType === 'KOL') &&
                 <MenuItem onClick={() => this.handleRedirect('/my-projects')}>
                   <Typography variant='body2'>
-                    My Projects
+                     My Projects
                   </Typography>
                 </MenuItem>
-                {profile.actorType !== 'USER'
+                }
+                {profile.actorType === 'PF'
                   ? <MenuItem onClick={() => this.handleRedirect('/project-management')}>
                     <Typography variant='body2'>
-                      Project Management
+                     Project Management
                     </Typography>
                   </MenuItem>
                   : null
                 }
+                {profile.actorType !== 'ANONYMOUS' &&
                 <MenuItem onClick={() => this.handleRedirect('/')}>
                   <Typography variant='body2'>
-                    Account Settings&nbsp;
+                     Account Settings&nbsp;
                   </Typography>
                 </MenuItem>
+                }
                 <div className={classes.bottomLine} />
+                {profile.actorType === 'ANONYMOUS' &&
+                <MenuItem className={classes.logout} onClick={this.login}>
+                  <Typography variant='body2'>
+                     Log in
+                  </Typography>
+                </MenuItem>
+                }
+                {profile.actorType !== 'ANONYMOUS' &&
                 <MenuItem className={classes.logout} onClick={this.logout}>
                   <Typography variant='body2'>
-                    Log out
+                     Log out
                   </Typography>
                   <ExitToApp className={classes.exitIcon} />
                 </MenuItem>
+                }
               </Menu>
             </Grid>
           </Grid>
