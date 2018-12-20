@@ -14,6 +14,8 @@ import classNames from 'classnames'
 import Loading from '../Notification/Loading'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
+import NavBar from '../User/NavBarContainer'
+import { Link } from 'react-router-dom'
 
 class ProxyVotingComponent extends Component {
   constructor (props) {
@@ -147,7 +149,7 @@ class ProxyVotingComponent extends Component {
       proxyList.push(validator.publicKey)
       votesInPercentList.push(item.votesInPercent)
     })
-    this.props.delegate(this.props.project.projectId, proxyList, votesInPercentList)
+    this.props.delegate(this.props.projectId, proxyList, votesInPercentList)
   }
 
   search = () => {
@@ -211,7 +213,7 @@ class ProxyVotingComponent extends Component {
                   let validator = this.actorToValidator(actor.proxy)
                   return (
                     <div className={classes.personWrapper} key={i}>
-                      <div className={classes.personName}>{validator.username}</div>
+                      <div className={classes.personName}>{validator.profileContent && validator.profileContent.name ? validator.profileContent.name : validator.username}</div>
                       <Select
                         className={classes.personSelectWrapper}
                         classes={{ root: classes.personSelectRoot, select: classes.personSelect }}
@@ -228,7 +230,7 @@ class ProxyVotingComponent extends Component {
                   )
                 })
               }
-              <Button onClick={() => this.setState({ voteStep: 0 })} className={classes.btnCancel}>
+              <Button component={Link} to='/my-projects' className={classes.btnCancel}>
                 Cancel
               </Button>
               <Button
@@ -249,7 +251,7 @@ class ProxyVotingComponent extends Component {
   }
 
   render () {
-    const { classes, projectProxyList, actionsPending, error } = this.props
+    const { classes, projectProxyList, actionsPending, location, history, error } = this.props
     const { selectedValidators, sort, keyword, showSearch } = this.state
 
     if (error) {
@@ -258,9 +260,7 @@ class ProxyVotingComponent extends Component {
 
     if (actionsPending.getProxyListForProject || actionsPending.getVoteInfo) {
       return (
-        <div>
-          <Loading />
-        </div>
+        <Loading />
       )
     }
 
@@ -269,8 +269,9 @@ class ProxyVotingComponent extends Component {
       let lcKeyword = keyword.toLowerCase()
       displayValidators = displayValidators.filter((validator) => {
         let targetProperties = ['username', 'description']
-        for (let name of targetProperties) {
-          if (validator[name] && validator[name].toLowerCase().indexOf(lcKeyword) >= 0) {
+        for (let property of targetProperties) {
+          if ((validator[property] && validator[property].toLowerCase().indexOf(lcKeyword) >= 0) ||
+          (validator.profileContent && validator.profileContent.name && validator.profileContent.name.toLowerCase().indexOf(lcKeyword) >= 0)) {
             return true
           }
         }
@@ -288,7 +289,8 @@ class ProxyVotingComponent extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Grid container className={classes.proxyVotingWrapper} onClick={this.props.handleClose} direction='row' justify='center' alignItems='center'>
+        <NavBar history={history} location={location} />
+        <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item className={classes.proxyVoting} onClick={(e) => e.stopPropagation()} xs={10}>
             <Grid container direction='row' spacing={24}>
               <Grid item xs={12} md={8}>
@@ -319,9 +321,9 @@ class ProxyVotingComponent extends Component {
                         />
                       </Grid>
                       <Grid item xs={12} sm={5} md={4} className={classes.sortWrapper}>
-                        Sort by:&nbsp;
+                Sort by:&nbsp;
                         <div className={classNames(classes.btnSort, { [classes.active]: sort === 'vote' })} onClick={() => this.sortBy('vote')} >Votes</div>
-                        &nbsp;|&nbsp;
+                &nbsp;|&nbsp;
                         <div className={classNames(classes.btnSort, { [classes.active]: sort === 'reputation' })} onClick={() => this.sortBy('reputation')}>Reputations</div>
                       </Grid>
                     </Grid>
@@ -332,8 +334,8 @@ class ProxyVotingComponent extends Component {
                         <Grid item xs={12} sm={8} className={classes.validatorInfo}>
                           <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
                           <div>
-                            <div className={classes.validatorName}>{validator.username}</div>
-                            <div className={classes.validatorDesc}>{validator.description}</div>
+                            <div className={classes.validatorName}>{validator.profileContent && validator.profileContent.name ? validator.profileContent.name : validator.username}</div>
+                            <div className={classes.validatorDesc}>{validator.profileContent.shortDescription}</div>
                           </div>
                         </Grid>
                         <Grid item xs={12} sm={4} className={classes.verticalCenter}>
@@ -364,9 +366,6 @@ class ProxyVotingComponent extends Component {
               </Grid>
               {this.getVoteDom()}
             </Grid>
-            <div onClick={this.props.handleClose} className={classes.close}>
-              <i className='fas fa-times' />
-            </div>
           </Grid>
         </Grid>
         {actionsPending.delegate && <TransactionProgress open />}
@@ -380,13 +379,8 @@ const theme = createMuiTheme({
     useNextVariants: true,
     suppressDeprecationWarnings: true
   },
-  proxyVotingWrapper: {
-    height: '100%'
-  },
   proxyVoting: {
-    position: 'relative',
-    backgroundColor: '#F3F6FC',
-    padding: '30px',
+    padding: '60px',
     borderRadius: '5px',
     fontFamily: 'Helvetica Neue'
   },

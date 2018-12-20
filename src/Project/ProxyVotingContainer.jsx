@@ -6,24 +6,25 @@ import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class ProxyVotingContainer extends Component {
   componentDidMount () {
-    let { getProxyListForProject, getVoteInfo, project, profile } = this.props
-    getProxyListForProject(project.projectId, Number.MAX_SAFE_INTEGER)
-    getVoteInfo(profile.actor, project.projectId, Number.MAX_SAFE_INTEGER)
+    this.refreshVoteInfo()
   }
 
   refreshVoteInfo = () => {
-    let { getVoteInfo, project, profile } = this.props
-    getVoteInfo(profile.actor, project.projectId, Number.MAX_SAFE_INTEGER)
+    const { projectId } = this.props.match.params
+    const { getProxyListForProject, getVoteInfo, profile } = this.props
+    getProxyListForProject(projectId, Number.MAX_SAFE_INTEGER)
+    getVoteInfo(profile.actor, projectId, Number.MAX_SAFE_INTEGER)
   }
 
   render () {
-    let { handleClose, projectProxyList, proxyVotingInfo, delegate, profile, project, ...others } = this.props
+    const { handleClose, projectProxyList, proxyVotingInfo, delegate, profile, project, ...others } = this.props
+    const { projectId } = this.props.match.params
     return (<ProxyVoting
       handleClose={handleClose}
       projectProxyList={projectProxyList}
       proxyVotingInfo={proxyVotingInfo}
       delegate={delegate}
-      project={project}
+      projectId={projectId}
       profile={profile}
       refreshVoteInfo={this.refreshVoteInfo}
       {...others}

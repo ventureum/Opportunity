@@ -113,6 +113,18 @@ async function getProxyListForProject (projectId, limit) {
   let rv = await apiTcr.post('/get-proxy-list', { limit })
   if (rv.data.responseData.proxies) {
     let proxyList = await userApi.getBatchProfiles(rv.data.responseData.proxies)
+    proxyList = proxyList.map(proxy => {
+      let pc = {}
+      try {
+        pc = JSON.parse(proxy.profileContent)
+      } catch (e) {
+      }
+      return {
+        ...proxy,
+        profileContent: pc
+      }
+    })
+
     let ProxyVotingInfoKeyList = []
     rv.data.responseData.proxies.forEach(validator => {
       ProxyVotingInfoKeyList.push({
