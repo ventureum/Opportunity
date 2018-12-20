@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Validator from './ValidatorComponent'
-import { getProxyInfoList } from '../Project/actions'
+import { getProxyInfoList, getValidatorRecentActivities, clearValidatorRecentActivities } from '../Project/actions'
+import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class ValidatorContainer extends Component {
   componentDidMount () {
@@ -9,27 +10,50 @@ class ValidatorContainer extends Component {
   }
 
   render () {
-    const { history, location, proxyInfoList } = this.props
+    const {
+      history,
+      location,
+      proxyInfoList,
+      getValidatorRecentActivities,
+      validatorRecentActivies,
+      actionsPending,
+      clearValidatorRecentActivities,
+      error
+    } = this.props
     return (
       <Validator
         history={history}
         location={location}
         proxyInfoList={proxyInfoList}
+        getValidatorRecentActivities={getValidatorRecentActivities}
+        validatorRecentActivies={validatorRecentActivies}
+        actionsPending={actionsPending}
+        clearValidatorRecentActivities={clearValidatorRecentActivities}
+        error={error}
       />
     )
   }
 }
+const getValidatorRecentActivitiesLoadingSelector = createLoadingSelector(['GET_VALIDATOR_RECENT_ACTIVITIES'])
+const errorSelector = createErrorSelector(['GET_VALIDATOR_RECENT_ACTIVITIES'])
 
 const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
-    proxyInfoList: state.projectReducer.proxyInfoList
+    proxyInfoList: state.projectReducer.proxyInfoList,
+    validatorRecentActivies: state.projectReducer.validatorRecentActivies,
+    actionsPending: {
+      getValidatorRecentActivities: getValidatorRecentActivitiesLoadingSelector(state)
+    },
+    error: errorSelector(state)
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getProxyInfoList: () => dispatch(getProxyInfoList())
+    getProxyInfoList: () => dispatch(getProxyInfoList()),
+    getValidatorRecentActivities: (actor, limit, cursor) => dispatch(getValidatorRecentActivities(actor, limit, cursor)),
+    clearValidatorRecentActivities: () => dispatch(clearValidatorRecentActivities())
   }
 }
 

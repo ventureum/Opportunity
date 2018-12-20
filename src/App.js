@@ -16,6 +16,15 @@ import ProjectManagement from './User/ProjectManagementContainer'
 import Validator from './User/ValidatorContainer'
 import Footer from './Static/Footer'
 import ProxyVoting from './Project/ProxyVotingContainer'
+import * as apiUser from './User/apis'
+import * as apiProject from './Project/apis'
+
+if (apiUser.apiFeed.defaults.headers.common['Authorization'] === undefined) {
+  apiUser.apiFeed.defaults.headers.common['Authorization'] = 'No Access Token'
+}
+if (apiProject.apiTcr.defaults.headers.common['Authorization'] === undefined) {
+  apiProject.apiTcr.defaults.headers.common['Authorization'] = 'No Access Token'
+}
 
 const userIsAuthenticated = connectedRouterRedirect({
   // The url to redirect user to if they fail

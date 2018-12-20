@@ -5,7 +5,8 @@ const initState = {
   finalizedValidator: [],
   proxyVotingInfoList: [],
   proxyVotingInfo: null,
-  projectByAdmin: null
+  projectByAdmin: null,
+  validatorRecentActivies: []
 }
 
 const projectReducer = (state = initState, action) => {
@@ -82,6 +83,19 @@ const projectReducer = (state = initState, action) => {
       return {
         ...state,
         proxyInfoList: action.payload
+      }
+    }
+
+    case 'GET_VALIDATOR_RECENT_ACTIVITIES_FULFILLED': {
+      return {
+        ...state,
+        validatorRecentActivies: action.payload
+      }
+    }
+    case 'CLEAR_VALIDATOR_RECENT_ACTIVITIES': {
+      return {
+        ...state,
+        validatorRecentActivies: []
       }
     }
     default: // need this for default case
