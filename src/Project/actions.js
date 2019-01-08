@@ -7,14 +7,14 @@ const getProject = (projectId) => {
   }
 }
 
-const getProjects = (limit = 20) => {
+const getProjects = (limit = 100) => {
   return {
     type: 'GET_PROJECTS',
     payload: projectApi.getProjects(limit)
   }
 }
 
-const getProxyListForProject = (projectId, limit = 20) => {
+const getProxyListForProject = (projectId, limit = 100) => {
   return {
     type: 'GET_PROXY_LIST_FOR_PROJECT',
     payload: projectApi.getProxyListForProject(projectId, limit)
@@ -28,7 +28,7 @@ const getProxyInfoList = () => {
   }
 }
 
-const getVoteInfo = (actor, projectId, limit = 20) => {
+const getVoteInfo = (actor, projectId, limit = 100) => {
   return {
     type: 'GET_VOTE_INFO',
     payload: projectApi.getVoteInfo(actor, projectId, limit)
