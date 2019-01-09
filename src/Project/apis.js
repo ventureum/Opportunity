@@ -44,6 +44,12 @@ function parseProject (p) {
       p.milestonesInfo.milestones[i] = parseMilestone(p.milestonesInfo.milestones[i])
     }
   }
+
+  // complete missing entries
+  if (!p.content.token.cantParticipate) {
+    p.content.token.cantParticipate = []
+  }
+
   return p
 }
 
