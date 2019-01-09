@@ -51,7 +51,7 @@ class ProjectDetailComponent extends Component {
             <Grid container direction='row'>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={classNames('fas', 'fa-map-marker-alt', classes.blockImg)} />
-                {content.corporationInfo.location.city}, {content.corporationInfo.location.country}
+                {content.corporationInfo.location.country}
               </Grid>
               <Grid item xs={12} sm={6} className={classes.block}>
                 <i className={classNames('fas', 'fa-tag', classes.blockImg)} />

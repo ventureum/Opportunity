@@ -341,8 +341,7 @@ const theme = createMuiTheme({
     suppressDeprecationWarnings: true
   },
   root: {
-    height: '100vh',
-    width: '100vw'
+    flex: 1
   },
   error: {
     color: '#F23A30',
