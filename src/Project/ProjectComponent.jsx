@@ -202,9 +202,8 @@ class ProjectComponent extends Component {
             <Grid item xs={12} sm={8} className={classes.validatorInfo}>
               <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
               <div>
-                <div className={classes.validatorName}>{validator.username}</div>
-                {/* <div className={classes.validatorDesc}>{validator.description}</div> */}
-                <div className={classes.validatorDesc}>PhD | Entrepreneur | CEO | ICO Advisor | Crypto enthusiast | BlockChain expert</div>
+                <div className={classes.validatorName}>{validator.profileContent && validator.profileContent.name}</div>
+                <div className={classes.validatorDesc}>{validator.profileContent && validator.profileContent.shortDescription}</div>
               </div>
             </Grid>
             <Grid item xs={12} sm={4} className={classes.verticalCenter}>
