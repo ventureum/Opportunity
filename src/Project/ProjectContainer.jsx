@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import Project from './ProjectComponent'
 import { getProject, rateObj, getProxyListForProject } from './actions'
+import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class ProjectContainer extends Component {
   componentDidMount () {
@@ -14,7 +15,7 @@ class ProjectContainer extends Component {
   }
 
   render () {
-    let { profile, projectData, projectProxyList, error, history, location } = this.props
+    let { profile, projectData, projectProxyList, error, history, location, actionsPending } = this.props
     return (
       <Project
         profile={profile}
@@ -23,17 +24,24 @@ class ProjectContainer extends Component {
         error={error}
         history={history}
         location={location}
+        actionsPending={actionsPending}
       />
     )
   }
 }
+
+const getProxyListForProjectLoadingSelector = createLoadingSelector(['GET_PROXY_LIST_FOR_PROJECT'])
+const errorSelector = createErrorSelector(['GET_PROXY_LIST_FOR_PROJECT'])
 
 const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
     projectData: state.projectReducer.projectData,
     projectProxyList: state.projectReducer.projectProxyList,
-    error: state.projectReducer.error
+    actionsPending: {
+      getProxyListForProject: getProxyListForProjectLoadingSelector(state)
+    },
+    error: errorSelector(state)
   }
 }
 
