@@ -54,7 +54,6 @@ class ValidatorComponent extends Component {
 
   renderRecentActivities = () => {
     const { validatorRecentActivies, classes } = this.props
-    const { chosenValidator } = this.state
     return (validatorRecentActivies.map((activity, i) => {
       return (
         <Grid item xs={12} key={i} className={classes.recentActivity}>
@@ -62,7 +61,7 @@ class ValidatorComponent extends Component {
             <Grid item>
               <Grid container alignItems='center'>
                 <Grid item>
-                  <img src={chosenValidator.photoUrl} alt='' className={classes.activityLogo} />
+                  <img src={activity.projectContent.logo} alt='' className={classes.activityLogo} />
                 </Grid>
                 <Grid item>
                   <Grid container direction='column' justify='center' >
