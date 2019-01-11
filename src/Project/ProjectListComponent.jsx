@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
-import {
-  Redirect
-} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
@@ -11,6 +9,8 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import NavBar from '../User/NavBarContainer'
 import { BarChart, Bar, YAxis } from 'recharts'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
 var numeral = require('numeral')
 
 class ProjectListComponent extends Component {
@@ -99,7 +99,7 @@ class ProjectListComponent extends Component {
 
   render () {
     const { redirectPath, redirectArgs } = this.state
-    const { classes, projects, history, location } = this.props
+    const { classes, projects, history, location, actionsPending } = this.props
 
     if (redirectPath) {
       // redirect to another page
@@ -114,9 +114,12 @@ class ProjectListComponent extends Component {
           <Grid container direction='column' alignItems='center'>
             <Grid container direction='column' className={classes.projectListContainer} alignItems='center'>
               <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
-              <Grid container direction='row' alignItems='center' spacing={16}>
-                {projects.map(p => this.renderProjectCard(p))}
-              </Grid>
+              {actionsPending.getProjects
+                ? <div ><CircularProgress /></div>
+                : <Grid container direction='row' alignItems='center' spacing={16}>
+                  {projects.map(p => this.renderProjectCard(p))}
+                </Grid>
+              }
             </Grid>
           </Grid>
         </div>
