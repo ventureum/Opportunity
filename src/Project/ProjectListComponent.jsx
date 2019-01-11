@@ -195,6 +195,7 @@ const theme = createMuiTheme({
   },
   projectListContainer: {
     marginTop: '60px',
+    marginBottom: '120px',
     '@media (min-width: 380px) and (max-width : 751px)': {
       maxWidth: '380px'
     },
