@@ -35,7 +35,8 @@ class ValidatorContainer extends Component {
   }
 }
 const getValidatorRecentActivitiesLoadingSelector = createLoadingSelector(['GET_VALIDATOR_RECENT_ACTIVITIES'])
-const errorSelector = createErrorSelector(['GET_VALIDATOR_RECENT_ACTIVITIES'])
+const getValidatorInfoListLoadingSelector = createLoadingSelector(['GET_PROXY_INFO_LIST'])
+const errorSelector = createErrorSelector(['GET_VALIDATOR_RECENT_ACTIVITIES', 'GET_PROXY_INFO_LIST'])
 
 const mapStateToProps = state => {
   return {
@@ -43,7 +44,8 @@ const mapStateToProps = state => {
     proxyInfoList: state.projectReducer.proxyInfoList,
     validatorRecentActivies: state.projectReducer.validatorRecentActivies,
     actionsPending: {
-      getValidatorRecentActivities: getValidatorRecentActivitiesLoadingSelector(state)
+      getValidatorRecentActivities: getValidatorRecentActivitiesLoadingSelector(state),
+      getValidatorInfoList: getValidatorInfoListLoadingSelector((state))
     },
     error: errorSelector(state)
   }
