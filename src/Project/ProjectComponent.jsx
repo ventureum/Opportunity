@@ -176,10 +176,10 @@ class ProjectComponent extends Component {
   }
 
   renderDetail = () => {
-    let { classes, projectData } = this.props
+    let { projectData } = this.props
     return (
       <Grid item>
-        <Grid container direction='column' alignItems='center' className={classes.detailSection}>
+        <Grid container direction='column' alignItems='center'>
           <Grid item lg={6}>
             <ProjectDetail projectData={projectData} />
           </Grid>
@@ -259,7 +259,7 @@ class ProjectComponent extends Component {
       <MuiThemeProvider theme={theme}>
         <Grid container className={classes.root} direction='column'>
           <Grid item>
-            <Grid container direction='column' justify='center' alignItems='stretch'>
+            <Grid container direction='column' justify='center'>
               <Grid item>
                 <NavBar history={history} location={location} />
               </Grid>
