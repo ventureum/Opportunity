@@ -54,7 +54,6 @@ class ValidatorComponent extends Component {
 
   renderRecentActivities = () => {
     const { validatorRecentActivies, classes } = this.props
-    const { chosenValidator } = this.state
     return (validatorRecentActivies.map((activity, i) => {
       return (
         <Grid item xs={12} key={i} className={classes.recentActivity}>
@@ -62,7 +61,7 @@ class ValidatorComponent extends Component {
             <Grid item>
               <Grid container alignItems='center'>
                 <Grid item>
-                  <img src={chosenValidator.photoUrl} alt='' className={classes.activityLogo} />
+                  <img src={activity.projectContent.logo} alt='' className={classes.activityLogo} />
                 </Grid>
                 <Grid item>
                   <Grid container direction='column' justify='center' >
@@ -177,7 +176,7 @@ class ValidatorComponent extends Component {
   }
 
   render () {
-    const { history, location, classes, proxyInfoList } = this.props
+    const { history, location, classes, proxyInfoList, actionsPending } = this.props
     const { chosenValidator } = this.state
     return (
       <div className={classes.root}>
@@ -192,6 +191,10 @@ class ValidatorComponent extends Component {
           <Grid container direction='column' alignItems='center'>
             <Grid container alignItems='center' direction='column' className={classes.validatorSection}>
               <Typography className={classes.validatorHeader} variant='h4'>Validators</Typography>
+              {actionsPending.getValidatorInfoList
+                ? <div><CircularProgress /></div>
+                : null
+              }
               <Grid container direction='row' alignItems='center' justify='flex-start' spacing={16}>
                 {proxyInfoList.map((validator, i) => (
                   <Grid item key={i}>

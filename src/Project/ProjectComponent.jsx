@@ -197,28 +197,28 @@ class ProjectComponent extends Component {
     })
     return (
       <Grid container alignItems='center' direction='column' className={classes.validatorSection}>
-        {projectProxyList.map((validator, i) => (
-          <Grid key={i} container direction='row' className={classes.validator}>
-            <Grid item xs={12} sm={8} className={classes.validatorInfo}>
-              <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
-              <div>
-                <div className={classes.validatorName}>{validator.username}</div>
-                {/* <div className={classes.validatorDesc}>{validator.description}</div> */}
-                <div className={classes.validatorDesc}>PhD | Entrepreneur | CEO | ICO Advisor | Crypto enthusiast | BlockChain expert</div>
-              </div>
+        { this.props.actionsPending.getProxyListForProject ? <div className={classes.recentActivitiesSection}><CircularProgress /></div>
+          : projectProxyList.map((validator, i) => (
+            <Grid key={i} container direction='row' className={classes.validator}>
+              <Grid item xs={12} sm={8} className={classes.validatorInfo}>
+                <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
+                <div>
+                  <div className={classes.validatorName}>{validator.profileContent && validator.profileContent.name}</div>
+                  <div className={classes.validatorDesc}>{validator.profileContent && validator.profileContent.shortDescription}</div>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4} className={classes.verticalCenter}>
+                <div className={classes.block}>
+                  <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
+                  <div>Reputation</div>
+                </div>
+                <div className={classes.block}>
+                  <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
+                  <div>Votes</div>
+                </div>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={4} className={classes.verticalCenter}>
-              <div className={classes.block}>
-                <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
-                <div>Reputation</div>
-              </div>
-              <div className={classes.block}>
-                <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
-                <div>Votes</div>
-              </div>
-            </Grid>
-          </Grid>
-        ))
+          ))
         }
       </Grid>
     )
@@ -513,7 +513,8 @@ const theme = createMuiTheme({
     marginBottom: '2px'
   },
   validatorSection: {
-    marginTop: '60px'
+    marginTop: '60px',
+    marginBottom: '60px'
   }
 })
 
