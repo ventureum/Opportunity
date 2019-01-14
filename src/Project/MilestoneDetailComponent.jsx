@@ -29,13 +29,6 @@ class MilestoneDetailComponent extends Component {
         }
       ],
       fileList: [
-        {
-          name: 'Compatible Inkjet Cartridge',
-          link: 'https://www.google.com'
-        }, {
-          name: 'Compatible Inkjet Cartridge',
-          link: 'https://www.google.com'
-        }
       ],
       relatedPosts: [
         {
