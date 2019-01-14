@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import Typography from '@material-ui/core/Typography'
 import countryCodeToName from './countryCodeToName'
 import classNames from 'classnames'
 
@@ -29,84 +32,93 @@ class ProjectDetailComponent extends Component {
 
     return (
       <MuiThemeProvider theme={theme}>
-        <Grid container direction='column' className={classes.projectInfo}>
-          <Grid item className={classes.video}>
-            {projectData.video &&
-            <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
-            }
-            {!projectData.video &&
-            <img className={classes.videoFrame} src={content.wideLogo} alt='' />
-            }
+        <Grid container direction='column' alignItems='flex-start' justify='flex-start' className={classes.projectInfo}>
+          <Grid container direction='row' alignItems='center' justify='center' className={classes.wideLogo}>
+            <Grid item>
+              {projectData.video &&
+              <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
+              }
+              {!projectData.video &&
+              <img src={content.wideLogo}
+                alt='wide-logo'
+                className={classes.video}
+              />
+              }
+            </Grid>
           </Grid>
-          <Grid item className={classes.titleAbout}>
-            About {content.projectName}
-          </Grid>
-          <Grid item className={classes.projectDesc}>
-            { content.shortDescription }
-          </Grid>
-          <Grid item className={classes.expand}>
-            Read more about the project
-          </Grid>
-          <Grid item>
-            <Grid container direction='row'>
-              <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={classNames('fas', 'fa-map-marker-alt', classes.blockImg)} />
-                {content.corporationInfo.location.country}
-              </Grid>
-              <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={classNames('fas', 'fa-tag', classes.blockImg)} />
-                {content.category}
-              </Grid>
-              <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={classNames('fas', 'fa-globe-americas', classes.blockImg)} />
-                <a className={classes.link} href={content.website} target='_blank' rel='noopener noreferrer'>View website</a>
-              </Grid>
-              <Grid item xs={12} sm={6} className={classes.block}>
-                <i className={classNames('fas', 'fa-link', classes.blockImg)} />
-                <a className={classes.link} href={content.whitepaper} target='_blank' rel='noopener noreferrer'>View Whitepaper</a>
+          <Grid container direction='column' className={classes.about}>
+            <Grid item className={classes.titleAbout}>
+              About {content.projectName}
+            </Grid>
+            <Grid item className={classes.projectDesc}>
+              { content.shortDescription }
+            </Grid>
+            <Grid item className={classes.expand}>
+              Read more about the project
+            </Grid>
+            <Grid item>
+              <Grid container direction='row'>
+                <Grid item xs={12} sm={6} className={classes.block}>
+                  <i className={classNames('fas', 'fa-map-marker-alt', classes.blockImg)} />
+                  {content.corporationInfo.location.country}
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.block}>
+                  <i className={classNames('fas', 'fa-tag', classes.blockImg)} />
+                  {content.category}
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.block}>
+                  <i className={classNames('fas', 'fa-globe-americas', classes.blockImg)} />
+                  <a className={classes.link} href={content.website} target='_blank' rel='noopener noreferrer'>View website</a>
+                </Grid>
+                <Grid item xs={12} sm={6} className={classes.block}>
+                  <i className={classNames('fas', 'fa-link', classes.blockImg)} />
+                  <a className={classes.link} href={content.whitepaper} target='_blank' rel='noopener noreferrer'>View Whitepaper</a>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item className={classes.coreTeam}>
-            <Grid container direction='column'>
-              <Grid item className={classes.titleTeam} md={12}>
+          <Grid container direction='column' className={classes.coreTeam}>
+            <Grid item className={classes.titleTeam} md={12}>
                 Core Team
-              </Grid>
-              <Grid item md={12}>
-                <Grid container className={classes.team} direction='row'>
-                  {content.corporationInfo.team.members.map((person, i) => {
-                    if (!expandTeam && i >= 3) {
-                      return null
-                    }
-                    return (
-                      <Grid item key={i} className={classes.personWrap} sm={4} lg={3} xs={12}>
+            </Grid>
+            <Grid item>
+              <GridList cellHeight='auto' cols='3' className={classes.teamGridList}>
+                {content.corporationInfo.team.members.map((person, i) => {
+                  if (!expandTeam && i >= 3) {
+                    return null
+                  }
+                  return (
+                    <GridListTile>
+                      <Grid item key={i} className={classes.personWrap} >
                         <Grid container className={classes.person} direction='column' alignItems='center'>
                           <Grid item>
                             <img className={classes.memberAvatar} src={content.logo} alt='' />
                           </Grid>
-                          <Grid item className={classes.memberName}>
-                            {person.name}
+                          <Grid item>
+                            <Typography className={classes.memberName}>
+                              {person.name}
+                            </Typography>
                           </Grid>
-                          <Grid item className={classes.memberTitle}>
-                            {person.title}
+                          <Grid item>
+                            <Typography className={classes.memberTitle}>
+                              {person.title}
+                            </Typography>
                           </Grid>
                         </Grid>
-                        <a href={person.linkedin} className={classes.linkedIn}>
-                          <i className={classNames('fab', 'fa-linkedin', classes.linkedInImg)} />
-                        </a>
                       </Grid>
-                    )
-                  })}
-                </Grid>
-              </Grid>
-              {content.corporationInfo.team.members.length > 3 &&
-              <Grid item className={classes.expand} onClick={this.toggleTeam}>
-                 Show all {content.corporationInfo.team.members.length} team members
-              </Grid>
-              }
+                    </GridListTile>
+                  )
+                })}
+              </GridList>
             </Grid>
+            {content.corporationInfo.team.members.length > 3 &&
+              <Grid item className={classes.expand} onClick={this.toggleTeam}>
+                { !expandTeam && <div> Show all {content.corporationInfo.team.members.length} team members </div> }
+                { expandTeam && <div> Hide team members </div> }
+              </Grid>
+            }
           </Grid>
-          <Grid item>
+          <Grid item className={classes.detail}>
             <Grid container direction='column'>
               <Grid item className={classes.titleIco}>
                 ICO Details
@@ -193,16 +205,10 @@ const theme = createMuiTheme({
     color: '#1B95E0'
   },
   projectInfo: {
+    paddingTop: '10px',
     color: '#464C4E'
   },
-  video: {
-    position: 'relative',
-    paddingTop: '50%'
-  },
   videoFrame: {
-    position: 'absolute',
-    top: '0',
-    left: '0',
     height: '100%',
     width: '100%'
   },
@@ -225,9 +231,8 @@ const theme = createMuiTheme({
     }
   },
   block: {
-    display: 'flex',
     marginBottom: '29.14px',
-    alignItems: 'center'
+    textAlign: 'left'
   },
   blockImg: {
     fontSize: '20px',
@@ -242,16 +247,11 @@ const theme = createMuiTheme({
     fontSize: '22px',
     fontWeight: 'bold'
   },
-  team: {
-    width: 'calc(100% + 20px)',
-    marginLeft: '-10px'
-  },
   personWrap: {
-    padding: '10px',
-    position: 'relative'
+    padding: '10px'
   },
   person: {
-    height: '180px',
+    minHeight: '180px',
     backgroundColor: 'white;',
     boxShadow: '0 2px 5px 0 rgba(0,0,0,0.05)',
     borderRadius: '6px'
@@ -272,21 +272,13 @@ const theme = createMuiTheme({
   },
   memberTitle: {
     color: '#7C878B',
-    fontSize: '16px',
+    textAlign: 'center',
+    fontSize: '10px',
     fontWeight: 'bold',
-    lineHeight: '19px'
+    maxWidth: '150px'
   },
-  linkedIn: {
-    position: 'absolute',
-    right: '27.07px',
-    top: '22px'
-  },
-  linkedInImg: {
-    fontSize: 20,
-    color: '#188ADC',
-    '&:hover': {
-      cursor: 'pointer'
-    }
+  detail: {
+    width: '100%'
   },
   titleIco: {
     fontSize: '22px',
@@ -301,6 +293,28 @@ const theme = createMuiTheme({
   value: {
     lineHeight: '2',
     fontWeight: '100'
+  },
+  video: {
+    '@media (max-width: 1024px)': {
+      width: '100vw'
+    },
+    '@media (min-width: 1024px)': {
+      minWidth: '623px'
+    },
+    height: 'auto'
+  },
+  wideLogo: {
+    '@media (max-width: 1024px)': {
+      maxWidth: '100%'
+    }
+  },
+  teamGridList: {
+    '@media (max-width: 1024px)': {
+      width: '100vw'
+    },
+    '@media (min-width: 1024px)': {
+      width: '30vw'
+    }
   }
 })
 
