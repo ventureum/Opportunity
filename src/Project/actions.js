@@ -131,6 +131,13 @@ const clearValidatorRecentActivities = () => {
   }
 }
 
+const getRelatedPostsForMilestone = (projectId, milestoneId) => {
+  return {
+    type: 'GET_RELATED_POSTS_FOR_MILESTONE',
+    payload: projectApi.getRelatedPostsForMilestone(projectId, milestoneId)
+  }
+}
+
 export {
   getProjects,
   getProject,
@@ -149,5 +156,6 @@ export {
   addMilestone,
   getProxyInfoList,
   getValidatorRecentActivities,
-  clearValidatorRecentActivities
+  clearValidatorRecentActivities,
+  getRelatedPostsForMilestone
 }

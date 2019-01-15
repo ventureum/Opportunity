@@ -3,11 +3,12 @@ import delay from 'delay'
 import c from '../contract'
 import * as userApi from '../User/apis'
 import { encodeObjData } from '../Utils'
+const sha3 = require('js-sha3').sha3_256
 
-const baseUrl = `${process.env.REACT_APP_TCR_ENDPOINT}/${process.env.REACT_APP_TCR_STAGE}`
+const baseTcrUrl = `${process.env.REACT_APP_TCR_ENDPOINT}/${process.env.REACT_APP_TCR_STAGE}`
 
 var apiTcr = axios.create({
-  baseURL: baseUrl,
+  baseURL: baseTcrUrl,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -270,6 +271,35 @@ async function addMilestone (projectId, content, commands, ids, contents) {
   await delay(2500)
 }
 
+async function getRelatedPostsForMilestone (projectId, milestoneId, limit = 50) {
+  const rv = await apiTcr.post(
+    '/get-rating-vote-list',
+    {
+      'projectId': projectId,
+      'milestoneId': milestoneId,
+      'objectiveId': 1,
+      'limit': limit
+    }
+  )
+  if (rv.data.responseData.objectiveVotesInfo.ratingVotes !== null) {
+    const voterArr = rv.data.responseData.objectiveVotesInfo.ratingVotes.map(item => {
+      return item.voter
+    })
+    const postHashArr = voterArr.map(voterUUID => {
+      const commentBoardId = 'obj-comment-' + projectId + '-' + milestoneId
+      return '0x' + sha3(commentBoardId + '-' + voterUUID)
+    })
+
+    const postRV = await userApi.apiFeed.post(
+      '/get-batch-posts',
+      {
+        'postHashes': postHashArr
+      }
+    )
+    return postRV.data.posts
+  } else return []
+}
+
 export {
   getProject,
   getProjects,
@@ -289,5 +319,6 @@ export {
   modifyMilestone,
   addMilestone,
   getProxyInfoList,
-  getValidatorRecentActivities
+  getValidatorRecentActivities,
+  getRelatedPostsForMilestone
 }
