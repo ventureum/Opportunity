@@ -56,14 +56,6 @@ class NavBarComponent extends Component {
       return (<Redirect push to={redirectTo} />)
     }
 
-    if (!profile) {
-      // create a mock profile for anonymous user
-      profile = {
-        username: 'Anonymous',
-        actorType: 'ANONYMOUS'
-      }
-    }
-
     return (
       <MuiThemeProvider theme={theme}>
         <AppBar position='static' color='default'>

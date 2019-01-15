@@ -5,7 +5,7 @@ const initState = {
     isAuthenticated: false
   },
   wallets: [],
-  profile: null,
+  profile: { username: 'Anonymous', actorType: 'ANONYMOUS' },
   profiles: [],
   finalizedValidators: [],
   voteList: [],
