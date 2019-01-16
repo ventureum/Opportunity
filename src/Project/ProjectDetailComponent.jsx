@@ -54,7 +54,9 @@ class ProjectDetailComponent extends Component {
               { content.shortDescription }
             </Grid>
             <Grid item className={classes.expand}>
+              <a className={classes.link} href={content.website} target='_blank' rel='noopener noreferrer'>
               Read more about the project
+              </a>
             </Grid>
             <Grid item>
               <Grid container direction='row'>
@@ -82,14 +84,14 @@ class ProjectDetailComponent extends Component {
                 Core Team
             </Grid>
             <Grid item>
-              <GridList cellHeight='auto' cols='3' className={classes.teamGridList}>
+              <GridList cellHeight='auto' cols={3} className={classes.teamGridList}>
                 {content.corporationInfo.team.members.map((person, i) => {
                   if (!expandTeam && i >= 3) {
                     return null
                   }
                   return (
-                    <GridListTile>
-                      <Grid item key={i} className={classes.personWrap} >
+                    <GridListTile key={i} >
+                      <Grid item className={classes.personWrap} >
                         <Grid container className={classes.person} direction='column' alignItems='center'>
                           <Grid item>
                             <img className={classes.memberAvatar} src={content.logo} alt='' />
