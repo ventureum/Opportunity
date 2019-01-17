@@ -6,7 +6,8 @@ const initState = {
   proxyVotingInfoList: [],
   proxyVotingInfo: null,
   projectByAdmin: null,
-  validatorRecentActivies: []
+  validatorRecentActivies: [],
+  relatedPostsForMilestone: []
 }
 
 const projectReducer = (state = initState, action) => {
@@ -96,6 +97,12 @@ const projectReducer = (state = initState, action) => {
       return {
         ...state,
         validatorRecentActivies: []
+      }
+    }
+    case 'GET_RELATED_POSTS_FOR_MILESTONE_FULFILLED': {
+      return {
+        ...state,
+        relatedPostsForMilestone: action.payload
       }
     }
     default: // need this for default case

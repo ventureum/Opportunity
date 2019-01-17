@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { List, ListItem, withStyles } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import logo from '../loomLogo.png'
 
 function FooterComponent ({ ...props }) {
   const { classes } = props
@@ -110,10 +111,18 @@ function FooterComponent ({ ...props }) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xl={12} ld={12} md={12} sm={12} xs={12}>
-          <Typography className={classes.copyright}>
+        <Grid item className={classes.logoAndCopyRight}>
+          <Grid container direction='row' justify='space-between' alignItems='flex-end'>
+            <Grid item>
+              <img className={classes.loomLogo} src={logo} alt='' />
+              <Typography align='left' className={classes.poweredByLoom}>Powered by LoomX</Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.copyright}>
     &copy; {'2017 - '}{1900 + new Date().getYear()} Ventureum Inc. All rights reserved.
-          </Typography>
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </footer>
@@ -127,6 +136,16 @@ const style = theme => ({
       paddingLeft: '140px',
       paddingRight: '140px'
     },
+    [theme.breakpoints.down('md')]: {
+      textAlign: 'right',
+      paddingLeft: '40px',
+      paddingRight: '40px'
+    },
+    [theme.breakpoints.down('xs')]: {
+      textAlign: 'right',
+      paddingLeft: '20px',
+      paddingRight: '20px'
+    },
     paddingTop: '60px',
     backgroundColor: '#333333'
   },
@@ -134,7 +153,8 @@ const style = theme => ({
     textDecoration: 'none'
   },
   listItem: {
-    justifyContent: 'left'
+    justifyContent: 'flex-start',
+    paddingLeft: '0px'
   },
   listTitle: {
     color: '#A8A8A8',
@@ -147,14 +167,29 @@ const style = theme => ({
   copyright: {
     color: '#FFFFFF',
     fontWeight: '500',
-    paddingTop: '5px',
-    paddingBottom: '30px',
+    paddingTop: '10px',
     [theme.breakpoints.up('md')]: {
       textAlign: 'right'
     },
     [theme.breakpoints.down('sm')]: {
       textAlign: 'center'
     }
+  },
+  poweredByLoom: {
+    color: '#ffffff',
+    fontFamily: 'Helvetica Neue',
+    fontSize: '12px',
+    fontWeight: 500,
+    letterSpacing: '0.15px'
+  },
+  loomLogo: {
+    height: '32px',
+    width: 'auto',
+    marginBottom: '6px'
+  },
+  logoAndCopyRight: {
+    marginBottom: '30px',
+    marginTop: '10px'
   }
 })
 

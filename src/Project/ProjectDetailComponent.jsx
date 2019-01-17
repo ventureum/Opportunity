@@ -34,17 +34,13 @@ class ProjectDetailComponent extends Component {
       <MuiThemeProvider theme={theme}>
         <Grid container direction='column' alignItems='flex-start' justify='flex-start' className={classes.projectInfo}>
           <Grid container direction='row' alignItems='center' justify='center' className={classes.wideLogo}>
-            <Grid item>
-              {projectData.video &&
-              <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
-              }
-              {!projectData.video &&
-              <img src={content.wideLogo}
+            {projectData.video
+              ? <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
+              : <img src={content.wideLogo}
                 alt='wide-logo'
                 className={classes.video}
               />
-              }
-            </Grid>
+            }
           </Grid>
           <Grid container direction='column' className={classes.about}>
             <Grid item className={classes.titleAbout}>
@@ -54,7 +50,9 @@ class ProjectDetailComponent extends Component {
               { content.shortDescription }
             </Grid>
             <Grid item className={classes.expand}>
+              <a className={classes.link} href={content.website} target='_blank' rel='noopener noreferrer'>
               Read more about the project
+              </a>
             </Grid>
             <Grid item>
               <Grid container direction='row'>
@@ -82,14 +80,14 @@ class ProjectDetailComponent extends Component {
                 Core Team
             </Grid>
             <Grid item>
-              <GridList cellHeight='auto' cols='3' className={classes.teamGridList}>
+              <GridList cellHeight='auto' cols={3} className={classes.teamGridList}>
                 {content.corporationInfo.team.members.map((person, i) => {
                   if (!expandTeam && i >= 3) {
                     return null
                   }
                   return (
-                    <GridListTile>
-                      <Grid item key={i} className={classes.personWrap} >
+                    <GridListTile key={i} >
+                      <Grid item className={classes.personWrap} >
                         <Grid container className={classes.person} direction='column' alignItems='center'>
                           <Grid item>
                             <img className={classes.memberAvatar} src={content.logo} alt='' />
@@ -295,12 +293,7 @@ const theme = createMuiTheme({
     fontWeight: '100'
   },
   video: {
-    '@media (max-width: 1024px)': {
-      width: '100vw'
-    },
-    '@media (min-width: 1024px)': {
-      minWidth: '623px'
-    },
+    width: '100%',
     height: 'auto'
   },
   wideLogo: {
@@ -309,12 +302,6 @@ const theme = createMuiTheme({
     }
   },
   teamGridList: {
-    '@media (max-width: 1024px)': {
-      width: '100vw'
-    },
-    '@media (min-width: 1024px)': {
-      width: '30vw'
-    }
   }
 })
 

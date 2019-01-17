@@ -1,10 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import MilestoneDetail from './MilestoneDetailComponent'
-import { rateObj } from './actions'
+import { rateObj, getRelatedPostsForMilestone } from './actions'
 import { createLoadingSelector, createErrorSelector } from '../selectors'
 
 class MilestoneDetailContainer extends Component {
+  componentDidMount () {
+    const { milestone, getRelatedPostsForMilestone } = this.props
+    getRelatedPostsForMilestone(milestone.projectId, milestone.milestoneId)
+  }
+
   render () {
     let {
       handleClose,
@@ -12,7 +17,9 @@ class MilestoneDetailContainer extends Component {
       milestone,
       rateObj,
       actionsPending,
-      error
+      error,
+      relatedPostsForMilestone,
+      getRelatedPostsForMilestone
     } = this.props
 
     return (
@@ -22,6 +29,8 @@ class MilestoneDetailContainer extends Component {
         milestone={milestone}
         rateObj={rateObj}
         actionsPending={actionsPending}
+        relatedPostsForMilestone={relatedPostsForMilestone}
+        getRelatedPostsForMilestone={getRelatedPostsForMilestone}
         error={error}
       />
     )
@@ -29,21 +38,25 @@ class MilestoneDetailContainer extends Component {
 }
 
 const rateObjLoadingSelector = createLoadingSelector(['RATE_OBJ'])
-const errorSelector = createErrorSelector(['RATE_OBJ'])
+const getRelatedPostsForMilestoneLoadingSelector = createLoadingSelector(['GET_RELATED_POSTS_FOR_MILESTONE'])
+const errorSelector = createErrorSelector(['RATE_OBJ', 'GET_RELATED_POSTS_FOR_MILESTONE'])
 
 const mapStateToProps = state => {
   return {
     profile: state.userReducer.profile,
     actionsPending: {
-      rateObj: rateObjLoadingSelector(state)
+      rateObj: rateObjLoadingSelector(state),
+      getRelatedPostsForMilestone: getRelatedPostsForMilestoneLoadingSelector(state)
     },
+    relatedPostsForMilestone: state.projectReducer.relatedPostsForMilestone,
     error: errorSelector(state)
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    rateObj: (projectId, milestoneId, ratings, comment) => dispatch(rateObj(projectId, milestoneId, ratings, comment))
+    rateObj: (projectId, milestoneId, ratings, comment) => dispatch(rateObj(projectId, milestoneId, ratings, comment)),
+    getRelatedPostsForMilestone: (projectId, milestoneId) => dispatch(getRelatedPostsForMilestone(projectId, milestoneId))
   }
 }
 

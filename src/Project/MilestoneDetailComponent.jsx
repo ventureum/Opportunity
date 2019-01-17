@@ -6,6 +6,8 @@ import Button from '@material-ui/core/Button'
 import MilestoneObjVote from './MilestoneObjVoteComponent'
 import TransactionProgress from '../Notification/TransactionProgress'
 import Error from '../Error/ErrorComponent'
+import { Typography } from '@material-ui/core'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 var moment = require('moment')
 
@@ -30,34 +32,7 @@ class MilestoneDetailComponent extends Component {
       ],
       fileList: [
       ],
-      relatedPosts: [
-        {
-          avatar: '/mock_logo.png',
-          title: 'Types Of Paper In Catalog',
-          author: 'Russell West',
-          link: 'https://www.google.com'
-        }, {
-          avatar: '/mock_logo.png',
-          title: 'Types Of Paper In Catalog',
-          author: 'Russell West',
-          link: 'https://www.google.com'
-        }, {
-          avatar: '/mock_logo.png',
-          title: 'Types Of Paper In Catalog',
-          author: 'Russell West',
-          link: 'https://www.google.com'
-        }, {
-          avatar: '/mock_logo.png',
-          title: 'Types Of Paper In Catalog',
-          author: 'Russell West',
-          link: 'https://www.google.com'
-        }, {
-          avatar: '/mock_logo.png',
-          title: 'Types Of Paper In Catalog',
-          author: 'Russell West',
-          link: 'https://www.google.com'
-        }
-      ]
+      relatedPosts: []
     }
   }
 
@@ -95,9 +70,8 @@ class MilestoneDetailComponent extends Component {
   }
 
   render () {
-    const { classes, milestone, profile, handleClose, rateObj, actionsPending, error } = this.props
-    const { evaluatorList, fileList, relatedPosts } = this.state
-
+    const { classes, milestone, profile, handleClose, rateObj, actionsPending, error, relatedPostsForMilestone } = this.props
+    const { evaluatorList, fileList } = this.state
     if (error) {
       return (<Error error={error} />)
     }
@@ -178,17 +152,23 @@ class MilestoneDetailComponent extends Component {
               <Grid item xs={12} className={classes.sectionTitle}>
                 Related Posts
               </Grid>
-              {relatedPosts.map((post, i) => {
-                return (
-                  <Grid item xs={12} key={i} className={classes.post}>
-                    <img src={post.avatar} alt='' className={classes.postAvatar} />
-                    <div className={classes.postContent}>
-                      <a href={post.link} target='_blank' rel='noopener noreferrer' className={classes.postTitle}>{post.title}</a>
-                      <div className={classes.postAuthor}>{post.author}</div>
-                    </div>
+              {actionsPending.getRelatedPostsForMilestone
+                ? <Grid item >
+                  <Grid container direction='row' justify='center'>
+                    <CircularProgress />
                   </Grid>
-                )
-              })}
+                </Grid>
+                : relatedPostsForMilestone.map((post, i) => {
+                  return (
+                    <Grid item xs={12} key={i} className={classes.post}>
+                      <img src={post.photoUrl} alt='' className={classes.postAvatar} />
+                      <div className={classes.postContent}>
+                        <Typography className={classes.postTitle}>{post.content.text}</Typography>
+                        <Typography className={classes.postAuthor}>{post.content.title}</Typography>
+                      </div>
+                    </Grid>
+                  )
+                })}
             </Grid>
           </Grid>
           <div onClick={handleClose} className={classes.close}>

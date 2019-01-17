@@ -81,7 +81,7 @@ class ValidatorComponent extends Component {
                   <Typography align='right' className={classes.detailValidatorName}>{numeral(activity.rating).format('0.0')}</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography className={classes.subtext}>{moment(activity.blockTimestamp).format('L')}</Typography>
+                  <Typography className={classes.subtext}>{moment.unix(activity.blockTimestamp).format('LL')}</Typography>
                 </Grid>
               </Grid>
             </Grid>
