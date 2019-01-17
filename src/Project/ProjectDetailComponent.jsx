@@ -34,17 +34,13 @@ class ProjectDetailComponent extends Component {
       <MuiThemeProvider theme={theme}>
         <Grid container direction='column' alignItems='flex-start' justify='flex-start' className={classes.projectInfo}>
           <Grid container direction='row' alignItems='center' justify='center' className={classes.wideLogo}>
-            <Grid item>
-              {projectData.video &&
-              <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
-              }
-              {!projectData.video &&
-              <img src={content.wideLogo}
+            {projectData.video
+              ? <iframe title='project_video' key='video-frame' className={classes.videoFrame} src={`https://www.youtube.com/embed/${projectData.video.split('?v=')[1]}`} frameBorder='0' allow='encrypted-media' allowFullScreen />
+              : <img src={content.wideLogo}
                 alt='wide-logo'
                 className={classes.video}
               />
-              }
-            </Grid>
+            }
           </Grid>
           <Grid container direction='column' className={classes.about}>
             <Grid item className={classes.titleAbout}>
@@ -297,12 +293,7 @@ const theme = createMuiTheme({
     fontWeight: '100'
   },
   video: {
-    '@media (max-width: 1024px)': {
-      width: '100vw'
-    },
-    '@media (min-width: 1024px)': {
-      minWidth: '623px'
-    },
+    width: '100%',
     height: 'auto'
   },
   wideLogo: {
@@ -311,12 +302,6 @@ const theme = createMuiTheme({
     }
   },
   teamGridList: {
-    '@media (max-width: 1024px)': {
-      width: '100vw'
-    },
-    '@media (min-width: 1024px)': {
-      width: '30vw'
-    }
   }
 })
 

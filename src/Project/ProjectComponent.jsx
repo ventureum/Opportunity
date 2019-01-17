@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component'
@@ -176,11 +176,11 @@ class ProjectComponent extends Component {
   }
 
   renderDetail = () => {
-    let { projectData } = this.props
+    let { projectData, classes } = this.props
     return (
-      <Grid item>
+      <Grid item >
         <Grid container direction='column' alignItems='center'>
-          <Grid item lg={6}>
+          <Grid item className={classes.detailContainer}>
             <ProjectDetail projectData={projectData} />
           </Grid>
         </Grid>
@@ -269,86 +269,84 @@ class ProjectComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Grid container className={classes.root} direction='column'>
-          <Grid item>
-            <Grid container direction='column' justify='center'>
-              <Grid item>
-                <NavBar history={history} location={location} />
-              </Grid>
-              <Grid item>
-                <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
-                  <Grid item>
-                    <img className={classes.topSectionProjectLogo} src={projectData.content.logo} alt='' />
-                  </Grid>
-                  <Grid item lg={5}>
-                    <Grid container direction='column' justify='center' alignItems='flex-start'>
-                      <Grid item>
-                        <Typography className={classes.topSectionProjectName} >
-                          { projectData.content.projectName }
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography className={classes.topSectionProjectShortDescription} variant='h5'>
-                          { projectData.content.shortDescription }
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Grid container direction='column' justify='center' alignItems='center'>
-                      <Grid item>
-                        <Typography className={classes.topSectionRating} >
-                          { numeral(projectData.avgRating / 10.0).format('0.0') }
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography className={classes.topSectionRatingDescription} >
-                          Avg Milestone Rating
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <AppBar className={classes.tabsBar} position='static'>
-                  <Tabs indicatorColor='primary' value={tabValue} onChange={this.handleTabChange} centered >
-                    <Tab label='MILESTONES' />
-                    <Tab label='INFO' />
-                    <Tab label='VALIDATORS' />
-                  </Tabs>
-                </AppBar>
-              </Grid>
-              { tabValue === 0 && this.renderTimeline() }
-              { tabValue === 1 && this.renderDetail() }
-              { tabValue === 2 && this.renderValidators() }
-              <Modal
-                disableRestoreFocus
-                disableEnforceFocus
-                disableAutoFocus
-                BackdropProps={{ classes: { root: classes.backdrop } }}
-                open={open}
-                onClose={this.handleClose}
-              >
-                <Grid onClick={this.handleClose} container direction='row' justify='flex-end'>
-                  <Grid className={classes.milestoneModal} item xs={12} sm={8} md={6}>
-                    <MilestoneDetail
-                      handleClose={this.handleClose}
-                      milestone={selectedMilestone}
-                    />
-                  </Grid>
-                </Grid>
-              </Modal>
+      <Grid container className={classes.root} direction='column'>
+        <Grid item>
+          <Grid container direction='column' justify='center'>
+            <Grid item>
+              <NavBar history={history} location={location} />
             </Grid>
+            <Grid item>
+              <Grid container className={classes.topSection} direction='row' justify='center' alignItems='center'>
+                <Grid item>
+                  <img className={classes.topSectionProjectLogo} src={projectData.content.logo} alt='' />
+                </Grid>
+                <Grid item lg={5}>
+                  <Grid container direction='column' justify='center' alignItems='flex-start'>
+                    <Grid item>
+                      <Typography className={classes.topSectionProjectName} >
+                        { projectData.content.projectName }
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.topSectionProjectShortDescription} variant='h5'>
+                        { projectData.content.shortDescription }
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Grid container direction='column' justify='center' alignItems='center'>
+                    <Grid item>
+                      <Typography className={classes.topSectionRating} >
+                        { numeral(projectData.avgRating / 10.0).format('0.0') }
+                      </Typography>
+                    </Grid>
+                    <Grid item>
+                      <Typography className={classes.topSectionRatingDescription} >
+                          Avg Milestone Rating
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <AppBar className={classes.tabsBar} position='static'>
+                <Tabs indicatorColor='primary' value={tabValue} onChange={this.handleTabChange} centered >
+                  <Tab label='MILESTONES' />
+                  <Tab label='INFO' />
+                  <Tab label='VALIDATORS' />
+                </Tabs>
+              </AppBar>
+            </Grid>
+            { tabValue === 0 && this.renderTimeline() }
+            { tabValue === 1 && this.renderDetail() }
+            { tabValue === 2 && this.renderValidators() }
+            <Modal
+              disableRestoreFocus
+              disableEnforceFocus
+              disableAutoFocus
+              BackdropProps={{ classes: { root: classes.backdrop } }}
+              open={open}
+              onClose={this.handleClose}
+            >
+              <Grid onClick={this.handleClose} container direction='row' justify='flex-end'>
+                <Grid className={classes.milestoneModal} item xs={12} sm={8} md={6}>
+                  <MilestoneDetail
+                    handleClose={this.handleClose}
+                    milestone={selectedMilestone}
+                  />
+                </Grid>
+              </Grid>
+            </Modal>
           </Grid>
         </Grid>
-      </MuiThemeProvider>
+      </Grid>
     )
   }
 }
 
-const theme = createMuiTheme({
+const style = theme => ({
   typography: {
     useNextVariants: true,
     suppressDeprecationWarnings: true
@@ -541,7 +539,14 @@ const theme = createMuiTheme({
     fontSize: '24px',
     fontWeight: 500,
     lineHeight: '29px'
-  }
+  },
+  detailContainer: {
+    [theme.breakpoints.down('lg')]: {
+      paddingLeft: '16px',
+      paddingRight: '16px'
+    }
+  },
+  maxWidth: '720px'
 })
 
-export default withStyles(theme)(ProjectComponent)
+export default withStyles(style)(ProjectComponent)
