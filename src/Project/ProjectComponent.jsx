@@ -190,32 +190,45 @@ class ProjectComponent extends Component {
 
   renderValidators = () => {
     const { projectProxyList, classes } = this.props
-    projectProxyList.sort((a, b) => {
+    let projectProxyListCopy = JSON.parse(JSON.stringify(projectProxyList))
+    // Get rid of zero votes.
+    projectProxyListCopy = projectProxyListCopy.filter(validator => {
+      return validator.proxyVoting.receivedDelegateVotes > 0
+    })
+    projectProxyListCopy.sort((a, b) => {
       const votesA = a.proxyVoting.receivedDelegateVotes
       const votesB = b.proxyVoting.receivedDelegateVotes
       return votesB - votesA
     })
+    projectProxyListCopy = projectProxyListCopy.slice(0, Math.min(5, projectProxyList.length))
     return (
       <Grid container alignItems='center' direction='column' className={classes.validatorSection}>
-        { this.props.actionsPending.getProxyListForProject ? <div className={classes.recentActivitiesSection}><CircularProgress /></div>
-          : projectProxyList.map((validator, i) => (
-            <Grid key={i} container direction='row' className={classes.validator}>
-              <Grid item xs={12} sm={8} className={classes.validatorInfo}>
-                <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
-                <div>
-                  <div className={classes.validatorName}>{validator.profileContent && validator.profileContent.name}</div>
-                  <div className={classes.validatorDesc}>{validator.profileContent && validator.profileContent.shortDescription}</div>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={4} className={classes.verticalCenter}>
-                <div className={classes.block}>
-                  <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
-                  <div>Reputation</div>
-                </div>
-                <div className={classes.block}>
-                  <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
-                  <div>Votes</div>
-                </div>
+        <Grid item className={classes.leadingValidatorTitle}>
+          <Grid container>
+            <Typography className={classes.leadingValidatorTitleText}>Leading Validators (In Progress)</Typography>
+          </Grid>
+        </Grid>
+        { this.props.actionsPending.getProxyListForProject ? <div><CircularProgress /></div>
+          : projectProxyListCopy.map((validator, i) => (
+            <Grid key={i} item className={classes.validator}>
+              <Grid container direction='row' >
+                <Grid item xs={12} sm={8} className={classes.validatorInfo}>
+                  <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
+                  <div>
+                    <div className={classes.validatorName}>{validator.profileContent && validator.profileContent.name}</div>
+                    <div className={classes.validatorDesc}>{validator.profileContent && validator.profileContent.shortDescription}</div>
+                  </div>
+                </Grid>
+                <Grid item xs={12} sm={4} className={classes.verticalCenter}>
+                  <div className={classes.block}>
+                    <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
+                    <div>Reputation</div>
+                  </div>
+                  <div className={classes.block}>
+                    <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
+                    <div>Votes</div>
+                  </div>
+                </Grid>
               </Grid>
             </Grid>
           ))
@@ -471,7 +484,8 @@ const theme = createMuiTheme({
     boxShadow: '0 2px 5px 0 rgba(0,0,0,0.05)',
     marginBottom: '10px',
     padding: '28px',
-    width: '60%'
+    width: '60%',
+    maxWidth: '900px'
   },
   validatorInfo: {
     display: 'flex'
@@ -515,6 +529,18 @@ const theme = createMuiTheme({
   validatorSection: {
     marginTop: '60px',
     marginBottom: '60px'
+  },
+  leadingValidatorTitle: {
+    maxWidth: '900px',
+    width: '60%',
+    marginBottom: '20px'
+  },
+  leadingValidatorTitleText: {
+    color: '#333333',
+    fontFamily: 'Helvetica Neue',
+    fontSize: '24px',
+    fontWeight: 500,
+    lineHeight: '29px'
   }
 })
 
