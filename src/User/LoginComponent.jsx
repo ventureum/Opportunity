@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -154,11 +154,7 @@ class Login extends Component {
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   root: {
     height: '100vh',
     width: '100vw'
@@ -202,4 +198,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(Login)
+export default withStyles(style)(Login)

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
@@ -108,31 +108,25 @@ class ProjectListComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <div className={classes.root}>
-          <NavBar history={history} location={location} />
-          <Grid container direction='column' alignItems='center'>
-            <Grid container direction='column' className={classes.projectListContainer} alignItems='center'>
-              <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
-              {actionsPending.getProjects
-                ? <div ><CircularProgress /></div>
-                : <Grid container direction='row' alignItems='center' spacing={16}>
-                  {projects.map(p => this.renderProjectCard(p))}
-                </Grid>
-              }
-            </Grid>
+      <div className={classes.root}>
+        <NavBar history={history} location={location} />
+        <Grid container direction='column' alignItems='center'>
+          <Grid container direction='column' className={classes.projectListContainer} alignItems='center'>
+            <Typography variant='h4' className={classes.projectsHeader}>Projects</Typography>
+            {actionsPending.getProjects
+              ? <div ><CircularProgress /></div>
+              : <Grid container direction='row' alignItems='center' spacing={16}>
+                {projects.map(p => this.renderProjectCard(p))}
+              </Grid>
+            }
           </Grid>
-        </div>
-      </MuiThemeProvider>
+        </Grid>
+      </div>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   root: {
     flex: 1
   },
@@ -155,7 +149,6 @@ const theme = createMuiTheme({
   },
   projectShortDescText: {
     color: '#333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '18px',
     lineHeight: '27px'
   },
@@ -163,7 +156,6 @@ const theme = createMuiTheme({
     fontSize: '14px',
     letterSpacing: '0.18px',
     lineHeight: '16px',
-    fontFamily: 'Helvetica Neue',
     color: '#666666',
     height: '48px'
   },
@@ -184,13 +176,11 @@ const theme = createMuiTheme({
   },
   milestoneRatingText: {
     color: '#333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '18px',
     lineHeight: '27px',
     letterSpacing: '0.29px'
   },
   milestoneCompletedText: {
-    fontFamily: 'Helvetica Neue',
     color: '#666666',
     letterSpacing: '0.2px',
     lineHeight: '18px',
@@ -270,4 +260,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(ProjectListComponent)
+export default withStyles(style)(ProjectListComponent)

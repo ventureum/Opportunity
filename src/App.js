@@ -18,6 +18,7 @@ import Footer from './Static/Footer'
 import ProxyVoting from './Project/ProxyVotingContainer'
 import * as apiUser from './User/apis'
 import * as apiProject from './Project/apis'
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
 
 if (apiUser.apiFeed.defaults.headers.common['Authorization'] === undefined) {
   apiUser.apiFeed.defaults.headers.common['Authorization'] = 'No Access Token'
@@ -68,21 +69,41 @@ const DefaultLayout = ({ component: Component, ...rest }) => {
 }
 
 class App extends Component {
+  componentDidMount () {
+    const link = document.createElement('link')
+    link.setAttribute(
+      'href',
+      'https://fonts.googleapis.com/css?family=Open+Sans')
+    link.setAttribute(
+      'rel',
+      'stylesheet')
+    document.head.appendChild(link)
+  }
+
   render () {
     return (
-      <Router>
-        <Switch>
-          <Route path='/login' component={userIsNotAuthenticated(Login)} />
-          <DefaultLayout exact path='/' component={ProjectList} />
-          <DefaultLayout path='/project/:projectId' component={Project} />
-          <DefaultLayout path='/my-projects' component={userIsAuthenticated(MyProjects)} />
-          <DefaultLayout path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
-          <DefaultLayout path='/validators' component={Validator} />
-          <DefaultLayout path='/ProxyVoting/:projectId' component={userIsAuthenticated(ProxyVoting)} />
-        </Switch>
-      </Router>
+      <MuiThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <Route path='/login' component={userIsNotAuthenticated(Login)} />
+            <DefaultLayout exact path='/' component={ProjectList} />
+            <DefaultLayout path='/project/:projectId' component={Project} />
+            <DefaultLayout path='/my-projects' component={userIsAuthenticated(MyProjects)} />
+            <DefaultLayout path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
+            <DefaultLayout path='/validators' component={Validator} />
+            <DefaultLayout path='/ProxyVoting/:projectId' component={userIsAuthenticated(ProxyVoting)} />
+          </Switch>
+        </Router>
+      </MuiThemeProvider>
     )
   }
 }
+const theme = createMuiTheme({
+  typography: {
+    useNextVariants: true,
+    suppressDeprecationWarnings: true,
+    fontFamily: 'Open Sans'
+  }
+})
 
-export default App
+export default withStyles(theme)(App)

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
-import 'react-vertical-timeline-component/style.min.css'
 import Button from '@material-ui/core/Button'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
@@ -134,7 +133,7 @@ class MilestoneComponent extends Component {
   }
 }
 
-const theme = createMuiTheme({
+const style = theme => ({
   typography: {
     useNextVariants: true,
     suppressDeprecationWarnings: true
@@ -167,4 +166,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(MilestoneComponent)
+export default withStyles(style)(MilestoneComponent)

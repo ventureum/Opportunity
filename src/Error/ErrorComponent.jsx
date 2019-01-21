@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
@@ -11,43 +11,41 @@ class ErrorComponent extends Component {
     let { classes, error } = this.props
     if (error) {
       return (
-        <MuiThemeProvider theme={theme}>
-          <Grid container className={classes.root} direction='column' justify='center' alignItems='flex-start'>
-            <Grid item>
-              <Grid container direction='column' justify='center' alignItems='center'>
-                <Grid item xs={7} >
-                  <Typography className={classes.heading} >
+        <Grid container className={classes.root} direction='column' justify='center' alignItems='flex-start'>
+          <Grid item>
+            <Grid container direction='column' justify='center' alignItems='center'>
+              <Grid item xs={7} >
+                <Typography className={classes.heading} >
                     Looks like we're having some issues.
-                  </Typography>
-                  <Divider className={classes.divider} />
-                  <Typography className={classes.subtitle} >
+                </Typography>
+                <Divider className={classes.divider} />
+                <Typography className={classes.subtitle} >
                     Go back to the previous page and try again.
                     If you think something is broken, report a problem.
-                  </Typography>
-                  <Grid container direction='row' className={classes.btnContainer}>
-                    <Grid item>
-                      <Link to='/' className={classes.link}>
-                        <Button variant='outlined' className={classes.homeBtn}>
+                </Typography>
+                <Grid container direction='row' className={classes.btnContainer}>
+                  <Grid item>
+                    <Link to='/' className={classes.link}>
+                      <Button variant='outlined' className={classes.homeBtn}>
                         GO TO HOMEPAGE
-                        </Button>
-                      </Link>
-                    </Grid>
-                    <Grid item>
-                      <Button variant='outlined' className={classes.reportBtn}>
-                        REPORT A PROBLEM
                       </Button>
-                    </Grid>
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Button variant='outlined' className={classes.reportBtn}>
+                        REPORT A PROBLEM
+                    </Button>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </MuiThemeProvider>
+        </Grid>
       )
     }
   }
 }
-const theme = createMuiTheme({
+const style = theme => ({
   typography: {
     useNextVariants: true,
     suppressDeprecationWarnings: true
@@ -95,4 +93,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(ErrorComponent)
+export default withStyles(style)(ErrorComponent)

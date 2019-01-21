@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -295,7 +295,7 @@ class CreateMilestoneComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <div>
         <Grid container direction='row' className={classes.createMilestoneWrapper} justify='center'>
           <Grid item xs={10} lg={8} xl={6}>
             <Grid className={classes.titleWrapper} container direction='row' justify='space-between' spacing={8}>
@@ -494,19 +494,14 @@ class CreateMilestoneComponent extends Component {
         {(actionsPending.modifyMilestone || actionsPending.addMilestone) &&
           <TransactionProgress open />
         }
-      </MuiThemeProvider>
+      </div>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   createMilestoneWrapper: {
-    marginTop: '60px',
-    fontFamily: 'Helvetica Neue'
+    marginTop: '60px'
   },
   titleWrapper: {
     color: '#333333',
@@ -646,4 +641,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(CreateMilestoneComponent)
+export default withStyles(style)(CreateMilestoneComponent)

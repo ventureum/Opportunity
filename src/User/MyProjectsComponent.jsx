@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, withStyles, createMuiTheme } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import { Link } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import WalletList from './WalletListComponent'
@@ -80,7 +80,7 @@ class MyProjectsComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <div>
         <NavBar history={history} location={location} />
         <Grid container direction='row' justify='center' className={classes.projectsWrapper}>
           <Grid item xs={10} className={classes.titleWrapper}>
@@ -162,19 +162,14 @@ class MyProjectsComponent extends Component {
             </Grid>
           </Grid>
         </Grid>
-      </MuiThemeProvider>
+      </div>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   projectsWrapper: {
-    marginTop: '60px',
-    fontFamily: 'Helvetica Neue'
+    marginTop: '60px'
   },
   titleWrapper: {
     marginBottom: '30px',
@@ -321,7 +316,6 @@ const theme = createMuiTheme({
     borderRadius: '4px',
     backgroundColor: '#01A78D',
     color: '#FFFFFF',
-    fontFamily: '"Noto Sans"',
     fontSize: '14px',
     fontWeight: 'bold',
     letterSpacing: '0.23px',
@@ -340,4 +334,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(MyProjectsComponent)
+export default withStyles(style)(MyProjectsComponent)

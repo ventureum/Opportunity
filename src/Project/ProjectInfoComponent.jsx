@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import ProjectDetail from './ProjectDetailComponent'
@@ -104,102 +104,21 @@ class ProjectInfoComponent extends Component {
     const { classes } = this.props
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Grid container className={classes.root} direction='row' justify='center'>
-          <Grid item className={classes.header} xs={12}>
-            <Grid container direction='row' justify='center'>
-              <Grid item xs={11} lg={9} xl={7}>
-                <Grid container direction='row'>
-                  <Grid item md={2} lg={2}>
-                    <img className={classes.projectLogo} src={projectData.logo} alt='' />
-                  </Grid>
-                  <Grid item className={classes.headerRight} md={7}>
-                    <Grid container direction='column'>
-                      <Grid item className={classes.headerName}>
-                        {projectData.projectName}
-                      </Grid>
-                      <Grid item className={classes.headerShortDesc}>
-                        {projectData.shortDescription}
-                      </Grid>
-                    </Grid>
-                  </Grid>
+      <Grid container className={classes.root} direction='row' justify='center'>
+        <Grid item className={classes.header} xs={12}>
+          <Grid container direction='row' justify='center'>
+            <Grid item xs={11} lg={9} xl={7}>
+              <Grid container direction='row'>
+                <Grid item md={2} lg={2}>
+                  <img className={classes.projectLogo} src={projectData.logo} alt='' />
                 </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item xs={11} md={6} lg={5} xl={4}>
-            <ProjectDetail projectData={projectData} tokenInfo={tokenInfo} />
-          </Grid>
-          <Grid item md={1} />
-          <Grid item xs={11} md={4} lg={3} xl={2}>
-            <Grid container direction='column'>
-              <Grid item className={classes.tokenDetail}>
-                <Grid container direction='column'>
-                  <Grid item>
-                    <Grid container direction='column'>
-                      <Grid item>
-                        <Grid container direction='row'>
-                          <Grid item className={classes.key} xs={7} md={6}>
-                            Token
-                          </Grid>
-                          <Grid item className={classes.value} xs={5} md={6}>
-                            {projectData.token.symbol}
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <Grid container direction='row'>
-                          <Grid item className={classes.key} xs={7} md={6}>
-                            Price
-                          </Grid>
-                          <Grid item className={classes.value} xs={5} md={6}>
-                            1&nbsp;{projectData.token.symbol}&nbsp;=&nbsp;{projectData.token.price}&nbsp;ETH
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <Grid container direction='row'>
-                          <Grid item className={classes.key} xs={7} md={6}>
-                            Platform
-                          </Grid>
-                          <Grid item className={classes.value} xs={5} md={6}>
-                            {projectData.token.platform}
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid item>
-                        <Grid container direction='row'>
-                          <Grid item className={classes.key} xs={7} md={6}>
-                            Accepting
-                          </Grid>
-                          <Grid item className={classes.value} xs={5} md={6}>
-                            {projectData.token.accept.join(', ')}
-                          </Grid>
-                        </Grid>
-                      </Grid>
+                <Grid item className={classes.headerRight} md={7}>
+                  <Grid container direction='column'>
+                    <Grid item className={classes.headerName}>
+                      {projectData.projectName}
                     </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Button className={classes.getToken}>
-                      Get Token
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <Grid container direction='column'>
-                  <Grid item className={classes.titleSocialLink}>
-                    Social Links
-                  </Grid>
-                  <Grid item>
-                    <Grid container direction='row' justify='center'>
-                      {projectData.socialLinks.map((item, i) => (
-                        <Grid item key={i} className={classes.socialLinkItem} xs={2} md={1}>
-                          <a href={item.link}>
-                            <i className={iconMap[item.type] + ' ' + classes.socialLinkIcon} />
-                          </a>
-                        </Grid>
-                      ))}
+                    <Grid item className={classes.headerShortDesc}>
+                      {projectData.shortDescription}
                     </Grid>
                   </Grid>
                 </Grid>
@@ -207,16 +126,91 @@ class ProjectInfoComponent extends Component {
             </Grid>
           </Grid>
         </Grid>
-      </MuiThemeProvider>
+        <Grid item xs={11} md={6} lg={5} xl={4}>
+          <ProjectDetail projectData={projectData} tokenInfo={tokenInfo} />
+        </Grid>
+        <Grid item md={1} />
+        <Grid item xs={11} md={4} lg={3} xl={2}>
+          <Grid container direction='column'>
+            <Grid item className={classes.tokenDetail}>
+              <Grid container direction='column'>
+                <Grid item>
+                  <Grid container direction='column'>
+                    <Grid item>
+                      <Grid container direction='row'>
+                        <Grid item className={classes.key} xs={7} md={6}>
+                            Token
+                        </Grid>
+                        <Grid item className={classes.value} xs={5} md={6}>
+                          {projectData.token.symbol}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Grid container direction='row'>
+                        <Grid item className={classes.key} xs={7} md={6}>
+                            Price
+                        </Grid>
+                        <Grid item className={classes.value} xs={5} md={6}>
+                            1&nbsp;{projectData.token.symbol}&nbsp;=&nbsp;{projectData.token.price}&nbsp;ETH
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Grid container direction='row'>
+                        <Grid item className={classes.key} xs={7} md={6}>
+                            Platform
+                        </Grid>
+                        <Grid item className={classes.value} xs={5} md={6}>
+                          {projectData.token.platform}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Grid container direction='row'>
+                        <Grid item className={classes.key} xs={7} md={6}>
+                            Accepting
+                        </Grid>
+                        <Grid item className={classes.value} xs={5} md={6}>
+                          {projectData.token.accept.join(', ')}
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item>
+                  <Button className={classes.getToken}>
+                      Get Token
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Grid container direction='column'>
+                <Grid item className={classes.titleSocialLink}>
+                    Social Links
+                </Grid>
+                <Grid item>
+                  <Grid container direction='row' justify='center'>
+                    {projectData.socialLinks.map((item, i) => (
+                      <Grid item key={i} className={classes.socialLinkItem} xs={2} md={1}>
+                        <a href={item.link}>
+                          <i className={iconMap[item.type] + ' ' + classes.socialLinkIcon} />
+                        </a>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   root: {
     width: '100%',
     backgroundColor: '#F3F6FC',
@@ -294,4 +288,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(ProjectInfoComponent)
+export default withStyles(style)(ProjectInfoComponent)

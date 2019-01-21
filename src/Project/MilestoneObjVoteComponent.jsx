@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
@@ -115,58 +115,52 @@ class MilestoneObjVoteComponent extends Component {
     const { classes, milestone, onClose, fullScreen, open } = this.props
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Dialog
-          disableBackdropClick
-          disableEscapeKeyDown
-          onClose={onClose}
-          fullScreen={fullScreen}
-          maxWidth='md'
-          aria-labelledby='obj-vote-dialog-title'
-          open={open}
-        >
-          <DialogTitle id='obj-vote-dialog-title'> {milestone.content.title} Rating </DialogTitle>
-          <DialogContent>
-            <Grid container direction='column' className={classes.modalWrapper}>
-              <Grid item>
-                <Typography className={classes.intro}>
-                  { milestone.content.description }
-                </Typography>
-                <Divider />
-              </Grid>
-              { milestone.objectives.map((o) => this.renderObj(o))}
-              <Grid item>
-                <TextField
-                  multiline
-                  margin='normal'
-                  id='obj-vote-comment'
-                  label='Add your comment here (optional)'
-                  variant='outlined'
-                  fullWidth
-                  onChange={this.handleCommentChange('comment')}
-                />
-              </Grid>
+      <Dialog
+        disableBackdropClick
+        disableEscapeKeyDown
+        onClose={onClose}
+        fullScreen={fullScreen}
+        maxWidth='md'
+        aria-labelledby='obj-vote-dialog-title'
+        open={open}
+      >
+        <DialogTitle id='obj-vote-dialog-title'> {milestone.content.title} Rating </DialogTitle>
+        <DialogContent>
+          <Grid container direction='column' className={classes.modalWrapper}>
+            <Grid item>
+              <Typography className={classes.intro}>
+                { milestone.content.description }
+              </Typography>
+              <Divider />
             </Grid>
-          </DialogContent>
-          <DialogActions>
-            <Button className={classes.objVoteBtnCancel} onClick={onClose} >
+            { milestone.objectives.map((o) => this.renderObj(o))}
+            <Grid item>
+              <TextField
+                multiline
+                margin='normal'
+                id='obj-vote-comment'
+                label='Add your comment here (optional)'
+                variant='outlined'
+                fullWidth
+                onChange={this.handleCommentChange('comment')}
+              />
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button className={classes.objVoteBtnCancel} onClick={onClose} >
               Cancel
-            </Button>
-            <Button className={classes.objVoteBtnSubmit} onClick={this.onSubmit} >
+          </Button>
+          <Button className={classes.objVoteBtnSubmit} onClick={this.onSubmit} >
               Submit
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </MuiThemeProvider>
+          </Button>
+        </DialogActions>
+      </Dialog>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   modalWrapper: {
     height: '100%',
     width: '100%',
@@ -231,4 +225,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withMobileDialog()(withStyles(theme)(MilestoneObjVoteComponent))
+export default withMobileDialog()(withStyles(style)(MilestoneObjVoteComponent))

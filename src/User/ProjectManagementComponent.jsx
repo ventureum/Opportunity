@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Table from '@material-ui/core/Table'
@@ -183,7 +183,7 @@ class ProjectManagementComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <div >
         <NavBar history={history} location={location} />
         <Grid className={classes.projectManagement} container direction='row' justify='center' alignItems='center'>
           <Grid item xs={10} lg={8} xl={6}>
@@ -332,19 +332,14 @@ class ProjectManagementComponent extends Component {
         {(actionsPending.activateMilestone || actionsPending.finalizeMilestone || actionsPending.removeMilestone) &&
           <TransactionProgress open />
         }
-      </MuiThemeProvider>
+      </div>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   projectManagement: {
-    marginTop: '60px',
-    fontFamily: 'Helvetica Neue'
+    marginTop: '60px'
   },
   titleWrapper: {
     color: '#333333',
@@ -447,4 +442,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(ProjectManagementComponent)
+export default withStyles(style)(ProjectManagementComponent)
