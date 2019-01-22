@@ -164,11 +164,15 @@ class MilestoneDetailComponent extends Component {
               : relatedPostsForMilestone.map((post, i) => {
                 return (
                   <Grid item xs={12} key={i} className={classes.post}>
-                    <img src={post.photoUrl} alt='' className={classes.postAvatar} />
-                    <div className={classes.postContent}>
-                      <Typography className={classes.postTitle}>{post.content.text}</Typography>
-                      <Typography className={classes.postAuthor}>{post.content.title}</Typography>
-                    </div>
+                    <Grid container direction='row' >
+                      <Grid item xs='auto'>
+                        <img src={post.photoUrl} alt='' className={classes.postAvatar} />
+                      </Grid>
+                      <Grid item className={classes.postContent} xs={8} md={10} xl={11}>
+                        <Typography className={classes.postTitle}>{post.content.text}</Typography>
+                        <Typography className={classes.postAuthor}>{post.content.title}</Typography>
+                      </Grid>
+                    </Grid>
                   </Grid>
                 )
               })}
