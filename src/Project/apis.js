@@ -282,7 +282,9 @@ async function getRelatedPostsForMilestone (projectId, milestoneId, limit = 50) 
     }
   )
   if (rv.data.responseData.objectiveVotesInfo.ratingVotes !== null) {
+    let weightDict = {}
     const voterArr = rv.data.responseData.objectiveVotesInfo.ratingVotes.map(item => {
+      weightDict[item.voter] = item.weight
       return item.voter
     })
     const postHashArr = voterArr.map(voterUUID => {
@@ -290,13 +292,24 @@ async function getRelatedPostsForMilestone (projectId, milestoneId, limit = 50) 
       return '0x' + sha3(commentBoardId + '-' + voterUUID)
     })
 
-    const postRV = await userApi.apiFeed.post(
+    let postRV = await userApi.apiFeed.post(
       '/get-batch-posts',
       {
         'postHashes': postHashArr
       }
     )
-    return postRV.data.posts
+    let posts = postRV.data.posts.map(item => {
+      return {
+        ...item,
+        weight: weightDict[item.actor]
+      }
+    })
+    // sort by weight
+    posts.sort((postA, postB) => {
+      return postB.weight - postA.weight
+    })
+
+    return posts
   } else return []
 }
 

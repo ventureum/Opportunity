@@ -10,6 +10,7 @@ import { Typography } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 var moment = require('moment')
+var numeral = require('numeral')
 
 class MilestoneDetailComponent extends Component {
   constructor () {
@@ -71,7 +72,8 @@ class MilestoneDetailComponent extends Component {
 
   render () {
     const { classes, milestone, profile, handleClose, rateObj, actionsPending, error, relatedPostsForMilestone } = this.props
-    const { evaluatorList, fileList } = this.state
+    const { fileList } = this.state
+    const top5Validator = relatedPostsForMilestone.slice(0, 5)
     if (error) {
       return (<Error error={error} />)
     }
@@ -88,15 +90,17 @@ class MilestoneDetailComponent extends Component {
           {this.getDateStr(milestone.startTime, milestone.endTime)}
         </Grid>
         <Grid item className={classes.rating}>
-          <div className={classes.ratingScore}>{milestone.avgRating}</div>
+          <div className={classes.ratingScore}>
+            {numeral(milestone.avgRating / 10.0).format('0.0')}
+          </div>
           <div className={classes.evaluator}>
-            {evaluatorList.map((person, i) => {
+            {top5Validator.map((person, i) => {
               return (
-                <img key={i} className={classes.avatar} src={person.avatar} alt='' />
+                <img key={i} className={classes.avatar} src={person.photoUrl} alt='' />
               )
             })}
             <div className={classes.evaluatorNote}>
-                Voted by {evaluatorList.length} evaluators
+              Voted by {top5Validator.length} evaluators
             </div>
           </div>
         </Grid>
@@ -106,9 +110,9 @@ class MilestoneDetailComponent extends Component {
               return (
                 <Grid item xs={12} className={classes.obj} key={i}>
                   <div className={classes.objId}>
-                       Objective&nbsp;{(i + 1)}
+                    Objective&nbsp;{(i + 1)}
                     <div className={classes.objRating}>
-                      {obj.avgRating}
+                      {numeral(obj.avgRating / 10.0).format('0.0')}
                     </div>
                   </div>
                   <div>
@@ -125,16 +129,16 @@ class MilestoneDetailComponent extends Component {
           </Grid>
         </Grid>
         <Grid item>
-          { profile.actorType === 'KOL' &&
-          <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
-                Rate
-          </Button>
+          {profile.actorType === 'KOL' &&
+            <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
+              Rate
+            </Button>
           }
         </Grid>
         <Grid item>
           <Grid container direction='column'>
             <Grid item xs={12} className={classes.sectionTitle}>
-                Attached Files
+              Attached Files
             </Grid>
             {fileList.map((file, i) => {
               return (
@@ -149,7 +153,7 @@ class MilestoneDetailComponent extends Component {
         <Grid item>
           <Grid container direction='column'>
             <Grid item xs={12} className={classes.sectionTitle}>
-                Related Posts
+              Related Posts
             </Grid>
             {actionsPending.getRelatedPostsForMilestone
               ? <Grid item >
@@ -181,7 +185,7 @@ class MilestoneDetailComponent extends Component {
             rateObj={rateObj}
           />
         }
-        { actionsPending.rateObj && <TransactionProgress open /> }
+        {actionsPending.rateObj && <TransactionProgress open />}
       </Grid>
     )
   }
