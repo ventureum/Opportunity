@@ -97,11 +97,11 @@ class FooterComponent extends React.Component {
                         </Link>
                       </ListItem>
                       <ListItem className={classes.listItem}>
-                        <Link to='/privacy' className={classes.link}>
+                        <a className={classes.link} target='_blank' rel='noopener noreferrer' href='https://docs.google.com/document/u/1/d/e/2PACX-1vQ85R-CCX_C2R4ZNlJNeXsJ8od-xrWfEEdecIV8IPfF98K4LC8bubsCQ4MtLPbI6IdM7u6lRuYHIl0m/pub'>
                           <Typography className={classes.listContent}>
                             Privacy Policy
                           </Typography>
-                        </Link>
+                        </a>
                       </ListItem>
                       <ListItem className={classes.listItem}>
                         <Link to='/terms' className={classes.link}>
@@ -122,7 +122,7 @@ class FooterComponent extends React.Component {
                   </Grid>
                   <a className={classes.loomExplorerContainer} target='_blank' rel='noopener noreferrer' href='http://explorer.milest.one/'>
                     <Typography className={classes.poweredByLoom}>
-                        View Loom Block Explorer
+                      View Loom Block Explorer
                     </Typography>
                   </a>
                 </Grid>
