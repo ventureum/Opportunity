@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import { withStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Typography from '@material-ui/core/Typography'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -57,116 +57,105 @@ class NavBarComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <AppBar position='static' color='default'>
-          <Grid container direction='row' justify='space-between' alignItems='center' spacing={0} className={classes.bar}>
-            <Grid item>
-              <Link to='/' className={classes.link}>
-                <div className={classes.logoWrapper}>
-                  <img className={classes.logo} src={logo} alt='' />
-                  <Typography className={classes.logoText}>
+      <AppBar position='static' color='default'>
+        <Grid container direction='row' justify='space-between' alignItems='center' spacing={0} className={classes.bar}>
+          <Grid item>
+            <Link to='/' className={classes.link}>
+              <div className={classes.logoWrapper}>
+                <img className={classes.logo} src={logo} alt='' />
+                <Typography className={classes.logoText}>
                     Milestone
-                  </Typography>
-                </div>
-              </Link>
-            </Grid>
-            <Grid xs={5} item >
-              <List className={classes.tabList}>
-                <Link to='/' className={classes.tabItem}>
-                  <Typography className={location.pathname === '/' ? classes.tabItemTextSelected : classes.tabItemTextDefault}>
-                    Projects
-                  </Typography>
-                </Link>
-                <Link to='/validators' className={classes.tabItem}>
-                  <Typography className={location.pathname === '/validators' ? classes.tabItemTextSelected : classes.tabItemTextDefault}>
-                    Validators
-                  </Typography>
-                </Link>
-                <a className={classes.tabItem} target='_blank' rel='noopener noreferrer' href='http://explorer.milest.one/'>
-                  <Typography className={classes.tabItemTextDefault}>
-                    Block Explorer
-                  </Typography>
-                </a>
-              </List>
-            </Grid>
-            <Grid item>
-              <div className={classes.user} onClick={this.handleOpen}>
-                {profile.photoUrl && <Avatar src={profile.photoUrl} className={classes.avatar} />}
-                {!profile.photoUrl && <Avatar className={classes.avatar}> {profile.username.charAt(0)} </Avatar>}
-                <Typography className={classes.username}>
-                  {profile.username}
                 </Typography>
               </div>
-              <Menu
-                anchorEl={anchorEl}
-                getContentAnchorEl={null}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right'
-                }}
-                open={open}
-                onClose={this.handleClose}
-                classes={{ paper: classes.menu }}
-                MenuListProps={{ disablePadding: true }}
-              >
-                {(profile.actorType === 'PF' || profile.actorType === 'KOL') &&
+            </Link>
+          </Grid>
+          <Grid xs={5} item >
+            <List className={classes.tabList}>
+              <Link to='/' className={classes.tabItem}>
+                <Typography className={location.pathname === '/' ? classes.tabItemTextSelected : classes.tabItemTextDefault}>
+                    Projects
+                </Typography>
+              </Link>
+              <Link to='/validators' className={classes.tabItem}>
+                <Typography className={location.pathname === '/validators' ? classes.tabItemTextSelected : classes.tabItemTextDefault}>
+                    Validators
+                </Typography>
+              </Link>
+            </List>
+          </Grid>
+          <Grid item>
+            <div className={classes.user} onClick={this.handleOpen}>
+              {profile.photoUrl && <Avatar src={profile.photoUrl} className={classes.avatar} />}
+              {!profile.photoUrl && <Avatar className={classes.avatar}> {profile.username.charAt(0)} </Avatar>}
+              <Typography className={classes.username}>
+                {profile.username}
+              </Typography>
+            </div>
+            <Menu
+              anchorEl={anchorEl}
+              getContentAnchorEl={null}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right'
+              }}
+              open={open}
+              onClose={this.handleClose}
+              classes={{ paper: classes.menu }}
+              MenuListProps={{ disablePadding: true }}
+            >
+              {(profile.actorType === 'PF' || profile.actorType === 'KOL') &&
                 <MenuItem>
                   {profile.actorType === 'KOL' && <Chip label='Validator' className={classes.userTypeValidatorChip} />}
                   {profile.actorType === 'PF' && <Chip label='Project Founder' className={classes.userTypeProjectFounderChip} />}
                 </MenuItem>
-                }
-                {(profile.actorType === 'USER' || profile.actorType === 'KOL') &&
+              }
+              {(profile.actorType === 'USER' || profile.actorType === 'KOL') &&
                 <MenuItem onClick={() => this.handleRedirect('/my-projects')}>
                   <Typography variant='body2'>
                      My Projects
                   </Typography>
                 </MenuItem>
-                }
-                {profile.actorType === 'PF'
-                  ? <MenuItem onClick={() => this.handleRedirect('/project-management')}>
-                    <Typography variant='body2'>
+              }
+              {profile.actorType === 'PF'
+                ? <MenuItem onClick={() => this.handleRedirect('/project-management')}>
+                  <Typography variant='body2'>
                      Project Management
-                    </Typography>
-                  </MenuItem>
-                  : null
-                }
-                {profile.actorType !== 'ANONYMOUS' &&
+                  </Typography>
+                </MenuItem>
+                : null
+              }
+              {profile.actorType !== 'ANONYMOUS' &&
                 <MenuItem onClick={() => this.handleRedirect('/')}>
                   <Typography variant='body2'>
                      Account Settings&nbsp;
                   </Typography>
                 </MenuItem>
-                }
-                <div className={classes.bottomLine} />
-                {profile.actorType === 'ANONYMOUS' &&
+              }
+              <div className={classes.bottomLine} />
+              {profile.actorType === 'ANONYMOUS' &&
                 <MenuItem className={classes.logout} onClick={this.login}>
                   <Typography variant='body2'>
                      Log in
                   </Typography>
                 </MenuItem>
-                }
-                {profile.actorType !== 'ANONYMOUS' &&
+              }
+              {profile.actorType !== 'ANONYMOUS' &&
                 <MenuItem className={classes.logout} onClick={this.logout}>
                   <Typography variant='body2'>
                      Log out
                   </Typography>
                   <ExitToApp className={classes.exitIcon} />
                 </MenuItem>
-                }
-              </Menu>
-            </Grid>
+              }
+            </Menu>
           </Grid>
-        </AppBar>
-      </MuiThemeProvider>
+        </Grid>
+      </AppBar>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   bar: {
     padding: '14px 30px 14px 30px'
   },
@@ -189,7 +178,6 @@ const theme = createMuiTheme({
     marginLeft: '10px',
     height: '15px',
     color: '#666666',
-    fontFamily: 'Helvetica Neue',
     fontSize: '12px',
     fontWeight: '500',
     '@media (max-width: 500px)': {
@@ -235,7 +223,6 @@ const theme = createMuiTheme({
     lineHeight: '27px',
     letterSpacing: '0.29px',
     fontSize: '18px',
-    fontFamily: 'Helvetica Neue',
     '@media (max-width: 600px)': {
       display: 'none'
     }
@@ -263,4 +250,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(NavBarComponent)
+export default withStyles(style)(NavBarComponent)

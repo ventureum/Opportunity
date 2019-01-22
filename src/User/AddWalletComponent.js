@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -115,74 +115,68 @@ class AddWalletComponent extends Component {
     const { walletAddress, message, signedMessage, error } = this.state
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Grid container onClick={handleClose} direction='row' className={classes.addWalletWrapper} justify='center' alignItems='center'>
-          <Grid item onClick={(e) => e.stopPropagation()} className={classes.addWallet} xs={10} sm={8} md={6}>
-            <div className={classes.title}>
+      <Grid container onClick={handleClose} direction='row' className={classes.addWalletWrapper} justify='center' alignItems='center'>
+        <Grid item onClick={(e) => e.stopPropagation()} className={classes.addWallet} xs={10} sm={8} md={6}>
+          <div className={classes.title}>
               Add Wallet
-            </div>
-            <div className={classes.intro}>
+          </div>
+          <div className={classes.intro}>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-            </div>
-            <div className={classes.stepTitle}>
+          </div>
+          <div className={classes.stepTitle}>
               Step 1. Add Wallet Address
-            </div>
-            <TextField
-              fullWidth
-              InputProps={{ className: classes.input }}
-              placeholder='Paste your wallet address here'
-              value={walletAddress}
-              onChange={(e) => this.handleChange(e, 'walletAddress')}
-              margin='normal'
-            />
-            <div className={classes.stepTitle}>
+          </div>
+          <TextField
+            fullWidth
+            InputProps={{ className: classes.input }}
+            placeholder='Paste your wallet address here'
+            value={walletAddress}
+            onChange={(e) => this.handleChange(e, 'walletAddress')}
+            margin='normal'
+          />
+          <div className={classes.stepTitle}>
               Step 2. Copy Message to MyEtherWallet
-            </div>
-            <TextField
-              fullWidth
-              id='message'
-              InputProps={{ className: classNames(classes.input, classes.grayText) }}
-              value={message}
-              margin='normal'
-            />
-            <a onClick={this.copy} href='#void' className={classNames(classes.btnLink, classes.firstBtnLink)}>Copy to Clipboard</a>
-            <a href='https://www.myetherwallet.com/signmsg.html' target='_blank' className={classes.btnLink} rel='noopener noreferrer'>Open MyEtherWallet</a>
-            <div className={classes.stepTitle}>
+          </div>
+          <TextField
+            fullWidth
+            id='message'
+            InputProps={{ className: classNames(classes.input, classes.grayText) }}
+            value={message}
+            margin='normal'
+          />
+          <a onClick={this.copy} href='#void' className={classNames(classes.btnLink, classes.firstBtnLink)}>Copy to Clipboard</a>
+          <a href='https://www.myetherwallet.com/signmsg.html' target='_blank' className={classes.btnLink} rel='noopener noreferrer'>Open MyEtherWallet</a>
+          <div className={classes.stepTitle}>
               Step 3. Paste Signed Message from MyEtherWallet
-            </div>
-            <TextField
-              fullWidth
-              multiline
-              rowsMax='4'
-              InputProps={{ className: classNames(classes.input, { [classes.error]: !!error }) }}
-              placeholder='Paste the signed message here'
-              value={signedMessage}
-              onChange={(e) => this.handleChange(e, 'signedMessage')}
-              margin='normal'
-              helperText={error}
-              error={!!error}
-            />
-            <Button onClick={this.verify} className={classes.btnVerify}>
-              {isAddingWallet ? <CircularProgress className={classes.progress} classes={{ svg: classes.progressSvg }} /> : 'Verify'}
-            </Button>
-            <Button onClick={handleClose} className={classes.btnCancel}>
+          </div>
+          <TextField
+            fullWidth
+            multiline
+            rowsMax='4'
+            InputProps={{ className: classNames(classes.input, { [classes.error]: !!error }) }}
+            placeholder='Paste the signed message here'
+            value={signedMessage}
+            onChange={(e) => this.handleChange(e, 'signedMessage')}
+            margin='normal'
+            helperText={error}
+            error={!!error}
+          />
+          <Button onClick={this.verify} className={classes.btnVerify}>
+            {isAddingWallet ? <CircularProgress className={classes.progress} classes={{ svg: classes.progressSvg }} /> : 'Verify'}
+          </Button>
+          <Button onClick={handleClose} className={classes.btnCancel}>
               Cancel
-            </Button>
-            <div onClick={handleClose} className={classes.close}>
-              <i className='fas fa-times' />
-            </div>
-          </Grid>
+          </Button>
+          <div onClick={handleClose} className={classes.close}>
+            <i className='fas fa-times' />
+          </div>
         </Grid>
-      </MuiThemeProvider>
+      </Grid>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   addWalletWrapper: {
     height: '100%'
   },
@@ -190,8 +184,7 @@ const theme = createMuiTheme({
     position: 'relative',
     backgroundColor: 'white',
     borderRadius: '10px',
-    padding: '60px 60px 30px 60px',
-    fontFamily: 'Helvetica Neue'
+    padding: '60px 60px 30px 60px'
   },
   title: {
     color: '#333333',
@@ -300,4 +293,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(AddWalletComponent)
+export default withStyles(style)(AddWalletComponent)

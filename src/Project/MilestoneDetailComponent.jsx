@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import classNames from 'classnames'
 import Button from '@material-ui/core/Button'
@@ -77,127 +77,120 @@ class MilestoneDetailComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <Grid container direction='column' className={classes.milestone} onClick={(e) => e.stopPropagation()}>
-          <Grid item className={classes.title}>
-            {milestone.content.title}
-          </Grid>
-          <Grid item className={classes.desc}>
-            {milestone.content.description}
-          </Grid>
-          <Grid item className={classes.date}>
-            {this.getDateStr(milestone.startTime, milestone.endTime)}
-          </Grid>
-          <Grid item className={classes.rating}>
-            <div className={classes.ratingScore}>{milestone.avgRating}</div>
-            <div className={classes.evaluator}>
-              {evaluatorList.map((person, i) => {
-                return (
-                  <img key={i} className={classes.avatar} src={person.avatar} alt='' />
-                )
-              })}
-              <div className={classes.evaluatorNote}>
+      <Grid container direction='column' className={classes.milestone} onClick={(e) => e.stopPropagation()}>
+        <Grid item className={classes.title}>
+          {milestone.content.title}
+        </Grid>
+        <Grid item className={classes.desc}>
+          {milestone.content.description}
+        </Grid>
+        <Grid item className={classes.date}>
+          {this.getDateStr(milestone.startTime, milestone.endTime)}
+        </Grid>
+        <Grid item className={classes.rating}>
+          <div className={classes.ratingScore}>{milestone.avgRating}</div>
+          <div className={classes.evaluator}>
+            {evaluatorList.map((person, i) => {
+              return (
+                <img key={i} className={classes.avatar} src={person.avatar} alt='' />
+              )
+            })}
+            <div className={classes.evaluatorNote}>
                 Voted by {evaluatorList.length} evaluators
-              </div>
             </div>
-          </Grid>
-          <Grid item>
-            <Grid container direction='column' className={classes.objWrapper}>
-              {milestone.objectives && milestone.objectives.map((obj, i) => {
-                return (
-                  <Grid item xs={12} className={classes.obj} key={i}>
-                    <div className={classes.objId}>
-                       Objective&nbsp;{(i + 1)}
-                      <div className={classes.objRating}>
-                        {obj.avgRating}
-                      </div>
-                    </div>
-                    <div>
-                      <div className={classes.objTitle}>
-                        {obj.content.title}
-                      </div>
-                      <div className={classes.objDesc}>
-                        {obj.content.description}
-                      </div>
-                    </div>
-                  </Grid>
-                )
-              })}
-            </Grid>
-          </Grid>
-          <Grid item>
-            { profile.actorType === 'KOL' &&
-              <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
-                Rate
-              </Button>
-            }
-          </Grid>
-          <Grid item>
-            <Grid container direction='column'>
-              <Grid item xs={12} className={classes.sectionTitle}>
-                Attached Files
-              </Grid>
-              {fileList.map((file, i) => {
-                return (
-                  <Grid item xs={12} key={i} className={classes.file}>
-                    <i className={classNames('fas', 'fa-file', classes.fileIcon)} />
-                    <a className={classes.fileName} href={file.link} target='_blank' rel='noopener noreferrer' >{file.name}</a>
-                  </Grid>
-                )
-              })}
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Grid container direction='column'>
-              <Grid item xs={12} className={classes.sectionTitle}>
-                Related Posts
-              </Grid>
-              {actionsPending.getRelatedPostsForMilestone
-                ? <Grid item >
-                  <Grid container direction='row' justify='center'>
-                    <CircularProgress />
-                  </Grid>
-                </Grid>
-                : relatedPostsForMilestone.map((post, i) => {
-                  return (
-                    <Grid item xs={12} key={i} className={classes.post}>
-                      <img src={post.photoUrl} alt='' className={classes.postAvatar} />
-                      <div className={classes.postContent}>
-                        <Typography className={classes.postTitle}>{post.content.text}</Typography>
-                        <Typography className={classes.postAuthor}>{post.content.title}</Typography>
-                      </div>
-                    </Grid>
-                  )
-                })}
-            </Grid>
-          </Grid>
-          <div onClick={handleClose} className={classes.close}>
-            <i className='fas fa-times' />
           </div>
-          {milestone.objectives &&
+        </Grid>
+        <Grid item>
+          <Grid container direction='column' className={classes.objWrapper}>
+            {milestone.objectives && milestone.objectives.map((obj, i) => {
+              return (
+                <Grid item xs={12} className={classes.obj} key={i}>
+                  <div className={classes.objId}>
+                       Objective&nbsp;{(i + 1)}
+                    <div className={classes.objRating}>
+                      {obj.avgRating}
+                    </div>
+                  </div>
+                  <div>
+                    <div className={classes.objTitle}>
+                      {obj.content.title}
+                    </div>
+                    <div className={classes.objDesc}>
+                      {obj.content.description}
+                    </div>
+                  </div>
+                </Grid>
+              )
+            })}
+          </Grid>
+        </Grid>
+        <Grid item>
+          { profile.actorType === 'KOL' &&
+          <Button variant='outlined' className={classes.objVoteBtn} onClick={this.handleObjVoteModalOpen} >
+                Rate
+          </Button>
+          }
+        </Grid>
+        <Grid item>
+          <Grid container direction='column'>
+            <Grid item xs={12} className={classes.sectionTitle}>
+                Attached Files
+            </Grid>
+            {fileList.map((file, i) => {
+              return (
+                <Grid item xs={12} key={i} className={classes.file}>
+                  <i className={classNames('fas', 'fa-file', classes.fileIcon)} />
+                  <a className={classes.fileName} href={file.link} target='_blank' rel='noopener noreferrer' >{file.name}</a>
+                </Grid>
+              )
+            })}
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Grid container direction='column'>
+            <Grid item xs={12} className={classes.sectionTitle}>
+                Related Posts
+            </Grid>
+            {actionsPending.getRelatedPostsForMilestone
+              ? <Grid item >
+                <Grid container direction='row' justify='center'>
+                  <CircularProgress />
+                </Grid>
+              </Grid>
+              : relatedPostsForMilestone.map((post, i) => {
+                return (
+                  <Grid item xs={12} key={i} className={classes.post}>
+                    <img src={post.photoUrl} alt='' className={classes.postAvatar} />
+                    <div className={classes.postContent}>
+                      <Typography className={classes.postTitle}>{post.content.text}</Typography>
+                      <Typography className={classes.postAuthor}>{post.content.title}</Typography>
+                    </div>
+                  </Grid>
+                )
+              })}
+          </Grid>
+        </Grid>
+        <div onClick={handleClose} className={classes.close}>
+          <i className='fas fa-times' />
+        </div>
+        {milestone.objectives &&
           <MilestoneObjVote
             open={this.state.objVoteModalOpen}
             onClose={this.handleObjVoteModalClose}
             milestone={milestone}
             rateObj={rateObj}
           />
-          }
-          { actionsPending.rateObj && <TransactionProgress open /> }
-        </Grid>
-      </MuiThemeProvider>
+        }
+        { actionsPending.rateObj && <TransactionProgress open /> }
+      </Grid>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   milestone: {
     padding: '60px',
-    position: 'relative',
-    fontFamily: 'Noto Sans'
+    position: 'relative'
   },
   title: {
     color: '#333333',
@@ -216,7 +209,6 @@ const theme = createMuiTheme({
   },
   date: {
     color: '#666666',
-    fontFamily: 'Noto Sans',
     fontSize: '14px',
     letterSpacing: '0.18px',
     lineHeight: '19px',
@@ -365,4 +357,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(MilestoneDetailComponent)
+export default withStyles(style)(MilestoneDetailComponent)

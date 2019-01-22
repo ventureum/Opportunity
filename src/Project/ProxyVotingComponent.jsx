@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import Select from '@material-ui/core/Select'
@@ -288,7 +288,7 @@ class ProxyVotingComponent extends Component {
     }
 
     return (
-      <MuiThemeProvider theme={theme}>
+      <div>
         <NavBar history={history} location={location} />
         <Grid container direction='row' justify='center' alignItems='center'>
           <Grid item className={classes.proxyVoting} onClick={(e) => e.stopPropagation()} xs={10}>
@@ -369,20 +369,15 @@ class ProxyVotingComponent extends Component {
           </Grid>
         </Grid>
         {actionsPending.delegate && <TransactionProgress open />}
-      </MuiThemeProvider>
+      </div>
     )
   }
 }
 
-const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
+const style = theme => ({
   proxyVoting: {
     padding: '60px',
-    borderRadius: '5px',
-    fontFamily: 'Helvetica Neue'
+    borderRadius: '5px'
   },
   menu: {
     marginBottom: '20px'
@@ -636,4 +631,4 @@ const theme = createMuiTheme({
   }
 })
 
-export default withStyles(theme)(ProxyVotingComponent)
+export default withStyles(style)(ProxyVotingComponent)

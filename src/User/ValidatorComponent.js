@@ -254,8 +254,7 @@ const styles = theme => ({
     fontWeight: 500,
     lineHeight: '22px',
     marginBottom: '8px',
-    letterSpacing: '0.23px',
-    fontFamily: 'Helvetica Neue'
+    letterSpacing: '0.23px'
   },
   validatorShortDescText: {
     color: '#666666',
@@ -306,14 +305,12 @@ const styles = theme => ({
   },
   reputationText: {
     color: ' #666666',
-    fontFamily: 'Helvetica Neue',
     fontSize: '12px',
     letterSpacing: '0.2px',
     lineHeight: '18px'
   },
   reputation: {
     color: ' #333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '14px',
     lineHeight: '21px',
     fontWeight: 500
@@ -339,7 +336,6 @@ const styles = theme => ({
   },
   detailValidatorName: {
     color: ' #333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '18px',
     lineHeight: '27px',
     fontWeight: 500,
@@ -347,7 +343,6 @@ const styles = theme => ({
   },
   detailShortDescription: {
     color: ' #666666',
-    fontFamily: 'Helvetica Neue',
     fontSize: '12px',
     lineHeight: '18px',
     letterSpacing: '0.2px'
@@ -361,7 +356,6 @@ const styles = theme => ({
   },
   subtext: {
     color: ' #666666',
-    fontFamily: 'Helvetica Neue',
     fontSize: '12px',
     lineHeight: '28px',
     letterSpacing: '0.2px'
@@ -387,7 +381,6 @@ const styles = theme => ({
   },
   detailNameText: {
     color: ' #333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '18px',
     letterSpacing: '0.29px',
     lineHeight: '27px',
@@ -395,7 +388,6 @@ const styles = theme => ({
   },
   detailDescText: {
     color: ' #666666',
-    fontFamily: 'Helvetica Neue',
     fontSize: '14px',
     letterSpacing: '0.23px',
     lineHeight: '21px'
@@ -409,7 +401,6 @@ const styles = theme => ({
   },
   recentValidationText: {
     color: ' #333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '18px',
     letterSpacing: '0.29px',
     lineHeight: '27px',
@@ -440,7 +431,6 @@ const styles = theme => ({
   },
   projectNameText: {
     color: ' #333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '14px',
     letterSpacing: '0.29px',
     lineHeight: '22px',

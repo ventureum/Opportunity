@@ -347,10 +347,6 @@ class ProjectComponent extends Component {
 }
 
 const style = theme => ({
-  typography: {
-    useNextVariants: true,
-    suppressDeprecationWarnings: true
-  },
   root: {
     flex: 1
   },
@@ -535,7 +531,6 @@ const style = theme => ({
   },
   leadingValidatorTitleText: {
     color: '#333333',
-    fontFamily: 'Helvetica Neue',
     fontSize: '24px',
     fontWeight: 500,
     lineHeight: '29px'
