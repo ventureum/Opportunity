@@ -46,7 +46,7 @@ class ProjectDetailComponent extends Component {
             About {content.projectName}
           </Grid>
           <Grid item className={classes.projectDesc}>
-            {content.shortDescription}
+            {content.description}
           </Grid>
           <Grid item className={classes.expand}>
             <a className={classes.link} href={content.website} target='_blank' rel='noopener noreferrer'>
@@ -211,7 +211,8 @@ const style = theme => ({
     fontWeight: 'bold'
   },
   projectDesc: {
-    fontSize: '16px'
+    fontSize: '16px',
+    maxWidth: '600px'
   },
   expand: {
     marginTop: '16px',
