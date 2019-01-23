@@ -15,6 +15,7 @@ import MyProjects from './User/MyProjectsContainer'
 import ProjectManagement from './User/ProjectManagementContainer'
 import Validator from './User/ValidatorContainer'
 import Footer from './Static/Footer'
+import FAQ from './Static/FAQ'
 import ProxyVoting from './Project/ProxyVotingContainer'
 import * as apiUser from './User/apis'
 import * as apiProject from './Project/apis'
@@ -92,6 +93,7 @@ class App extends Component {
             <DefaultLayout path='/project-management' component={userIsAuthenticated(ProjectManagement)} />
             <DefaultLayout path='/validators' component={Validator} />
             <DefaultLayout path='/ProxyVoting/:projectId' component={userIsAuthenticated(ProxyVoting)} />
+            <DefaultLayout path='/faq' component={FAQ} />
           </Switch>
         </Router>
       </MuiThemeProvider>
