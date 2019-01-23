@@ -139,10 +139,10 @@ class Login extends Component {
             </Grid>
             <Grid item className={classes.textSection} align='center'>
               <Typography className={classes.heading} variant='h3' gutterBottom align='center'>
-                Milestone
+                Welcome to Milest.one!
               </Typography>
               <Typography className={classes.content} variant='h5' gutterBottom>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eu feugiat ante, feugiat ultrices urna. Sed feugiat congue urna, in lacinia dolor accumsan faucibus.
+                Milest.one is a decentralized milestone-driven rating community, powered by Telegram and LoomX.
               </Typography>
             </Grid>
             { userInfo.newUser ? this.renderRegistration() : this.renderLoginBtn() }
