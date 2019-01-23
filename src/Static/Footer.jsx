@@ -104,11 +104,11 @@ class FooterComponent extends React.Component {
                         </a>
                       </ListItem>
                       <ListItem className={classes.listItem}>
-                        <Link to='/terms' className={classes.link}>
+                        <a className={classes.link} target='_blank' rel='noopener noreferrer' href='https://docs.google.com/document/d/e/2PACX-1vScWE32Rzf-z8OYmzS9mKTBcpVftWMbeR_BfbhmeJxHDF4jaiYXyUfPOtGif7mI6RSpoQ19onaawdYE/pub'>
                           <Typography className={classes.listContent}>
                             Terms
                           </Typography>
-                        </Link>
+                        </a>
                       </ListItem>
                     </List>
                   </Grid>
