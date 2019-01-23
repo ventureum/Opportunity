@@ -58,11 +58,17 @@ const defaultLayoutStyle = {
   flexDirection: 'column'
 }
 
+const componentStyle = {
+  minHeight: '80vh'
+}
+
 const DefaultLayout = ({ component: Component, ...rest }) => {
   return (
     <Route {...rest} render={matchProps => (
       <div style={defaultLayoutStyle}>
-        <Component {...matchProps} />
+        <div style={componentStyle}>
+          <Component {...matchProps} />
+        </div>
         <Footer />
       </div>
     )} />

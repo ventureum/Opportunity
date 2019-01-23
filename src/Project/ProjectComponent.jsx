@@ -168,7 +168,7 @@ class ProjectComponent extends Component {
       <Grid item>
         { projectData.milestonesInfo.milestones &&
           <VerticalTimeline animate={false}>
-            {projectData.milestonesInfo.milestones.map((m) => this.renderMilestone(m))}
+            { projectData.milestonesInfo.milestones.map((m) => this.renderMilestone(m)) }
           </VerticalTimeline>
         }
       </Grid>
@@ -215,17 +215,17 @@ class ProjectComponent extends Component {
                 <Grid item xs={12} sm={8} className={classes.validatorInfo}>
                   <img src={validator.photoUrl} alt='' className={classes.validatorAvatar} />
                   <div>
-                    <div className={classes.validatorName}>{validator.profileContent && validator.profileContent.name}</div>
-                    <div className={classes.validatorDesc}>{validator.profileContent && validator.profileContent.shortDescription}</div>
+                    <div className={classes.validatorName}>{ validator.profileContent && validator.profileContent.name }</div>
+                    <div className={classes.validatorDesc}>{ validator.profileContent && validator.profileContent.shortDescription }</div>
                   </div>
                 </Grid>
                 <Grid item xs={12} sm={4} className={classes.verticalCenter}>
                   <div className={classes.block}>
-                    <div className={classes.value}>{validator.rewardsInfo.reputation}</div>
+                    <div className={classes.value}>{ validator.rewardsInfo.reputation }</div>
                     <div>Reputation</div>
                   </div>
                   <div className={classes.block}>
-                    <div className={classes.value}>{this.formatNumber(validator.proxyVoting.receivedDelegateVotes)}</div>
+                    <div className={classes.value}>{ this.formatNumber(validator.proxyVoting.receivedDelegateVotes) }</div>
                     <div>Votes</div>
                   </div>
                 </Grid>
@@ -303,7 +303,7 @@ class ProjectComponent extends Component {
                     </Grid>
                     <Grid item>
                       <Typography className={classes.topSectionRatingDescription} >
-                          Avg Milestone Rating
+                        Avg Milestone Rating
                       </Typography>
                     </Grid>
                   </Grid>
@@ -536,12 +536,13 @@ const style = theme => ({
     lineHeight: '29px'
   },
   detailContainer: {
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       paddingLeft: '16px',
       paddingRight: '16px'
-    }
-  },
-  maxWidth: '720px'
+    },
+    maxWidth: '600px',
+    width: '100%'
+  }
 })
 
 export default withStyles(style)(ProjectComponent)
