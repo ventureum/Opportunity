@@ -90,11 +90,11 @@ class FooterComponent extends React.Component {
                         </Link>
                       </ListItem>
                       <ListItem className={classes.listItem}>
-                        <Link to='/contact' className={classes.link}>
+                        <a className={classes.link} href='mailto: support@milest.one'>
                           <Typography className={classes.listContent}>
                             Contact Us
                           </Typography>
-                        </Link>
+                        </a>
                       </ListItem>
                       <ListItem className={classes.listItem}>
                         <a className={classes.link} target='_blank' rel='noopener noreferrer' href='https://docs.google.com/document/u/1/d/e/2PACX-1vQ85R-CCX_C2R4ZNlJNeXsJ8od-xrWfEEdecIV8IPfF98K4LC8bubsCQ4MtLPbI6IdM7u6lRuYHIl0m/pub'>

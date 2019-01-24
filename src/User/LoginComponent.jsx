@@ -73,7 +73,13 @@ class Login extends Component {
                   onChange={this.handleAgreementCheckboxChange}
                 />
               }
-              label='I agree with terms and conditions'
+              label=<Typography>
+                I agree with
+                <span />
+                <a className={classes.termslink} target='_blank' rel='noopener noreferrer' href='https://docs.google.com/document/d/e/2PACX-1vScWE32Rzf-z8OYmzS9mKTBcpVftWMbeR_BfbhmeJxHDF4jaiYXyUfPOtGif7mI6RSpoQ19onaawdYE/pub'>
+                  terms and conditions
+                </a>
+              </Typography>
             />
           </Grid>
           <Grid item>
@@ -186,6 +192,9 @@ const style = theme => ({
   },
   loginBtnLink: {
     color: 'white',
+    textDecoration: 'none'
+  },
+  termslink: {
     textDecoration: 'none'
   },
   palette: {
