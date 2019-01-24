@@ -141,19 +141,19 @@ class ProjectComponent extends Component {
         icon={iconData.icon}
       >
         <div onClick={() => { this.handleOpen(m) }} className={classes.milestoneCard}>
-          <h3 className={classNames(classes.milestoneTitle, 'vertical-timeline-element-title')}> { content.title } </h3>
+          <h3 className={classNames(classes.milestoneTitle, 'vertical-timeline-element-title')}> {content.title} </h3>
           <Typography className={classes.milestoneContent} variant='subtitle1'>
-            { content.description }
+            {content.description}
           </Typography>
           <Grid className={classes.milestoneBottom} container direction='row' justify='space-between' alignItems='center'>
             <Grid item>
               <Typography className={classes.milestoneTime} variant='subtitle1'>
-                { time }
+                {time}
               </Typography>
             </Grid>
             <Grid item>
               <Button className={classes.scoreButton} variant='contained' color='primary'>
-                { numeral(m.avgRating / 10.0).format('0.0') }
+                {numeral(m.avgRating / 10.0).format('0.0')}
               </Button>
             </Grid>
           </Grid>
@@ -166,7 +166,7 @@ class ProjectComponent extends Component {
     let { projectData } = this.props
     return (
       <Grid item>
-        { projectData.milestonesInfo.milestones &&
+        {projectData.milestonesInfo.milestones &&
           <VerticalTimeline animate={false}>
             {projectData.milestonesInfo.milestones.map((m) => this.renderMilestone(m))}
           </VerticalTimeline>
@@ -208,7 +208,7 @@ class ProjectComponent extends Component {
             <Typography className={classes.leadingValidatorTitleText}>Leading Validators (In Progress)</Typography>
           </Grid>
         </Grid>
-        { this.props.actionsPending.getProxyListForProject ? <div><CircularProgress /></div>
+        {this.props.actionsPending.getProxyListForProject ? <div><CircularProgress /></div>
           : projectProxyListCopy.map((validator, i) => (
             <Grid key={i} item className={classes.validator}>
               <Grid container direction='row' >
@@ -284,12 +284,12 @@ class ProjectComponent extends Component {
                   <Grid container direction='column' justify='center' alignItems='flex-start'>
                     <Grid item>
                       <Typography className={classes.topSectionProjectName} >
-                        { projectData.content.projectName }
+                        {projectData.content.projectName}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={classes.topSectionProjectShortDescription} variant='h5'>
-                        { projectData.content.shortDescription }
+                        {projectData.content.shortDescription}
                       </Typography>
                     </Grid>
                   </Grid>
@@ -298,12 +298,12 @@ class ProjectComponent extends Component {
                   <Grid container direction='column' justify='center' alignItems='center'>
                     <Grid item>
                       <Typography className={classes.topSectionRating} >
-                        { numeral(projectData.avgRating / 10.0).format('0.0') }
+                        {numeral(projectData.avgRating / 10.0).format('0.0')}
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Typography className={classes.topSectionRatingDescription} >
-                          Avg Milestone Rating
+                        Avg Milestone Rating
                       </Typography>
                     </Grid>
                   </Grid>
@@ -319,9 +319,9 @@ class ProjectComponent extends Component {
                 </Tabs>
               </AppBar>
             </Grid>
-            { tabValue === 0 && this.renderTimeline() }
-            { tabValue === 1 && this.renderDetail() }
-            { tabValue === 2 && this.renderValidators() }
+            {tabValue === 0 && this.renderTimeline()}
+            {tabValue === 1 && this.renderDetail()}
+            {tabValue === 2 && this.renderValidators()}
             <Modal
               disableRestoreFocus
               disableEnforceFocus
@@ -536,12 +536,13 @@ const style = theme => ({
     lineHeight: '29px'
   },
   detailContainer: {
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('md')]: {
       paddingLeft: '16px',
       paddingRight: '16px'
-    }
-  },
-  maxWidth: '720px'
+    },
+    maxWidth: '600px',
+    width: '100%'
+  }
 })
 
 export default withStyles(style)(ProjectComponent)

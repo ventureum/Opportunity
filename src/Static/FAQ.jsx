@@ -44,14 +44,14 @@ function FAQComponent ({ ...props }) {
                 </Typography>
               </Grid>
               <Grid item lg={8} md={8} sm={8} >
-                { faqList.map((item) => (
+                {faqList.map((item) => (
                   <ExpansionPanel>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography variant='subtitle'> { item.title } </Typography>
+                      <Typography variant='subtitle'> {item.title} </Typography>
                     </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                       <Typography>
-                        { item.content }
+                        {item.content}
                       </Typography>
                     </ExpansionPanelDetails>
                   </ExpansionPanel>))

@@ -271,7 +271,7 @@ class ProxyVotingComponent extends Component {
         let targetProperties = ['username', 'description']
         for (let property of targetProperties) {
           if ((validator[property] && validator[property].toLowerCase().indexOf(lcKeyword) >= 0) ||
-          (validator.profileContent && validator.profileContent.name && validator.profileContent.name.toLowerCase().indexOf(lcKeyword) >= 0)) {
+            (validator.profileContent && validator.profileContent.name && validator.profileContent.name.toLowerCase().indexOf(lcKeyword) >= 0)) {
             return true
           }
         }
@@ -321,9 +321,9 @@ class ProxyVotingComponent extends Component {
                         />
                       </Grid>
                       <Grid item xs={12} sm={5} md={4} className={classes.sortWrapper}>
-                Sort by:&nbsp;
+                        Sort by:&nbsp;
                         <div className={classNames(classes.btnSort, { [classes.active]: sort === 'vote' })} onClick={() => this.sortBy('vote')} >Votes</div>
-                &nbsp;|&nbsp;
+                        &nbsp;|&nbsp;
                         <div className={classNames(classes.btnSort, { [classes.active]: sort === 'reputation' })} onClick={() => this.sortBy('reputation')}>Reputations</div>
                       </Grid>
                     </Grid>

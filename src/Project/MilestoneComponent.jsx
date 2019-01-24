@@ -38,7 +38,7 @@ class MilestoneComponent extends Component {
             <Grid container direction='row' alignItems='center'>
               <Grid item lg={11}>
                 <Typography className={classes.heading}>
-                  { obj.content.title }
+                  {obj.content.title}
                 </Typography>
               </Grid>
               <Grid item>
@@ -49,7 +49,7 @@ class MilestoneComponent extends Component {
             </Grid>
           </ExpansionPanelSummary>
           <ExpansionPanelDetails className={classes.details}>
-            { obj.content.description }
+            {obj.content.description}
           </ExpansionPanelDetails>
           <Divider />
           <ExpansionPanelActions>
@@ -125,7 +125,7 @@ class MilestoneComponent extends Component {
                 </Grid>
               </Grid>
             </Grid>
-            { objs.map((o) => this.renderObj(o)) }
+            {objs.map((o) => this.renderObj(o))}
           </Grid>
         </DialogContent>
       </Dialog>

@@ -101,14 +101,14 @@ class Login extends Component {
     let { classes, actionsPending } = this.props
     return (
       <Grid item className={classes.loginButton} align='center'>
-        { actionsPending.fetchAccessToken && <CircularProgress /> }
-        { !actionsPending.fetchAccessToken &&
+        {actionsPending.fetchAccessToken && <CircularProgress />}
+        {!actionsPending.fetchAccessToken &&
           <Button variant='contained'
             color='primary'
             onClick={this.onLogin}
             className={classes.loginBtnLink}
           >
-          Login with Telegram
+            Login with Telegram
           </Button>
         }
       </Grid>
@@ -151,10 +151,10 @@ class Login extends Component {
                 Milest.one is a decentralized milestone-driven rating community, powered by Telegram and LoomX.
               </Typography>
             </Grid>
-            { userInfo.newUser ? this.renderRegistration() : this.renderLoginBtn() }
+            {userInfo.newUser ? this.renderRegistration() : this.renderLoginBtn()}
           </Grid>
         </Grid>
-        { actionsPending.register && <TransactionProgress open /> }
+        {actionsPending.register && <TransactionProgress open />}
       </Grid>
     )
   }

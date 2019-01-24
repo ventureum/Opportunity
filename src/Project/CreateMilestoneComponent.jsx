@@ -114,10 +114,12 @@ class CreateMilestoneComponent extends Component {
 
   addObj = () => {
     this.setState({
-      objList: update(this.state.objList, { $push: [{
-        title: '',
-        description: ''
-      }] })
+      objList: update(this.state.objList, {
+        $push: [{
+          title: '',
+          description: ''
+        }]
+      })
     })
   }
 

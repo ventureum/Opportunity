@@ -118,13 +118,13 @@ class AddWalletComponent extends Component {
       <Grid container onClick={handleClose} direction='row' className={classes.addWalletWrapper} justify='center' alignItems='center'>
         <Grid item onClick={(e) => e.stopPropagation()} className={classes.addWallet} xs={10} sm={8} md={6}>
           <div className={classes.title}>
-              Add Wallet
+            Add Wallet
           </div>
           <div className={classes.intro}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           </div>
           <div className={classes.stepTitle}>
-              Step 1. Add Wallet Address
+            Step 1. Add Wallet Address
           </div>
           <TextField
             fullWidth
@@ -135,7 +135,7 @@ class AddWalletComponent extends Component {
             margin='normal'
           />
           <div className={classes.stepTitle}>
-              Step 2. Copy Message to MyEtherWallet
+            Step 2. Copy Message to MyEtherWallet
           </div>
           <TextField
             fullWidth
@@ -147,7 +147,7 @@ class AddWalletComponent extends Component {
           <a onClick={this.copy} href='#void' className={classNames(classes.btnLink, classes.firstBtnLink)}>Copy to Clipboard</a>
           <a href='https://www.myetherwallet.com/signmsg.html' target='_blank' className={classes.btnLink} rel='noopener noreferrer'>Open MyEtherWallet</a>
           <div className={classes.stepTitle}>
-              Step 3. Paste Signed Message from MyEtherWallet
+            Step 3. Paste Signed Message from MyEtherWallet
           </div>
           <TextField
             fullWidth
@@ -165,7 +165,7 @@ class AddWalletComponent extends Component {
             {isAddingWallet ? <CircularProgress className={classes.progress} classes={{ svg: classes.progressSvg }} /> : 'Verify'}
           </Button>
           <Button onClick={handleClose} className={classes.btnCancel}>
-              Cancel
+            Cancel
           </Button>
           <div onClick={handleClose} className={classes.close}>
             <i className='fas fa-times' />

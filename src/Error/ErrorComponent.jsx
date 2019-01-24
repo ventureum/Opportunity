@@ -16,12 +16,12 @@ class ErrorComponent extends Component {
             <Grid container direction='column' justify='center' alignItems='center'>
               <Grid item xs={7} >
                 <Typography className={classes.heading} >
-                    Looks like we're having some issues.
+                  Looks like we're having some issues.
                 </Typography>
                 <Divider className={classes.divider} />
                 <Typography className={classes.subtitle} >
-                    Go back to the previous page and try again.
-                    If you think something is broken, report a problem.
+                  Go back to the previous page and try again.
+                  If you think something is broken, report a problem.
                 </Typography>
                 <Grid container direction='row' className={classes.btnContainer}>
                   <Grid item>
@@ -33,7 +33,7 @@ class ErrorComponent extends Component {
                   </Grid>
                   <Grid item>
                     <Button variant='outlined' className={classes.reportBtn}>
-                        REPORT A PROBLEM
+                      REPORT A PROBLEM
                     </Button>
                   </Grid>
                 </Grid>
