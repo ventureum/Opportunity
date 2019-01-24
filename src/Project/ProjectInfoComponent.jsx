@@ -139,7 +139,7 @@ class ProjectInfoComponent extends Component {
                     <Grid item>
                       <Grid container direction='row'>
                         <Grid item className={classes.key} xs={7} md={6}>
-                            Token
+                          Token
                         </Grid>
                         <Grid item className={classes.value} xs={5} md={6}>
                           {projectData.token.symbol}
@@ -149,17 +149,17 @@ class ProjectInfoComponent extends Component {
                     <Grid item>
                       <Grid container direction='row'>
                         <Grid item className={classes.key} xs={7} md={6}>
-                            Price
+                          Price
                         </Grid>
                         <Grid item className={classes.value} xs={5} md={6}>
-                            1&nbsp;{projectData.token.symbol}&nbsp;=&nbsp;{projectData.token.price}&nbsp;ETH
+                          1&nbsp;{projectData.token.symbol}&nbsp;=&nbsp;{projectData.token.price}&nbsp;ETH
                         </Grid>
                       </Grid>
                     </Grid>
                     <Grid item>
                       <Grid container direction='row'>
                         <Grid item className={classes.key} xs={7} md={6}>
-                            Platform
+                          Platform
                         </Grid>
                         <Grid item className={classes.value} xs={5} md={6}>
                           {projectData.token.platform}
@@ -169,7 +169,7 @@ class ProjectInfoComponent extends Component {
                     <Grid item>
                       <Grid container direction='row'>
                         <Grid item className={classes.key} xs={7} md={6}>
-                            Accepting
+                          Accepting
                         </Grid>
                         <Grid item className={classes.value} xs={5} md={6}>
                           {projectData.token.accept.join(', ')}
@@ -180,7 +180,7 @@ class ProjectInfoComponent extends Component {
                 </Grid>
                 <Grid item>
                   <Button className={classes.getToken}>
-                      Get Token
+                    Get Token
                   </Button>
                 </Grid>
               </Grid>
@@ -188,7 +188,7 @@ class ProjectInfoComponent extends Component {
             <Grid item>
               <Grid container direction='column'>
                 <Grid item className={classes.titleSocialLink}>
-                    Social Links
+                  Social Links
                 </Grid>
                 <Grid item>
                   <Grid container direction='row' justify='center'>

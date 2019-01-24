@@ -49,10 +49,10 @@ class WalletListComponent extends Component {
       <div className={classes.root} onClick={(e) => e.stopPropagation()}>
         <Grid container direction='row' className={classes.walletListWrapper}>
           <Grid item className={classes.title} xs={12}>
-              Manage Wallets
+            Manage Wallets
           </Grid>
           <Grid item className={classes.subTitle} xs={12}>
-              Wallet Address
+            Wallet Address
           </Grid>
           {wallets.map(addr => {
             return (
@@ -96,15 +96,15 @@ class WalletListComponent extends Component {
               <DialogTitle>Delete Wallet</DialogTitle>
               <DialogContent>
                 <DialogContentText>
-                    Are you sure you want to delete this wallet address?
+                  Are you sure you want to delete this wallet address?
                 </DialogContentText>
               </DialogContent>
               <DialogActions className={classes.action}>
                 <Button className={classes.btnDelete} onClick={this.removeAddress}>
-                    Delete
+                  Delete
                 </Button>
                 <Button className={classes.btnCancel} onClick={() => this.handleClose('dialog')}>
-                    Cancel
+                  Cancel
                 </Button>
               </DialogActions>
               <div onClick={() => this.handleClose('dialog')} className={classes.close}>

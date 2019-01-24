@@ -57,7 +57,8 @@ async function getProfile (uuid, withPrivateKey = true) {
 
 async function setActorPrivateKey (uuid, privateKey) {
   await apiFeed.post('/set-actor-private-key',
-    { actor: uuid,
+    {
+      actor: uuid,
       privateKey: privateKey
     })
 }

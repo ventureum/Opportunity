@@ -129,11 +129,11 @@ class MilestoneObjVoteComponent extends Component {
           <Grid container direction='column' className={classes.modalWrapper}>
             <Grid item>
               <Typography className={classes.intro}>
-                { milestone.content.description }
+                {milestone.content.description}
               </Typography>
               <Divider />
             </Grid>
-            { milestone.objectives.map((o) => this.renderObj(o))}
+            {milestone.objectives.map((o) => this.renderObj(o))}
             <Grid item>
               <TextField
                 multiline
@@ -149,10 +149,10 @@ class MilestoneObjVoteComponent extends Component {
         </DialogContent>
         <DialogActions>
           <Button className={classes.objVoteBtnCancel} onClick={onClose} >
-              Cancel
+            Cancel
           </Button>
           <Button className={classes.objVoteBtnSubmit} onClick={this.onSubmit} >
-              Submit
+            Submit
           </Button>
         </DialogActions>
       </Dialog>

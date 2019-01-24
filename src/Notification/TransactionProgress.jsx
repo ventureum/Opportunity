@@ -22,7 +22,7 @@ class TransactionProgressComponent extends Component {
           <Grid container direction='column' className={classes.modalWrapper}>
             <Grid item>
               <Typography className={classes.message} variant='subtitle2'>
-                  Waiting for transaction to be mined
+                Waiting for transaction to be mined
               </Typography>
             </Grid>
           </Grid>

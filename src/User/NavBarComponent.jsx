@@ -64,7 +64,7 @@ class NavBarComponent extends Component {
               <div className={classes.logoWrapper}>
                 <img className={classes.logo} src={logo} alt='' />
                 <Typography className={classes.logoText}>
-                    Milestone
+                  Milestone
                 </Typography>
               </div>
             </Link>
@@ -73,12 +73,12 @@ class NavBarComponent extends Component {
             <List className={classes.tabList}>
               <Link to='/' className={classes.tabItem}>
                 <Typography className={location.pathname === '/' ? classes.tabItemTextSelected : classes.tabItemTextDefault}>
-                    Projects
+                  Projects
                 </Typography>
               </Link>
               <Link to='/validators' className={classes.tabItem}>
                 <Typography className={location.pathname === '/validators' ? classes.tabItemTextSelected : classes.tabItemTextDefault}>
-                    Validators
+                  Validators
                 </Typography>
               </Link>
             </List>
@@ -112,14 +112,14 @@ class NavBarComponent extends Component {
               {(profile.actorType === 'USER' || profile.actorType === 'KOL') &&
                 <MenuItem onClick={() => this.handleRedirect('/my-projects')}>
                   <Typography variant='body2'>
-                     My Projects
+                    My Projects
                   </Typography>
                 </MenuItem>
               }
               {profile.actorType === 'PF'
                 ? <MenuItem onClick={() => this.handleRedirect('/project-management')}>
                   <Typography variant='body2'>
-                     Project Management
+                    Project Management
                   </Typography>
                 </MenuItem>
                 : null
@@ -127,7 +127,7 @@ class NavBarComponent extends Component {
               {profile.actorType !== 'ANONYMOUS' &&
                 <MenuItem onClick={() => this.handleRedirect('/')}>
                   <Typography variant='body2'>
-                     Account Settings&nbsp;
+                    Account Settings&nbsp;
                   </Typography>
                 </MenuItem>
               }
@@ -135,14 +135,14 @@ class NavBarComponent extends Component {
               {profile.actorType === 'ANONYMOUS' &&
                 <MenuItem className={classes.logout} onClick={this.login}>
                   <Typography variant='body2'>
-                     Log in
+                    Log in
                   </Typography>
                 </MenuItem>
               }
               {profile.actorType !== 'ANONYMOUS' &&
                 <MenuItem className={classes.logout} onClick={this.logout}>
                   <Typography variant='body2'>
-                     Log out
+                    Log out
                   </Typography>
                   <ExitToApp className={classes.exitIcon} />
                 </MenuItem>
